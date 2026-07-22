@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600" role="img" aria-labelledby="title desc">
+  <title id="title">LeanDesk Suite</title>
+  <desc id="desc">A local-first Windows office suite from Dietrich AI Labs with Writer, Sheets, Slides, Notes, Draw, Tasks, Calendar, and Contacts.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07182d"/>
+      <stop offset="1" stop-color="#0d6f85"/>
+    </linearGradient>
+    <pattern id="grid" width="54" height="54" patternUnits="userSpaceOnUse">
+      <path d="M54 0H0V54" fill="none" stroke="#2b7081" stroke-opacity=".22"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="600" fill="url(#bg)"/>
+  <rect width="1600" height="600" fill="url(#grid)"/>
+
+  <g transform="translate(60 44)">
+    <rect width="64" height="64" rx="15" fill="#18c6c4"/>
+    <path d="M17 16v34h18M37 16v34M37 16c14 0 18 8 18 17s-4 17-18 17" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="80" y="25" fill="#8fe9e8" font-family="Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" letter-spacing="1">DIETRICH AI LABS</text>
+  </g>
+
+  <text x="60" y="174" fill="#ffffff" font-family="Segoe UI,Arial,sans-serif" font-size="58" font-weight="700">LeanDesk Suite</text>
+  <text x="62" y="216" fill="#d6eaf0" font-family="Segoe UI,Arial,sans-serif" font-size="23">A focused, local-first office suite for Windows.</text>
+
+  <g font-family="Segoe UI,Arial,sans-serif" font-size="14" font-weight="700" fill="#eafafa">
+    <rect x="60" y="240" width="126" height="34" rx="17" fill="#114e60" stroke="#51a8b5"/>
+    <text x="76" y="262">LOCAL-FIRST</text>
+    <rect x="196" y="240" width="191" height="34" rx="17" fill="#114e60" stroke="#51a8b5"/>
+    <text x="213" y="262">NO REQUIRED CLOUD</text>
+    <rect x="397" y="240" width="211" height="34" rx="17" fill="#114e60" stroke="#51a8b5"/>
+    <text x="414" y="262">INSTALLER + PORTABLE</text>
+  </g>
+
+  <rect x="990" y="55" width="545" height="490" rx="30" fill="#062436" stroke="#398b9c"/>
+  <g font-family="Segoe UI,Arial,sans-serif" font-size="15" font-weight="700" fill="#f2f8fa">
+    <g transform="translate(1025 94)"><rect width="215" height="54" rx="12" fill="#11465a" stroke="#48a3b4"/><circle cx="22" cy="27" r="11" fill="#1dc9c5"/><text x="18" y="32" fill="#fff" font-size="11">W</text><text x="45" y="33">Writer</text></g>
+    <g transform="translate(1255 94)"><rect width="215" height="54" rx="12" fill="#11465a" stroke="#48a3b4"/><circle cx="22" cy="27" r="11" fill="#1dc9c5"/><text x="18" y="32" fill="#fff" font-size="11">S</text><text x="45" y="33">Sheets</text></g>
+    <g transform="translate(1025 159)"><rect width="215" height="54" rx="12" fill="#11465a" stroke="#48a3b4"/><circle cx="22" cy="27" r="11" fill="#1dc9c5"/><text x="18" y="32" fill="#fff" font-size="11">P</text><text x="45" y="33">Slides</text></g>
+    <g transform="translate(1255 159)"><rect width="215" height="54" rx="12" fill="#11465a" stroke="#48a3b4"/><circle cx="22" cy="27" r="11" fill="#1dc9c5"/><text x="18" y="32" fill="#fff" font-size="11">N</text><text x="45" y="33">Notes</text></g>
+    <g transform="translate(1025 224)"><rect width="215" height="54" rx="12" fill="#11465a" stroke="#48a3b4"/><circle cx="22" cy="27" r="11" fill="#1dc9c5"/><text x="18" y="32" fill="#fff" font-size="11">D</text><text x="45" y="33">Draw</text></g>
+    <g transform="translate(1255 224)"><rect width="215" height="54" rx="12" fill="#11465a" stroke="#48a3b4"/><circle cx="22" cy="27" r="11" fill="#1dc9c5"/><text x="18" y="32" fill="#fff" font-size="11">T</text><text x="45" y="33">Tasks</text></g>
+    <g transform="translate(1025 289)"><rect width="215" height="54" rx="12" fill="#11465a" stroke="#48a3b4"/><circle cx="22" cy="27" r="11" fill="#1dc9c5"/><text x="18" y="32" fill="#fff" font-size="11">C</text><text x="45" y="33">Calendar</text></g>
+    <g transform="translate(1255 289)"><rect width="215" height="54" rx="12" fill="#11465a" stroke="#48a3b4"/><circle cx="22" cy="27" r="11" fill="#1dc9c5"/><text x="17" y="32" fill="#fff" font-size="11">@</text><text x="45" y="33">Contacts</text></g>
+  </g>
+</svg>
