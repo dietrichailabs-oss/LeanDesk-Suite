@@ -1,0 +1,7 @@
+LeanDesk Suite Source-Available License
+
+Copyright (c) 2026 Dietrich AI Labs. All rights reserved.
+
+Permission is granted to inspect and run this source for personal evaluation and to submit improvements to the official project. Redistribution, commercial resale, rebranding, or publication of modified builds requires prior written permission from Dietrich AI Labs unless a separate repository license states otherwise.
+
+Third-party components remain under their own licenses.

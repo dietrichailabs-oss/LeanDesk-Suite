@@ -1,0 +1,13 @@
+🚀 LeanDesk Suite has reached its first all-modules preview.
+
+Writer, Sheets, Slides, Notes, Draw, Tasks, Calendar, and Contacts now run together under one local Windows suite.
+
+Writer includes a cleaned-up original ribbon and fully offline spell checking with a bundled English dictionary containing more than 100,000 words, live underlining, suggestions, and a personal dictionary.
+
+The rest of the suite includes spreadsheet formulas and XLSX support, presentation themes and PPTX support, Markdown notes, diagram tools, and local personal organization.
+
+No required account. No cloud service. No telemetry. No subscription.
+
+This is still a testing preview rather than a finished Office replacement, but the complete shared foundation and every planned module are now in place.
+
+Built by Dietrich AI Labs.

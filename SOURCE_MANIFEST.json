@@ -1,0 +1,506 @@
+{
+  "schema": 2,
+  "candidate": "0.8.0-reconstructed-correction-6",
+  "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
+  "generated_utc": "2026-08-26T11:26:24.312511+00:00",
+  "source_tree_id": "1A373230C55849A405B715C663FD7665C72B3B2DD3CCD365F913A9E55041E77E",
+  "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
+  "excluded_identity_files": [
+    "SOURCE_MANIFEST.json",
+    "SOURCE_TREE_ID.txt"
+  ],
+  "file_count": 98,
+  "total_bytes": 3860388,
+  "files": [
+    {
+      "path": ".gitignore",
+      "size": 61,
+      "sha256": "E7D52A0EB396F55ED83864528191406C599B78A601E747A444E3D39E3884873F"
+    },
+    {
+      "path": "BUILD_LEANDESK_SUITE.bat",
+      "size": 399,
+      "sha256": "CC6A539F36121B29F48A38B8D34D66BCFF28A06A2698E6D5EE0BAAC7135DF11E"
+    },
+    {
+      "path": "BUILD_LEANDESK_SUITE.ps1",
+      "size": 13760,
+      "sha256": "118E479A3A33D61E89A2D02EFAE34EA08808C945E97DACA332FC1688374E0828"
+    },
+    {
+      "path": "BUILD_READINESS.txt",
+      "size": 2240,
+      "sha256": "37D39D5575DDB0A4D0AFE2E8D6200E183859D62AB78CC4601C5FC2C39226B13C"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size": 6829,
+      "sha256": "85C1B58C90D2BDA19DEFAB5E35CD8400D7B6370D355A9B4F74EA476114282373"
+    },
+    {
+      "path": "DEPENDENCY_LOCK_STATUS.json",
+      "size": 422,
+      "sha256": "65577F9407010AFB193E0BF514DF208E5B35A3B8743F951FFE700D1762000D2D"
+    },
+    {
+      "path": "ENGINEERING_TEST_LOG.txt",
+      "size": 2335,
+      "sha256": "F40F0F2AFF0A9167C40EEFB618E0D803BA3967DBE4293D26280BF591F0293D0B"
+    },
+    {
+      "path": "EULA.txt",
+      "size": 2774,
+      "sha256": "05310415447D3AB66790020EE22D36DB44F7EB92FE6FB81637D7B5E09C84B191"
+    },
+    {
+      "path": "FACEBOOK_LAUNCH_POST.txt",
+      "size": 812,
+      "sha256": "5FFC681E645593FF8B6617377C911229C0EAC77EE9A67EE8213EFE63537E6727"
+    },
+    {
+      "path": "GITHUB_RELEASE.md",
+      "size": 969,
+      "sha256": "A0FDD86CC36F51175FEC9D186D03BDEE1E08718F203A2D51B7E6A9D3F8F2B77D"
+    },
+    {
+      "path": "LICENSE.txt",
+      "size": 478,
+      "sha256": "7056CADD431964DC88AEB6C20C4E8B9C9F31B243BDC5BE95D517524712295E56"
+    },
+    {
+      "path": "LeanDesk_Suite_Installer.iss",
+      "size": 19948,
+      "sha256": "C3AC5686EE45816FBAE3B8F7528896B5348F00A7325C45589C04A44591443EDA"
+    },
+    {
+      "path": "MODULE_ACCEPTANCE_ORDER.md",
+      "size": 853,
+      "sha256": "F106B4A229A76762136383E15025C1B96881FE2C9709CC39912E2D0B2F4879D1"
+    },
+    {
+      "path": "README.md",
+      "size": 7370,
+      "sha256": "9D2545BF90EC596043A36E20E54F80DF3310A477FE7A688EB633777242F4EB21"
+    },
+    {
+      "path": "RELEASE_MANIFEST.txt",
+      "size": 2042,
+      "sha256": "09ED12FC2DE8600FE34B4C2D101BDAA904B2A1A6FA71547CFE79E2157C408A32"
+    },
+    {
+      "path": "ROADMAP.md",
+      "size": 1034,
+      "sha256": "6AC3851DD7669A2DC3E5EA0529A80B0087C453B3B92E113C7C9CFC6BBF088D9A"
+    },
+    {
+      "path": "RUN_LEANDESK_SUITE.bat",
+      "size": 301,
+      "sha256": "D4CDD93CC15A7122632828478F329AC4D683E36CB45439AEEDFF8DCF55CECF5A"
+    },
+    {
+      "path": "STANDARD_RELEASE_MODEL.md",
+      "size": 649,
+      "sha256": "C6ADE55319FB71FCE617D6E34555DE6BCDE1E99648B06E121DF2532B29FFB5C4"
+    },
+    {
+      "path": "START_HERE.txt",
+      "size": 2928,
+      "sha256": "62D89267529BD6C19E85BE4A1909190C1DE08B57216539C1A1D1294D46D15BBA"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.txt",
+      "size": 2331,
+      "sha256": "BCFF1F4232307E680090733781BC5C196A3258239B08885ED7DC414D53EB853C"
+    },
+    {
+      "path": "UI_ACCEPTANCE_CHECKLIST.md",
+      "size": 1040,
+      "sha256": "D6C0B630940D66804AD71F6CC8CCB4CADB9FF7165738715134817B917643089F"
+    },
+    {
+      "path": "VERIFICATION_REPORT.txt",
+      "size": 3088,
+      "sha256": "8B714C53339DEC187A7211DAC8EC00F2A8D29CB28D0C0E7F823833829A766C6F"
+    },
+    {
+      "path": "assets/english_words.txt",
+      "size": 1069549,
+      "sha256": "184CF6F35C2CF37A0BBD44451A0EE241F575BB43B845C835F17145230F821960"
+    },
+    {
+      "path": "assets/leandesk-suite-banner.png",
+      "size": 24375,
+      "sha256": "7F729BD85F552DB2F7D5CEBF7F01C63C6975694D356FBAAF2A4AABA6820CD285"
+    },
+    {
+      "path": "assets/leandesk-suite-icon.png",
+      "size": 4037,
+      "sha256": "8AD422CACDD454302D7AFF44330C18ADA4D5CF2A5F9B69BE007F7D828246B756"
+    },
+    {
+      "path": "assets/leandesk-suite-social-preview.png",
+      "size": 41450,
+      "sha256": "843393D54C04CB07C707638A1D1F91C4C63309D508F609CE5408B42665627B9E"
+    },
+    {
+      "path": "docs/LeanDesk_Suite_0.3.0_UI_Overview.png",
+      "size": 185074,
+      "sha256": "21B616643C96718417D8A99AE11D56C08117D3FCB4A088C5ABB4C687AAA4188F"
+    },
+    {
+      "path": "docs/UPDATE_MANIFEST_DEPLOYMENT.md",
+      "size": 760,
+      "sha256": "9281C8A6B6224BD23511B229358AEF40B6F5062FC549C21B8E1565123ADB59D1"
+    },
+    {
+      "path": "docs/screenshots/01-home.png",
+      "size": 68163,
+      "sha256": "02A8C9E8B2E1D922728B27F4C386A9E8D8587F1C58F920E86E09B6ED8E832691"
+    },
+    {
+      "path": "docs/screenshots/02-writer.png",
+      "size": 77645,
+      "sha256": "86EEFE2084A947BD03BF6EED76E034C50FCC66C75FE5B04519D8324695E2111C"
+    },
+    {
+      "path": "docs/screenshots/03-sheets.png",
+      "size": 43670,
+      "sha256": "BF0B9FAD8CC3C7E5D4ECF25F8EE70DB7F0FA05B1028CBBF03D22109D08B00B46"
+    },
+    {
+      "path": "docs/screenshots/04-slides.png",
+      "size": 52004,
+      "sha256": "3B6D13942322A5E32B60FAF644091EB80D50191798BC72456A02AE181340F09B"
+    },
+    {
+      "path": "docs/screenshots/05-notes.png",
+      "size": 53471,
+      "sha256": "22F1E7DB2B931E3733A4CC9AD0C971F4EA6FCBAF7225EFCB95C12E195B48B98B"
+    },
+    {
+      "path": "docs/screenshots/06-draw.png",
+      "size": 33836,
+      "sha256": "37F7ED1BE9CF771DB5A611C0900C8B29741F6FBDBB2DF06FAF1ECB0B46A801B8"
+    },
+    {
+      "path": "docs/screenshots/07-tasks.png",
+      "size": 46213,
+      "sha256": "795DED37980C4FB4AD4884D68DE89794AE60DB0468857DA063C79FAC41007201"
+    },
+    {
+      "path": "docs/screenshots/08-calendar.png",
+      "size": 44235,
+      "sha256": "FA1B37DCD2324BA540153F96083E4F4E235827AB0D80F4DB04A14DA32A213508"
+    },
+    {
+      "path": "docs/screenshots/09-contacts.png",
+      "size": 41698,
+      "sha256": "76BAF86A99BD3C19567F885013BFAF4762EECB6CBA59E46D91036FDCCBDB10FB"
+    },
+    {
+      "path": "docs/update-manifest-example.json",
+      "size": 354,
+      "sha256": "13F7B1BFD224F695D7FD072F6DD88622D94D8F02D75B6FB118D2A3BD25D3C436"
+    },
+    {
+      "path": "docs/writer-ribbon-approved-concept.png",
+      "size": 1296895,
+      "sha256": "C4AAF30FD0AE3316EB327BC1EE867325D8D8778DFDCF05FE8B648DAAB8E9A3A9"
+    },
+    {
+      "path": "lean_desk_suite.ico",
+      "size": 27744,
+      "sha256": "8D0EA1B6B622F85B654B5068CD65F136CED1F251CCF598313F789EEF6A4FA819"
+    },
+    {
+      "path": "lean_desk_suite.py",
+      "size": 87,
+      "sha256": "FFE383FAB0B2DF7299BDCBF2413D16716D864C1B8C984B844F5123E921EAF973"
+    },
+    {
+      "path": "leandesk/__init__.py",
+      "size": 53,
+      "sha256": "17511F858879A8AB8AA521949B2C996BCC7C87C1C744A22498FB396061A0075F"
+    },
+    {
+      "path": "leandesk/app.py",
+      "size": 28918,
+      "sha256": "D4C451E2ADAF4BE9C517A0821E70FF99066F20343E7E985D0E03A7C24922EF0F"
+    },
+    {
+      "path": "leandesk/backup_integrity.py",
+      "size": 20648,
+      "sha256": "60F06ED05BBD1A6D115478FA82F6DB4202B9005301768C231B070F9DB17E9B63"
+    },
+    {
+      "path": "leandesk/backup_service.py",
+      "size": 51557,
+      "sha256": "082A53E707AA5A8EDC5C4975D830CA6C9D765139743AC3F452EBED69ADA86F40"
+    },
+    {
+      "path": "leandesk/compatibility.py",
+      "size": 10078,
+      "sha256": "E447191FB27FB7119DA5AE7BCD7508B6E3689CDF5FB53E4CFC8AA5CC0A8A01B5"
+    },
+    {
+      "path": "leandesk/core.py",
+      "size": 17425,
+      "sha256": "99220620C4E98E634E36C6FC9A1F504B998B4B7DE88E84890E7D1D1F44B4BBC4"
+    },
+    {
+      "path": "leandesk/data_boundary.py",
+      "size": 7292,
+      "sha256": "F90B8D3BE1A03DDB8B487F126B1B4FCCA65AF4869F0426FD95892D12DA462F54"
+    },
+    {
+      "path": "leandesk/document_formats.py",
+      "size": 7721,
+      "sha256": "2CFD7055F9EAC59BE3C057BDB7D3912FC621244DAF0803F92EFD485C9187534F"
+    },
+    {
+      "path": "leandesk/draw.py",
+      "size": 25022,
+      "sha256": "C2B40A41BD4E9FB17E056A36457293A891BE455E5BB33E378AA9C4D8FA6FA12A"
+    },
+    {
+      "path": "leandesk/import_safety.py",
+      "size": 3902,
+      "sha256": "28C52B85595097A138D130B650732DB32B55526F8BAB4FD6615737554CADCBA9"
+    },
+    {
+      "path": "leandesk/notes.py",
+      "size": 19813,
+      "sha256": "9C3FBEDE745425DDDCC5380B18B295073B16F3E7482A327FFD806A7EE79D2CD3"
+    },
+    {
+      "path": "leandesk/ooxml_preflight.py",
+      "size": 33237,
+      "sha256": "C8B3E2B8FBE8CFE80F847BD60C338BEC6296A0F6212D48BC08E90E9495F201AA"
+    },
+    {
+      "path": "leandesk/organizer.py",
+      "size": 25828,
+      "sha256": "FD2AEFE3AB0EBC3CD7FF24851C3D4408264960DC3AFB55395D84D08D19BDA8EC"
+    },
+    {
+      "path": "leandesk/rtf_codec.py",
+      "size": 17164,
+      "sha256": "FAD2DA22FB1500DDFD56DBF6C1CCEA5A16CC33CE8FE11AACAC89988C6B8B445B"
+    },
+    {
+      "path": "leandesk/save_policy.py",
+      "size": 6119,
+      "sha256": "80ACB3DB431D21E22F3783F942794D79D305BBCFAC82A6E3B3D3E5092C5460B6"
+    },
+    {
+      "path": "leandesk/sheets.py",
+      "size": 34264,
+      "sha256": "5C1118117E4739B385614CA46B8C12ADD2BAEAD0D5A6A974C2286B7B0EF8DE8A"
+    },
+    {
+      "path": "leandesk/slides.py",
+      "size": 30024,
+      "sha256": "EB90DE90393F036EB6F1266F9A3FF03B78694728DE94238DA54B9C69623E5F62"
+    },
+    {
+      "path": "leandesk/spellcheck.py",
+      "size": 8770,
+      "sha256": "C987C85EDEB4D7E71C402E61E1252C4CD39E580466389EAA6095AEB997079471"
+    },
+    {
+      "path": "leandesk/ui.py",
+      "size": 5274,
+      "sha256": "34A119A9E1D796943FF1A92A92FE3435F8F445EEB5FC6BDB14997E42A65745DA"
+    },
+    {
+      "path": "leandesk/update_checker.py",
+      "size": 296,
+      "sha256": "E9AADA5FAEE0CDDC8E0D79ACE18B236F87D325E87087E4E27AD973641B025B49"
+    },
+    {
+      "path": "leandesk/updates/__init__.py",
+      "size": 667,
+      "sha256": "C155A52DF65014BE3E0100B8FBBD9564C3232555944C381D6FDA27E9AED4D3EA"
+    },
+    {
+      "path": "leandesk/updates/update_checker.py",
+      "size": 8119,
+      "sha256": "DA01B1C6F168F306E8947432D12708EEAC4FD38B268BD9EF9DDAA9C964917772"
+    },
+    {
+      "path": "leandesk/updates/update_manifest.py",
+      "size": 4481,
+      "sha256": "03911DD1651E16F152E2D78B357C7215E1D71BE745A832A89EAD09EB4FD9DFD1"
+    },
+    {
+      "path": "leandesk/updates/version_compare.py",
+      "size": 3638,
+      "sha256": "432EFD245E50ABD1D169298F69A934F83F1B32180C59E0AB8CB3957A8C9AECE9"
+    },
+    {
+      "path": "leandesk/writer.py",
+      "size": 65119,
+      "sha256": "8DDE0F2A38D3E2CE07272E943F2CCD33505F650A3AB22D8794B68C4FFA231427"
+    },
+    {
+      "path": "make_artwork.py",
+      "size": 4919,
+      "sha256": "D3F37CE7D88040E420C1503C6626D00F3D0D3DC084EBA92B25646DFE44F24CB2"
+    },
+    {
+      "path": "requirements.lock.txt",
+      "size": 142,
+      "sha256": "1E4D20115E9D4528BD4E481B7A2AC6ACEA505BEE04592DA80B201F9E9A35FD7C"
+    },
+    {
+      "path": "requirements.txt",
+      "size": 25,
+      "sha256": "AFC73932DA04B8833D5E39E973B53774F10039D995044C706EB1CD50B41938D3"
+    },
+    {
+      "path": "test_compatibility.py",
+      "size": 3032,
+      "sha256": "ACEDD5AD2A5C1B0472AAA3E1914E996843CECFAEB47A4C77E7854FDEC14E0D8F"
+    },
+    {
+      "path": "test_leandesk.py",
+      "size": 10651,
+      "sha256": "9C41FC91F3368F5D13D7F372500B60B2B940F6E37F6E40649E5C676E2C6D2D74"
+    },
+    {
+      "path": "tests/fixtures/correction_3/OFFICE_DUPLICATE_PARTS/conflicting-duplicate.docx",
+      "size": 37240,
+      "sha256": "429AA8417FE00B8B8396741FB59EF44FBFEA41250A989203C5F588463D8CA4CC"
+    },
+    {
+      "path": "tests/fixtures/correction_3/OFFICE_DUPLICATE_PARTS/conflicting-duplicate.pptx",
+      "size": 28753,
+      "sha256": "5104D5D47AC89FDE4BBCE1B407A37BBC98D1271D597065D258B949D8BC6F21B3"
+    },
+    {
+      "path": "tests/fixtures/correction_3/OFFICE_DUPLICATE_PARTS/conflicting-duplicate.xlsx",
+      "size": 5286,
+      "sha256": "3A04D4F7B874724033802743E216E4AE45CF5A24D3B9EECDD198E9BF8CE70D5A"
+    },
+    {
+      "path": "tests/fixtures/correction_3/RTF/qa_broken_leandesk_generated.rtf",
+      "size": 75,
+      "sha256": "FB7F6FE4B9228AEBBD644BA8F29E34CD44F03C7976A39C47374DBA5BF4A6BA12"
+    },
+    {
+      "path": "tests/fixtures/correction_3/RTF/standard_unicode.rtf",
+      "size": 86,
+      "sha256": "8A073C83899469470132C2306AA3FAEAE79D9E2E0AC4F9784EA7A7B30C26FF1F"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp65001_hex.rtf",
+      "size": 34,
+      "sha256": "163C8F212B84BB43582B304F72108C03B865F913A0928BE7FAF2F9D9193B2AA9"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp65001_raw.rtf",
+      "size": 28,
+      "sha256": "79F5322106B723709FD5FC82D934278F70542E0830F53124030630F94D706533"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp932_control_boundary.rtf",
+      "size": 34,
+      "sha256": "312096B15FA8B554856555274020D4B3D1CCA09DDE2DBBCAA773C748B4F6215F"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp932_group_boundary.rtf",
+      "size": 36,
+      "sha256": "A3FE5FFAFF6F7BC5D77B90511389AD2D0F42FD0D99BA34BF9AE915B182FAB3B3"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp932_hex.rtf",
+      "size": 32,
+      "sha256": "967146A3B0EAD34050E0B83FAC4EEAF5B6685CEEC5208ECC6320A36A02861A66"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp932_raw.rtf",
+      "size": 26,
+      "sha256": "BC6930C857061D32EB2D354C34D3FF84DBC45FF89F996311D49E46649328E66D"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp936_hex.rtf",
+      "size": 32,
+      "sha256": "D7817D759799A3115223837528EA4F774BE544C0D9BA175A0B0CFB2669B84892"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp936_raw.rtf",
+      "size": 26,
+      "sha256": "53F398AAB2C74A7F210DEE6B158415F5BD600D1288B1206738B80D7FA8968CD6"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp949_hex.rtf",
+      "size": 32,
+      "sha256": "4D09D1646C6C32B4DA11AECD3635652EFF979896622D9867D3FDA52903DBBBC5"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/cp949_raw.rtf",
+      "size": 26,
+      "sha256": "DA36D5EFD72C2148F4A2DF30103FBE5FF071DCBB70E24049DE1F59CD1A5E1CB9"
+    },
+    {
+      "path": "tests/fixtures/correction_4/RTF/multicodepage_composite.rtf",
+      "size": 102,
+      "sha256": "C953BEFABE3850F377C0989512EBFF21B3F21AA4DC80001268F90ACAFFD04626"
+    },
+    {
+      "path": "tests/test_correction_1_safety.py",
+      "size": 3084,
+      "sha256": "C9DD5266D86C5847A587392C712C950B70C10C8B10C811770AD388648C3D7165"
+    },
+    {
+      "path": "tests/test_correction_2_qa.py",
+      "size": 27450,
+      "sha256": "93DF58ED73EC56A43FA1EEC4A8DAB3723EB34EA4FE9A1B174D24D0522E5EA9DE"
+    },
+    {
+      "path": "tests/test_correction_3_qa.py",
+      "size": 30720,
+      "sha256": "723ABF627BEBBA7BB883582FCF9EFC615BF0561BF9AB4A049B3EFA700DEE38BC"
+    },
+    {
+      "path": "tests/test_correction_4_qa.py",
+      "size": 25088,
+      "sha256": "3C9BC8D9F0396CAADD174AA286F58DDD8377AD98A4A34FB65A624F91DDE98E07"
+    },
+    {
+      "path": "tests/test_correction_5_qa.py",
+      "size": 34595,
+      "sha256": "3577530E6E4461601F285FA3DD261E8F7B39788C6AAF9EFF3202A8C6F770D855"
+    },
+    {
+      "path": "tests/test_correction_6_qa.py",
+      "size": 6549,
+      "sha256": "0E77DC460E64E9D2D3257FF3D8B6263F0E8B96F99178208C3A9AEBB71A2AC1BD"
+    },
+    {
+      "path": "tools/package_cleanliness.py",
+      "size": 3953,
+      "sha256": "4C8BF4CDC9F3BC32F6A2589B16A5C45BFAAB8F6DD3C6223EFAB30D4622717D5C"
+    },
+    {
+      "path": "tools/run_authoritative_tests.py",
+      "size": 9184,
+      "sha256": "C891DDDA33420DE1E7DC21D938011032856E3D77B977BDED164DE4C4B4327A5E"
+    },
+    {
+      "path": "tools/source_manifest.py",
+      "size": 4159,
+      "sha256": "280C976F3D26C99C3EA5225F8E7DCF7422FCED8329EF2698B5B500F9EE18646C"
+    },
+    {
+      "path": "tools/validate_build_gate.py",
+      "size": 4776,
+      "sha256": "714D4C835C0D7A227419957BBD3E4D9C338D24BF10B781002D24CD0010794361"
+    },
+    {
+      "path": "version_info.txt",
+      "size": 861,
+      "sha256": "6EE210CB0C971BAB606F0E846D21816E738716454572B07D20E4056927B6BBF8"
+    }
+  ]
+}
