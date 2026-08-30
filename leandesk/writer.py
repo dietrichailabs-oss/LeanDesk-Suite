@@ -915,7 +915,7 @@ class WriterFrame(ttk.Frame):
         messagebox.showinfo("Writer Shortcuts", "Ctrl+N  New\nCtrl+O  Open\nCtrl+S  Save\nCtrl+F  Find\nCtrl+B  Bold\nCtrl+I  Italic\nCtrl+U  Underline\nCtrl+mouse wheel  Zoom", parent=self)
 
     def show_writer_about(self) -> None:
-        messagebox.showinfo("About LeanDesk Writer", "LeanDesk Writer 0.8.0\n\nClean grouped ribbon, offline spell checking with personal dictionary, paragraph spacing, recovery, DOCX workflows, and PDF export.", parent=self)
+        messagebox.showinfo("About LeanDesk Writer", "LeanDesk Writer 0.8.1\n\nClean grouped ribbon, offline spell checking with personal dictionary, paragraph spacing, recovery, DOCX workflows, and PDF export.", parent=self)
 
     def export_pdf(self) -> bool:
         value = filedialog.asksaveasfilename(parent=self, defaultextension=".pdf", filetypes=(("PDF", "*.pdf"),))

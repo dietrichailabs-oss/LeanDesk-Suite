@@ -24,7 +24,7 @@ from .data_boundary import (
 )
 
 APP_NAME = "LeanDesk Suite"
-APP_VERSION = "0.8.0"
+APP_VERSION = "0.8.1"
 PUBLISHER = "Dietrich AI Labs"
 SETTINGS_SCHEMA_VERSION = 1
 STORE_SCHEMA_VERSION = 1

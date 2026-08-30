@@ -52,7 +52,7 @@ def build_manifest(root: Path) -> dict[str, Any]:
     identity = tree_identity(rows)
     return {
         "schema": 2,
-        "candidate": "0.8.0-reconstructed-correction-6",
+        "candidate": "0.8.1-hotfix",
         "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "source_tree_id": identity,

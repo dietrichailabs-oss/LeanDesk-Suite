@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.1 — UI and Update Hotfix Candidate
+
+- Restores all ten historically approved suite themes with live Settings selection and persistence.
+- Restores visible Sheets cell boundaries and stronger per-cell selection in dark and light themes.
+- Repairs the fixed official update endpoint compatibility and adds useful fail-safe manual diagnostics.
+- Engineering candidate only; Independent QA approval is not claimed.
+
 ## 0.8.0 Reconstructed Correction 5 — QA Resubmission
 
 - Bound backup restore verification, extraction, manifest use, and reported SHA-256 to one private immutable source snapshot rather than repeatedly reopening a replaceable pathname

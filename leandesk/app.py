@@ -16,7 +16,8 @@ from .notes import NotesFrame
 from .organizer import CalendarFrame, ContactsFrame, TasksFrame
 from .sheets import SheetsFrame
 from .slides import SlidesFrame
-from .ui import COLORS, configure_suite_styles
+from .themes import get_theme
+from .ui import COLORS, apply_suite_theme, configure_suite_styles, theme_names
 from .writer import WriterFrame
 from .compatibility import cleanup_stale_conversion_roots, module_for_suffix
 from .update_checker import MANIFEST_URL, UpdateResult, check_async, set_enabled
@@ -32,6 +33,10 @@ def resource_path(name: str) -> Path:
 class LeanDeskApp(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
+        self.settings = AppSettings.load()
+        startup_theme = get_theme(self.settings.theme)
+        self.settings.theme = startup_theme.name
+        configure_suite_styles(self, startup_theme.name)
         self.title(f"{APP_NAME} {APP_VERSION}")
         self.geometry("1580x940")
         self.minsize(1180, 720)
@@ -47,7 +52,6 @@ class LeanDeskApp(tk.Tk):
         except Exception:
             # Conversion residue cleanup is non-critical and must never block launch.
             pass
-        self.settings = AppSettings.load()
         self.recent = RecentFiles()
         self.recovery = RecoveryStore()
         self._update_results: queue.Queue[UpdateResult] = queue.Queue()
@@ -57,7 +61,6 @@ class LeanDeskApp(tk.Tk):
             set_enabled(self.settings.auto_check_updates)
         except Exception:
             pass
-        configure_suite_styles(self)
         self.frames: dict[str, ttk.Frame] = {}
         self.home_frame: ttk.Frame | None = None
         self.recent_tree: ttk.Treeview | None = None
@@ -308,6 +311,21 @@ class LeanDeskApp(tk.Tk):
         card.pack(fill="x")
         live_var = tk.BooleanVar(value=self.settings.live_spellcheck)
         update_var = tk.BooleanVar(value=self.settings.auto_check_updates)
+        theme_var = tk.StringVar(value=self.settings.theme)
+        theme_description = tk.StringVar(value=get_theme(theme_var.get()).description)
+        ttk.Label(card, text="APPEARANCE", style="Panel.TLabel", foreground=COLORS["copper"], font=("Segoe UI Semibold", 10)).pack(anchor="w", padx=18, pady=(18, 5))
+        ttk.Label(card, text="Suite theme", style="Panel.TLabel", foreground=COLORS["muted"]).pack(anchor="w", padx=18)
+        theme_picker = ttk.Combobox(card, textvariable=theme_var, values=theme_names(), state="readonly", width=28)
+        theme_picker.pack(anchor="w", padx=18, pady=(3, 5))
+        ttk.Label(card, textvariable=theme_description, style="Panel.TLabel", foreground=COLORS["muted"], wraplength=720).pack(anchor="w", padx=18, pady=(0, 10))
+
+        def preview_theme(_event=None) -> None:
+            theme = apply_suite_theme(self, theme_var.get())
+            theme_var.set(theme.name)
+            theme_description.set(theme.description)
+
+        theme_picker.bind("<<ComboboxSelected>>", preview_theme)
+        ttk.Separator(card).pack(fill="x", padx=18, pady=8)
         ttk.Checkbutton(card, text="Enable live Writer spell checking", variable=live_var).pack(anchor="w", padx=18, pady=(18, 8))
         ttk.Label(card, text="Autosave recovery interval (seconds)", style="Panel.TLabel", foreground=COLORS["muted"]).pack(anchor="w", padx=18)
         autosave = tk.StringVar(value=str(self.settings.autosave_seconds))
@@ -343,6 +361,7 @@ class LeanDeskApp(tk.Tk):
         ttk.Label(card, text=f"Local data: {DATA_ROOT}", style="Panel.TLabel", foreground=COLORS["muted"]).pack(anchor="w", padx=18, pady=(0, 12))
 
         def save_settings() -> None:
+            self.settings.theme = get_theme(theme_var.get()).name
             self.settings.live_spellcheck = live_var.get()
             self.settings.auto_check_updates = update_var.get()
             try:
@@ -438,9 +457,12 @@ class LeanDeskApp(tk.Tk):
         elif result.status == "current" and manual:
             messagebox.showinfo(APP_NAME, "LeanDesk Suite is up to date.", parent=self)
         elif result.status in {"error"} and manual:
+            diagnostic = result.error or "The official update service could not be reached."
             messagebox.showinfo(
                 APP_NAME,
-                "LeanDesk couldn't check for updates right now. You can continue using the application normally.",
+                f"LeanDesk couldn't check for updates right now.\n\n{diagnostic}\n\n"
+                f"Diagnostic category: {result.error_category or 'unknown'}\n\n"
+                "You can continue using the application normally.",
                 parent=self,
             )
         # disabled and not_due are intentionally quiet for automatic checks.

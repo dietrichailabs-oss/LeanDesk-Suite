@@ -1,12 +1,12 @@
 ![LeanDesk Suite banner](assets/leandesk-suite-banner.png)
 
-# LeanDesk Suite 0.8.0 — All-Modules Functional Preview
+# LeanDesk Suite 0.8.1 — UI and Update Hotfix Candidate
 
 **Lean tools. Fast work.**
 
 LeanDesk Suite is a local-first Windows productivity suite built around the tools people use most, without a required account, cloud service, telemetry, or subscription.
 
-Version 0.8.0 is a reconstructed compatibility candidate in independent-QA correction. Every planned module opens from the same suite shell, but cross-suite import remains best-effort rather than a claim of pixel-perfect Microsoft Office, LibreOffice/OpenOffice, or Apple iWork round trips.
+Version 0.8.1 is an Engineering hotfix candidate routed to Independent QA. It restores the ten-theme suite appearance system, visible Sheets cell boundaries, and the fixed official update check while preserving the C6 application and compatibility baseline. Cross-suite import remains best-effort rather than a claim of pixel-perfect Microsoft Office, LibreOffice/OpenOffice, or Apple iWork round trips.
 
 ## Included modules
 

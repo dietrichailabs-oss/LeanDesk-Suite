@@ -1,16 +1,16 @@
 {
   "schema": 2,
-  "candidate": "0.8.0-reconstructed-correction-6",
+  "candidate": "0.8.1-hotfix",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-08-26T11:26:24.312511+00:00",
-  "source_tree_id": "1A373230C55849A405B715C663FD7665C72B3B2DD3CCD365F913A9E55041E77E",
+  "generated_utc": "2026-08-30T23:29:07.911116+00:00",
+  "source_tree_id": "9C421F3255BE6D2127E5902643FECDA8880A0C2E3A910D474EB1A74019F34B03",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 98,
-  "total_bytes": 3860388,
+  "file_count": 100,
+  "total_bytes": 3894380,
   "files": [
     {
       "path": ".gitignore",
@@ -24,8 +24,8 @@
     },
     {
       "path": "BUILD_LEANDESK_SUITE.ps1",
-      "size": 13760,
-      "sha256": "118E479A3A33D61E89A2D02EFAE34EA08808C945E97DACA332FC1688374E0828"
+      "size": 14037,
+      "sha256": "957FE5246B1BFC4C18407E381677B01067E189F14D859EACAC5C16328AE92C72"
     },
     {
       "path": "BUILD_READINESS.txt",
@@ -34,8 +34,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "size": 6829,
-      "sha256": "85C1B58C90D2BDA19DEFAB5E35CD8400D7B6370D355A9B4F74EA476114282373"
+      "size": 7250,
+      "sha256": "7C165CA6272F3A88358280641B896EDDEC70818BEC14159B02A8B6C6DE0FF8EE"
     },
     {
       "path": "DEPENDENCY_LOCK_STATUS.json",
@@ -50,7 +50,7 @@
     {
       "path": "EULA.txt",
       "size": 2774,
-      "sha256": "05310415447D3AB66790020EE22D36DB44F7EB92FE6FB81637D7B5E09C84B191"
+      "sha256": "6F2985869A4D2341EEF2400044042D4DC69A4BFF879F9D293321CDDC6169D60D"
     },
     {
       "path": "FACEBOOK_LAUNCH_POST.txt",
@@ -70,7 +70,7 @@
     {
       "path": "LeanDesk_Suite_Installer.iss",
       "size": 19948,
-      "sha256": "C3AC5686EE45816FBAE3B8F7528896B5348F00A7325C45589C04A44591443EDA"
+      "sha256": "DBD620D51D3F70815007AFA449F4E8392C05B5EDA7E44BCBC92EF90B8851E739"
     },
     {
       "path": "MODULE_ACCEPTANCE_ORDER.md",
@@ -79,8 +79,8 @@
     },
     {
       "path": "README.md",
-      "size": 7370,
-      "sha256": "9D2545BF90EC596043A36E20E54F80DF3310A477FE7A688EB633777242F4EB21"
+      "size": 7483,
+      "sha256": "7CAAD1BB43C0CB3C52A8A35AA1DC0D530B4498B7CA84A0A4DA31D1165D1B6E0E"
     },
     {
       "path": "RELEASE_MANIFEST.txt",
@@ -220,12 +220,12 @@
     {
       "path": "leandesk/__init__.py",
       "size": 53,
-      "sha256": "17511F858879A8AB8AA521949B2C996BCC7C87C1C744A22498FB396061A0075F"
+      "sha256": "B330E7F4C67C3A897437685D7CC9CCA1110FA55A30EF0673B70E1D017EAB40B3"
     },
     {
       "path": "leandesk/app.py",
-      "size": 28918,
-      "sha256": "D4C451E2ADAF4BE9C517A0821E70FF99066F20343E7E985D0E03A7C24922EF0F"
+      "size": 30481,
+      "sha256": "9E9F46C1565BE46AFDCAD76A1609FE193C9AFB964499FDC5D5EB21E00F6D2BFB"
     },
     {
       "path": "leandesk/backup_integrity.py",
@@ -245,7 +245,7 @@
     {
       "path": "leandesk/core.py",
       "size": 17425,
-      "sha256": "99220620C4E98E634E36C6FC9A1F504B998B4B7DE88E84890E7D1D1F44B4BBC4"
+      "sha256": "EC8959CD813B5760FAEA65E4278A79548E5B2DEEE17D7A93937A399273886B46"
     },
     {
       "path": "leandesk/data_boundary.py",
@@ -294,8 +294,8 @@
     },
     {
       "path": "leandesk/sheets.py",
-      "size": 34264,
-      "sha256": "5C1118117E4739B385614CA46B8C12ADD2BAEAD0D5A6A974C2286B7B0EF8DE8A"
+      "size": 40316,
+      "sha256": "1518E4B6F84E8E3E9831B2234DCED0802991A8BC15E61A2AD58E96EB53D789BF"
     },
     {
       "path": "leandesk/slides.py",
@@ -308,9 +308,14 @@
       "sha256": "C987C85EDEB4D7E71C402E61E1252C4CD39E580466389EAA6095AEB997079471"
     },
     {
+      "path": "leandesk/themes.py",
+      "size": 7052,
+      "sha256": "F8DAEFFD856E21886A02D277CE8B908D4F5A61B637852A5F691DEE6324C349BA"
+    },
+    {
       "path": "leandesk/ui.py",
-      "size": 5274,
-      "sha256": "34A119A9E1D796943FF1A92A92FE3435F8F445EEB5FC6BDB14997E42A65745DA"
+      "size": 13128,
+      "sha256": "15F31AA7A47F3A8E0F4274335BAED95D334B4BAAD57DEF1E84C1C7AA08B0D6B9"
     },
     {
       "path": "leandesk/update_checker.py",
@@ -324,13 +329,13 @@
     },
     {
       "path": "leandesk/updates/update_checker.py",
-      "size": 8119,
-      "sha256": "DA01B1C6F168F306E8947432D12708EEAC4FD38B268BD9EF9DDAA9C964917772"
+      "size": 9569,
+      "sha256": "D5E6D1C84EF8999016A4AA5918FDF496C492898B7ABA6E7DF567254E6559AA71"
     },
     {
       "path": "leandesk/updates/update_manifest.py",
-      "size": 4481,
-      "sha256": "03911DD1651E16F152E2D78B357C7215E1D71BE745A832A89EAD09EB4FD9DFD1"
+      "size": 5115,
+      "sha256": "76EF7E0902BDBC945D0C851BA089FA154AC0A6A76302AA8C0C6E59A9FD34D14F"
     },
     {
       "path": "leandesk/updates/version_compare.py",
@@ -340,7 +345,7 @@
     {
       "path": "leandesk/writer.py",
       "size": 65119,
-      "sha256": "8DDE0F2A38D3E2CE07272E943F2CCD33505F650A3AB22D8794B68C4FFA231427"
+      "sha256": "ADC832DC20334730C5C783C28176DC1FC65838AD5DFA1F444DAFD9B349DDA339"
     },
     {
       "path": "make_artwork.py",
@@ -474,8 +479,13 @@
     },
     {
       "path": "tests/test_correction_6_qa.py",
-      "size": 6549,
-      "sha256": "0E77DC460E64E9D2D3257FF3D8B6263F0E8B96F99178208C3A9AEBB71A2AC1BD"
+      "size": 6529,
+      "sha256": "CBDA066C5518BF7E3088B36A77AC14076CA396EA33E002EED57DCE585CB91D79"
+    },
+    {
+      "path": "tests/test_hotfix_081.py",
+      "size": 7390,
+      "sha256": "2D04E5FA38384ECCA76E23FB0A52B18E1C08FD164369C0C8F703487CFCC6E99B"
     },
     {
       "path": "tools/package_cleanliness.py",
@@ -484,13 +494,13 @@
     },
     {
       "path": "tools/run_authoritative_tests.py",
-      "size": 9184,
-      "sha256": "C891DDDA33420DE1E7DC21D938011032856E3D77B977BDED164DE4C4B4327A5E"
+      "size": 10410,
+      "sha256": "CBD958608214473C9C619EED8BC2ED71B9339806639257BA82C474B89B80F396"
     },
     {
       "path": "tools/source_manifest.py",
-      "size": 4159,
-      "sha256": "280C976F3D26C99C3EA5225F8E7DCF7422FCED8329EF2698B5B500F9EE18646C"
+      "size": 4139,
+      "sha256": "89DC6331E2668676F84F37A161493A37656591A797818AB7FAA351EF38EDC7A8"
     },
     {
       "path": "tools/validate_build_gate.py",
@@ -500,7 +510,7 @@
     {
       "path": "version_info.txt",
       "size": 861,
-      "sha256": "6EE210CB0C971BAB606F0E846D21816E738716454572B07D20E4056927B6BBF8"
+      "sha256": "6042647BE8754D3FA3183AE9DA157CB0A3A46C4D346F30EDA33937E6603589BE"
     }
   ]
 }

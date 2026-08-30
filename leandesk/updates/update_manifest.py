@@ -11,6 +11,7 @@ from .version_compare import Version, VersionError
 
 PRODUCT = "leandesk-suite"
 OFFICIAL_HOST = "www.dietrichailabs.com"
+OFFICIAL_DOWNLOAD_HOST = "downloads.dietrichailabs.com"
 MANIFEST_URL = "https://www.dietrichailabs.com/updates/leandesk.json"
 MAX_RESPONSE_BYTES = 64 * 1024
 
@@ -19,7 +20,13 @@ class ManifestError(ValueError):
     pass
 
 
-def _official_https(value: Any, *, field: str, required_path_prefix: str | None = None) -> str | None:
+def _official_https(
+    value: Any,
+    *,
+    field: str,
+    allowed_hosts: tuple[str, ...] = (OFFICIAL_HOST,),
+    required_path_prefixes: tuple[str, ...] = (),
+) -> str | None:
     if value in (None, ""):
         return None
     if not isinstance(value, str) or len(value) > 2048:
@@ -27,22 +34,32 @@ def _official_https(value: Any, *, field: str, required_path_prefix: str | None 
     parts = urlsplit(value)
     if (
         parts.scheme.lower() != "https"
-        or (parts.hostname or "").lower() != OFFICIAL_HOST
+        or (parts.hostname or "").lower() not in allowed_hosts
         or parts.username
         or parts.password
         or parts.port not in (None, 443)
         or parts.fragment
     ):
         raise ManifestError(f"{field} must be a credential-free official Dietrich AI Labs HTTPS URL.")
-    if required_path_prefix:
-        prefix = required_path_prefix.rstrip("/") or "/"
-        if parts.path != prefix and not parts.path.startswith(prefix + "/"):
+    if required_path_prefixes:
+        accepted = False
+        for required_path_prefix in required_path_prefixes:
+            prefix = required_path_prefix.rstrip("/") or "/"
+            if (
+                parts.path == prefix
+                or parts.path.startswith(prefix + "/")
+                or (prefix.endswith("_") and parts.path.startswith(prefix))
+            ):
+                accepted = True
+                break
+        if not accepted:
             raise ManifestError(f"Unexpected {field} path.")
-    return urlunsplit(("https", OFFICIAL_HOST, parts.path or "/", parts.query, ""))
+    host = (parts.hostname or "").lower()
+    return urlunsplit(("https", host, parts.path or "/", parts.query, ""))
 
 
 def validate_final_manifest_url(value: str) -> None:
-    normalized = _official_https(value, field="final manifest URL", required_path_prefix="/updates/")
+    normalized = _official_https(value, field="final manifest URL", required_path_prefixes=("/updates/",))
     if normalized != MANIFEST_URL:
         raise ManifestError("The update manifest response did not come from the approved fixed endpoint.")
 
@@ -90,8 +107,15 @@ def parse_manifest(data: bytes) -> UpdateManifest:
     else:
         published_at = None
 
-    release_url = _official_https(obj.get("release_url"), field="release_url", required_path_prefix="/apps/leandesk")
-    download_url = _official_https(obj.get("download_url"), field="download_url", required_path_prefix="/downloads")
+    release_url = _official_https(
+        obj.get("release_url"), field="release_url",
+        required_path_prefixes=("/leandesk.html", "/apps/leandesk"),
+    )
+    download_url = _official_https(
+        obj.get("download_url"), field="download_url",
+        allowed_hosts=(OFFICIAL_HOST, OFFICIAL_DOWNLOAD_HOST),
+        required_path_prefixes=("/downloads", "/LeanDesk_", "/LeandDesk_"),
+    )
     if release_url is None and download_url is None:
         raise ManifestError("The update manifest must provide an official release_url or download_url.")
     sha = obj.get("sha256") or None

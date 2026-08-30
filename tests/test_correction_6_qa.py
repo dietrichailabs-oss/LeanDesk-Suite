@@ -163,5 +163,5 @@ def test_correction_6_source_manifest_is_current_and_deterministic() -> None:
     result = verify_manifest(ROOT)
     manifest = build_manifest(ROOT)
     assert result["valid"], result["errors"]
-    assert manifest["candidate"] == "0.8.0-reconstructed-correction-6"
+    assert manifest["candidate"] == "0.8.1-hotfix"
     assert manifest["source_tree_id"] == (ROOT / "SOURCE_TREE_ID.txt").read_text(encoding="ascii").strip()

@@ -354,71 +354,120 @@ class WorkbookModel:
 class SheetGrid(ttk.Frame):
     ROWS = MAX_ROWS
     COLS = MAX_COLS
+    ROW_HEIGHT = 29
+    HEADER_HEIGHT = 32
+    ROW_HEADER_WIDTH = 48
 
     def __init__(self, master, model: SheetModel, on_change, on_selection):
         super().__init__(master)
         self.model = model
         self.on_change = on_change
         self.on_selection = on_selection
-        columns = [column_name(i) for i in range(self.COLS)]
-        self.tree = ttk.Treeview(self, columns=columns, show="tree headings", selectmode="browse")
-        self.tree.heading("#0", text="#")
-        self.tree.column("#0", width=48, minwidth=48, stretch=False, anchor="center")
-        for name in columns:
-            self.tree.heading(name, text=name)
-            self.tree.column(name, width=model.column_widths.get(name, 92), minwidth=45, stretch=False, anchor="w")
-        yscroll = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
-        xscroll = ttk.Scrollbar(self, orient="horizontal", command=self.tree.xview)
-        self.tree.configure(yscrollcommand=yscroll.set, xscrollcommand=xscroll.set)
-        self.tree.grid(row=0, column=0, sticky="nsew")
+        self.column_widths = [model.column_widths.get(column_name(index), 92) for index in range(self.COLS)]
+        self.canvas = tk.Canvas(
+            self, background=COLORS["field"], highlightthickness=1,
+            highlightbackground=COLORS["line"], takefocus=True,
+        )
+        # Compatibility alias retained for automation that locates SheetGrid.tree.
+        self.tree = self.canvas
+        yscroll = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        xscroll = ttk.Scrollbar(self, orient="horizontal", command=self.canvas.xview)
+        self.canvas.configure(yscrollcommand=yscroll.set, xscrollcommand=xscroll.set)
+        self.canvas.grid(row=0, column=0, sticky="nsew")
         yscroll.grid(row=0, column=1, sticky="ns")
         xscroll.grid(row=1, column=0, sticky="ew")
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
-        for row in range(self.ROWS):
-            self.tree.insert("", "end", iid=str(row + 1), text=str(row + 1), values=[""] * self.COLS)
-        self.tree.bind("<Double-1>", self.begin_edit)
-        self.tree.bind("<Return>", self.begin_edit)
-        self.tree.bind("<<TreeviewSelect>>", self._selection_changed)
-        self.tree.bind("<ButtonRelease-1>", self._selection_changed)
         self.editor: ttk.Entry | None = None
         self.active_address = "A1"
+        self._resize_column: int | None = None
+        self._resize_start_x = 0.0
+        self._resize_start_width = 0
+        self.canvas.bind("<Button-1>", self._button_press)
+        self.canvas.bind("<B1-Motion>", self._resize_motion)
+        self.canvas.bind("<ButtonRelease-1>", self._button_release)
+        self.canvas.bind("<Double-1>", self.begin_edit)
+        self.canvas.bind("<Return>", self.begin_edit)
+        self.canvas.bind("<Up>", lambda event: self._move_selection(-1, 0))
+        self.canvas.bind("<Down>", lambda event: self._move_selection(1, 0))
+        self.canvas.bind("<Left>", lambda event: self._move_selection(0, -1))
+        self.canvas.bind("<Right>", lambda event: self._move_selection(0, 1))
+        self.canvas.bind("<MouseWheel>", self._mousewheel)
+        self.canvas.bind("<Shift-MouseWheel>", self._horizontal_mousewheel)
+        self.bind("<<LeanDeskThemeChanged>>", lambda _event: self.refresh())
         self.refresh()
 
     def refresh(self) -> None:
+        self.canvas.delete("grid")
+        self._x_positions = [self.ROW_HEADER_WIDTH]
+        for width in self.column_widths:
+            self._x_positions.append(self._x_positions[-1] + width)
+        total_width = self._x_positions[-1]
+        total_height = self.HEADER_HEIGHT + self.ROWS * self.ROW_HEIGHT
+        self.canvas.configure(scrollregion=(0, 0, total_width, total_height), background=COLORS["field"], highlightbackground=COLORS["line"])
+        self.canvas.create_rectangle(0, 0, self.ROW_HEADER_WIDTH, self.HEADER_HEIGHT, fill=COLORS["panel2"], outline=COLORS["line"], tags="grid")
+        self.canvas.create_text(self.ROW_HEADER_WIDTH / 2, self.HEADER_HEIGHT / 2, text="#", fill=COLORS["text"], font=("Segoe UI Semibold", 9), tags="grid")
+        for col in range(self.COLS):
+            left, right = self._x_positions[col], self._x_positions[col + 1]
+            self.canvas.create_rectangle(left, 0, right, self.HEADER_HEIGHT, fill=COLORS["panel2"], outline=COLORS["line"], tags="grid")
+            self.canvas.create_text((left + right) / 2, self.HEADER_HEIGHT / 2, text=column_name(col), fill=COLORS["text"], font=("Segoe UI Semibold", 9), tags="grid")
+        active_row, active_col = split_cell(self.active_address)
         for row in range(self.ROWS):
-            values = []
+            top = self.HEADER_HEIGHT + row * self.ROW_HEIGHT
+            bottom = top + self.ROW_HEIGHT
+            self.canvas.create_rectangle(0, top, self.ROW_HEADER_WIDTH, bottom, fill=COLORS["selection"] if row == active_row else COLORS["panel2"], outline=COLORS["line"], tags="grid")
+            self.canvas.create_text(self.ROW_HEADER_WIDTH / 2, (top + bottom) / 2, text=str(row + 1), fill=COLORS["button_active_text"] if row == active_row else COLORS["text"], font=("Segoe UI", 9), tags="grid")
             for col in range(self.COLS):
+                left, right = self._x_positions[col], self._x_positions[col + 1]
+                selected = row == active_row and col == active_col
+                self.canvas.create_rectangle(left, top, right, bottom, fill=COLORS["selection"] if selected else COLORS["field"], outline=COLORS["focus"] if selected else COLORS["line"], width=2 if selected else 1, tags="grid")
                 address = f"{column_name(col)}{row + 1}"
                 value = self.model.value(address)
-                values.append(value)
-            self.tree.item(str(row + 1), values=values)
+                if value != "":
+                    self.canvas.create_text(left + 6, (top + bottom) / 2, text=str(value), anchor="w", width=max(1, right - left - 12), fill=COLORS["button_active_text"] if selected else COLORS["field_text"], font=("Segoe UI", 9), tags="grid")
+
+    def _column_at(self, x: float) -> int | None:
+        for col in range(self.COLS):
+            if self._x_positions[col] <= x < self._x_positions[col + 1]:
+                return col
+        return None
 
     def _address_from_event(self, event=None) -> str:
-        if event is not None:
-            row_id = self.tree.identify_row(event.y)
-            column_id = self.tree.identify_column(event.x)
-            if row_id and column_id and column_id.startswith("#") and column_id != "#0":
-                try:
-                    col = int(column_id[1:]) - 1
-                    return f"{column_name(col)}{int(row_id)}"
-                except (ValueError, TypeError):
-                    pass
-        row_id = self.tree.focus() or "1"
-        return f"A{int(row_id)}"
+        if event is None:
+            return self.active_address
+        x = self.canvas.canvasx(event.x)
+        y = self.canvas.canvasy(event.y)
+        col = self._column_at(x)
+        row = int((y - self.HEADER_HEIGHT) // self.ROW_HEIGHT)
+        if col is not None and 0 <= row < self.ROWS:
+            return f"{column_name(col)}{row + 1}"
+        return self.active_address
 
     def _selection_changed(self, event=None) -> None:
         address = self._address_from_event(event)
         self.active_address = address
         self.on_selection(address, self.model.raw(address))
+        self.refresh()
 
     def select_address(self, address: str) -> None:
-        row, _col = split_cell(address)
-        self.tree.selection_set(str(row + 1))
-        self.tree.focus(str(row + 1))
-        self.tree.see(str(row + 1))
+        row, col = split_cell(address)
         self.active_address = address.upper()
         self.on_selection(self.active_address, self.model.raw(self.active_address))
+        self.refresh()
+        self.update_idletasks()
+        left, top, right, bottom = self._cell_bounds(row, col)
+        visible_left, visible_top = self.canvas.canvasx(0), self.canvas.canvasy(0)
+        visible_right = visible_left + self.canvas.winfo_width()
+        visible_bottom = visible_top + self.canvas.winfo_height()
+        total_width = max(1, self._x_positions[-1])
+        total_height = max(1, self.HEADER_HEIGHT + self.ROWS * self.ROW_HEIGHT)
+        if left < visible_left or right > visible_right:
+            self.canvas.xview_moveto(max(0.0, min(1.0, (left - self.ROW_HEADER_WIDTH) / total_width)))
+        if top < visible_top or bottom > visible_bottom:
+            self.canvas.yview_moveto(max(0.0, min(1.0, (top - self.HEADER_HEIGHT) / total_height)))
+
+    def _cell_bounds(self, row: int, col: int) -> tuple[float, float, float, float]:
+        return (self._x_positions[col], self.HEADER_HEIGHT + row * self.ROW_HEIGHT, self._x_positions[col + 1], self.HEADER_HEIGHT + (row + 1) * self.ROW_HEIGHT)
 
     def begin_edit(self, event=None):
         if event is not None:
@@ -426,16 +475,18 @@ class SheetGrid(ttk.Frame):
         else:
             address = self.active_address
         row, col = split_cell(address)
-        column_id = f"#{col + 1}"
-        bbox = self.tree.bbox(str(row + 1), column_id)
-        if not bbox:
+        left, top, right, bottom = self._cell_bounds(row, col)
+        x = left - self.canvas.canvasx(0)
+        y = top - self.canvas.canvasy(0)
+        if x >= self.canvas.winfo_width() or y >= self.canvas.winfo_height() or right <= self.canvas.canvasx(0) or bottom <= self.canvas.canvasy(0):
             return "break"
-        x, y, width, height = bbox
         if self.editor:
             self.editor.destroy()
-        self.editor = ttk.Entry(self.tree)
+        self.active_address = address
+        self.on_selection(address, self.model.raw(address))
+        self.editor = ttk.Entry(self.canvas)
         self.editor.insert(0, self.model.raw(address))
-        self.editor.place(x=x, y=y, width=width, height=height)
+        self.editor.place(x=x + 1, y=y + 1, width=max(20, right - left - 2), height=max(18, bottom - top - 2))
         self.editor.focus_set()
         self.editor.select_range(0, "end")
         self.editor.bind("<Return>", lambda _e: self.commit_edit(address))
@@ -460,6 +511,55 @@ class SheetGrid(ttk.Frame):
         if self.editor:
             self.editor.destroy()
             self.editor = None
+        return "break"
+
+    def _button_press(self, event):
+        self.canvas.focus_set()
+        x = self.canvas.canvasx(event.x)
+        y = self.canvas.canvasy(event.y)
+        if y < self.HEADER_HEIGHT:
+            for col in range(self.COLS):
+                if abs(x - self._x_positions[col + 1]) <= 5:
+                    self._resize_column = col
+                    self._resize_start_x = x
+                    self._resize_start_width = self.column_widths[col]
+                    self.canvas.configure(cursor="sb_h_double_arrow")
+                    return "break"
+        self._selection_changed(event)
+        return None
+
+    def _resize_motion(self, event):
+        if self._resize_column is None:
+            return None
+        x = self.canvas.canvasx(event.x)
+        width = max(45, min(500, int(self._resize_start_width + x - self._resize_start_x)))
+        self.column_widths[self._resize_column] = width
+        self.refresh()
+        return "break"
+
+    def _button_release(self, _event):
+        if self._resize_column is not None:
+            name = column_name(self._resize_column)
+            self.model.column_widths[name] = self.column_widths[self._resize_column]
+            self._resize_column = None
+            self.canvas.configure(cursor="")
+            self.on_change()
+            return "break"
+        return None
+
+    def _move_selection(self, row_delta: int, col_delta: int):
+        row, col = split_cell(self.active_address)
+        row = max(0, min(self.ROWS - 1, row + row_delta))
+        col = max(0, min(self.COLS - 1, col + col_delta))
+        self.select_address(f"{column_name(col)}{row + 1}")
+        return "break"
+
+    def _mousewheel(self, event):
+        self.canvas.yview_scroll(-1 if event.delta > 0 else 1, "units")
+        return "break"
+
+    def _horizontal_mousewheel(self, event):
+        self.canvas.xview_scroll(-1 if event.delta > 0 else 1, "units")
         return "break"
 
 
@@ -809,5 +909,4 @@ class SheetsFrame(ttk.Frame):
         self.dirty = True
         self.rebuild_tabs()
         self._update_title()
-
 

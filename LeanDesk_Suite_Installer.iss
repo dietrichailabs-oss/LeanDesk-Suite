@@ -1,12 +1,12 @@
 #ifndef SourceRoot
-  #define SourceRoot "Release\v0.8.0"
+  #define SourceRoot "Release\v0.8.1"
 #endif
 #ifndef OutputRoot
-  #define OutputRoot "Release\v0.8.0"
+  #define OutputRoot "Release\v0.8.1"
 #endif
 
 #define MyAppName "LeanDesk Suite"
-#define MyAppVersion "0.8.0"
+#define MyAppVersion "0.8.1"
 #define MyAppPublisher "Dietrich AI Labs"
 #define MyAppExeName "LeanDesk_Suite.exe"
 
@@ -21,7 +21,7 @@ DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir={#OutputRoot}
-OutputBaseFilename=LeanDesk_Suite_Setup_0.8.0
+OutputBaseFilename=LeanDesk_Suite_Setup_0.8.1
 SetupIconFile={#SourceRoot}\lean_desk_suite.ico
 UninstallDisplayIcon={app}\lean_desk_suite.ico
 Compression=lzma2/ultra64
@@ -31,7 +31,7 @@ LicenseFile=EULA.txt
 UsePreviousAppDir=yes
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
-VersionInfoVersion=0.8.0.0
+VersionInfoVersion=0.8.1.0
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription=LeanDesk Suite Installer
 VersionInfoProductName={#MyAppName}

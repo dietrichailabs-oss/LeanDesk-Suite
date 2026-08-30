@@ -24,7 +24,7 @@ import uuid
 from package_cleanliness import scan_tree
 from source_manifest import build_manifest, sha256_file, verify_manifest
 
-MIN_EXPECTED_TESTS = 355
+MIN_EXPECTED_TESTS = 372
 REQUIRED_TEST_FILES = (
     "test_leandesk.py",
     "test_compatibility.py",
@@ -34,6 +34,7 @@ REQUIRED_TEST_FILES = (
     "tests/test_correction_4_qa.py",
     "tests/test_correction_5_qa.py",
     "tests/test_correction_6_qa.py",
+    "tests/test_hotfix_081.py",
 )
 _EXCLUDED_SOURCE_PARTS = {".pytest_cache", "__pycache__", ".git", "build", "dist"}
 
@@ -129,6 +130,7 @@ def main(argv: list[str] | None = None) -> int:
         "collected_tests": 0,
         "test_exit_code": None,
         "test_output": "",
+        "execution_shards": [],
         "post_test_cleanliness": None,
         "status": "FAIL",
     }
@@ -204,13 +206,36 @@ def main(argv: list[str] | None = None) -> int:
 
     # Historical recursive-run marker retained for prior QA source assertions:
     # [sys.executable, "-m", "pytest", "-q"]
-    run = _run(
-        [sys.executable, "-m", "pytest", "-q", "--basetemp", str(execution_basetemp)],
-        root,
+    # Execute every recursively discovered test module in a fresh process. On
+    # Windows this prevents one destroyed Tk interpreter from contaminating a
+    # later GUI test while retaining the exact full-suite collection gate.
+    test_files = sorted(
+        path.relative_to(root)
+        for path in root.rglob("test*.py")
+        if not any(part in _EXCLUDED_SOURCE_PARTS for part in path.relative_to(root).parts)
     )
-    report["test_exit_code"] = run.returncode
-    report["test_output"] = run.stdout
-    print(run.stdout, end="")
+    execution_basetemp.mkdir(parents=True, exist_ok=True)
+    combined_output: list[str] = []
+    aggregate_exit_code = 0
+    for index, relative in enumerate(test_files):
+        shard_temp = execution_basetemp / f"{index:02d}-{relative.stem}"
+        shard = _run(
+            [sys.executable, "-m", "pytest", "-q", str(relative), "--basetemp", str(shard_temp)],
+            root,
+        )
+        print(shard.stdout, end="")
+        combined_output.append(f"===== {relative.as_posix()} =====\n{shard.stdout}")
+        report["execution_shards"].append(
+            {
+                "test_file": relative.as_posix(),
+                "exit_code": shard.returncode,
+                "output": shard.stdout,
+            }
+        )
+        if shard.returncode != 0 and aggregate_exit_code == 0:
+            aggregate_exit_code = shard.returncode
+    report["test_exit_code"] = aggregate_exit_code
+    report["test_output"] = "\n".join(combined_output)
 
     post_clean = scan_tree(root)
     report["post_test_cleanliness"] = post_clean
@@ -224,18 +249,18 @@ def main(argv: list[str] | None = None) -> int:
         and report["source_manifest_sha256_before"] == report["source_manifest_sha256_after"]
         and manifest_after["valid"]
     )
-    if run.returncode == 0 and not post_clean["clean"]:
+    if aggregate_exit_code == 0 and not post_clean["clean"]:
         print("Source staging became dirty during testing.", file=sys.stderr)
         report["status"] = "FAIL"
         return finish(7)
 
-    if run.returncode == 0 and not report["source_identity_match"]:
+    if aggregate_exit_code == 0 and not report["source_identity_match"]:
         print("Source identity changed during authoritative testing.", file=sys.stderr)
         report["status"] = "FAIL"
         return finish(10)
 
-    report["status"] = "PASS" if run.returncode == 0 and report["source_identity_match"] else "FAIL"
-    return finish(run.returncode)
+    report["status"] = "PASS" if aggregate_exit_code == 0 and report["source_identity_match"] else "FAIL"
+    return finish(aggregate_exit_code)
 
 
 if __name__ == "__main__":

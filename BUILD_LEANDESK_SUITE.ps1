@@ -8,12 +8,12 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Version = "0.8.0"
+$Version = "0.8.1"
 $ReleaseRoot = Join-Path $Root "Release\v$Version"
 $ReadyRoot = Join-Path $Root "Release\Release Ready"
 # Historical source-gate marker: Join-Path $env:TEMP "LeanDesk_0.8.0_Correction_4_Build_Venv"
 # Historical source-gate marker: Join-Path $env:TEMP "LeanDesk_0.8.0_Correction_5_Build_Venv"
-$Venv = Join-Path $env:TEMP "LeanDesk_0.8.0_Correction_6_Build_Venv"
+$Venv = Join-Path $env:TEMP "LeanDesk_0.8.1_Hotfix_Build_Venv"
 $Dist = Join-Path $Root "dist"
 $Build = Join-Path $Root "build"
 $BuildStartUtc = [DateTime]::UtcNow.ToString("o")
@@ -30,8 +30,8 @@ function Require-File([string]$Path) {
 
 function Find-SignTool {
     $patterns = @(
-        "$env:ProgramFiles(x86)\Windows Kits\10\bin\*\x64\signtool.exe",
-        "$env:ProgramFiles(x86)\Windows Kits\10\bin\x64\signtool.exe"
+        "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe",
+        "${env:ProgramFiles(x86)}\Windows Kits\10\bin\x64\signtool.exe"
     )
     foreach ($pattern in $patterns) {
         $found = Get-ChildItem -Path $pattern -ErrorAction SilentlyContinue |
@@ -74,6 +74,7 @@ $required = @(
     "tests\test_correction_1_safety.py", "tests\test_correction_2_qa.py",
     "tests\test_correction_3_qa.py", "tests\test_correction_4_qa.py",
     "tests\test_correction_5_qa.py", "tests\test_correction_6_qa.py"
+    "tests\test_hotfix_081.py"
 )
 foreach ($name in $required) { Require-File (Join-Path $Root $name) }
 
@@ -113,7 +114,7 @@ $VenvPython = Join-Path $Venv "Scripts\python.exe"
 
 Write-Step "Run canonical recursive automated gate"
 $RunId = [Guid]::NewGuid().ToString("N")
-$GateEvidenceRoot = Join-Path $env:LOCALAPPDATA "LeanDeskBuildEvidence\0.8.0-c6\$RunId"
+$GateEvidenceRoot = Join-Path $env:LOCALAPPDATA "LeanDeskBuildEvidence\0.8.1-hotfix\$RunId"
 New-Item $GateEvidenceRoot -ItemType Directory -Force | Out-Null
 $GateReport = Join-Path $GateEvidenceRoot "AUTHORITATIVE_TEST_GATE.json"
 $PytestTempRoot = Join-Path $GateEvidenceRoot "pytest-owned-temp"
@@ -131,9 +132,11 @@ $GateAuthorization = Join-Path $GateEvidenceRoot "BUILD_GATE_AUTHORIZATION.json"
 if ($LASTEXITCODE -ne 0 -or $GateExitCode -ne 0) { throw "Canonical automated gate failed closed before packaging." }
 Require-File $GateAuthorization
 
-Write-Step "Generate artwork"
-& $VenvPython make_artwork.py
-if ($LASTEXITCODE -ne 0) { throw "Artwork generation failed." }
+Write-Step "Validate approved artwork without regenerating tracked source"
+Require-File (Join-Path $Root "lean_desk_suite.ico")
+Require-File (Join-Path $Root "assets\leandesk-suite-banner.png")
+Require-File (Join-Path $Root "assets\leandesk-suite-icon.png")
+Require-File (Join-Path $Root "assets\leandesk-suite-social-preview.png")
 & $VenvPython (Join-Path $Root "tools\source_manifest.py") --root $Root --verify
 if ($LASTEXITCODE -ne 0) { throw "Source identity changed before PyInstaller." }
 if ((Get-FileHash -LiteralPath $SourceManifestPath -Algorithm SHA256).Hash -ne $SourceManifestSHA256) {
@@ -148,12 +151,12 @@ Remove-Item $Dist, $Build -Recurse -Force -ErrorAction SilentlyContinue
     --name "LeanDesk_Suite" `
     --icon (Join-Path $Root "lean_desk_suite.ico") `
     --version-file (Join-Path $Root "version_info.txt") `
-    --add-data "README.md;." `
-    --add-data "EULA.txt;." `
-    --add-data "CHANGELOG.md;." `
-    --add-data "LICENSE.txt;." `
-    --add-data "THIRD_PARTY_NOTICES.txt;." `
-    --add-data "assets;assets" `
+    --add-data "$Root\README.md;." `
+    --add-data "$Root\EULA.txt;." `
+    --add-data "$Root\CHANGELOG.md;." `
+    --add-data "$Root\LICENSE.txt;." `
+    --add-data "$Root\THIRD_PARTY_NOTICES.txt;." `
+    --add-data "$Root\assets;assets" `
     --collect-all docx `
     --collect-all reportlab `
     --collect-all openpyxl `
@@ -220,7 +223,7 @@ Require-File $GateAuthorization
 & $ISCC "/DSourceRoot=$ReleaseRoot" "/DOutputRoot=$ReleaseRoot" `
     (Join-Path $Root "LeanDesk_Suite_Installer.iss")
 if ($LASTEXITCODE -ne 0) { throw "Inno Setup build failed." }
-$Installer = Join-Path $ReleaseRoot "LeanDesk_Suite_Setup_0.8.0.exe"
+$Installer = Join-Path $ReleaseRoot "LeanDesk_Suite_Setup_0.8.1.exe"
 Require-File $Installer
 if ($SignTool) {
     & $SignTool sign /sha1 $Cert.Thumbprint /fd SHA256 /td SHA256 /tr http://timestamp.digicert.com $Installer
@@ -242,9 +245,9 @@ Get-ChildItem $ReleaseRoot -File -Recurse |
 
 Write-Step "Create release packages"
 Require-File $GateAuthorization
-$Portable = Join-Path $ReadyRoot "LeanDesk_Suite_Portable_0.8.0.zip"
-$InstallerZip = Join-Path $ReadyRoot "LeanDesk_Suite_Installer_0.8.0.zip"
-$Complete = Join-Path $ReadyRoot "LeanDesk_Suite_Complete_0.8.0.zip"
+$Portable = Join-Path $ReadyRoot "LeanDesk_Suite_Portable_0.8.1.zip"
+$InstallerZip = Join-Path $ReadyRoot "LeanDesk_Suite_Installer_0.8.1.zip"
+$Complete = Join-Path $ReadyRoot "LeanDesk_Suite_Complete_0.8.1.zip"
 
 Compress-Archive -Path @(
     $ReleaseExe,

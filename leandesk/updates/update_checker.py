@@ -6,9 +6,12 @@ import json
 import logging
 import os
 from pathlib import Path
+import socket
+import ssl
 import tempfile
 import threading
 from typing import Any, Callable
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from ..core import UPDATE_STATE_FILE
@@ -42,6 +45,7 @@ class UpdateResult:
     sha256: str | None = None
     message: str | None = None
     error: str | None = None
+    error_category: str | None = None
 
     @property
     def code(self) -> str:
@@ -54,6 +58,25 @@ class UpdateResult:
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def _diagnose_error(exc: Exception) -> tuple[str, str]:
+    if isinstance(exc, HTTPError):
+        return "service", f"Update service returned HTTP {exc.code}."
+    if isinstance(exc, ssl.SSLError):
+        return "secure_connection", "A secure TLS connection to the update service could not be established."
+    if isinstance(exc, (TimeoutError, socket.timeout)):
+        return "timeout", "The update service did not respond before the safety timeout."
+    if isinstance(exc, URLError):
+        reason = exc.reason
+        if isinstance(reason, ssl.SSLError):
+            return "secure_connection", "A secure TLS connection to the update service could not be established."
+        if isinstance(reason, (TimeoutError, socket.timeout)):
+            return "timeout", "The update service did not respond before the safety timeout."
+        return "network", "The official update service could not be reached. Check the network connection and try again."
+    if isinstance(exc, (ValueError, TypeError)):
+        return "metadata", "The official update service returned metadata that did not pass LeanDesk safety validation."
+    return "internal", "LeanDesk could not complete the update check safely."
 
 
 def _state_path() -> Path:
@@ -155,14 +178,14 @@ def check_for_updates(
     try:
         Version.parse(current_version)
     except VersionError as exc:
-        return UpdateResult("error", False, current_version, error=f"Invalid local version: {exc}")
+        return UpdateResult("error", False, current_version, error=f"Invalid local version: {exc}", error_category="local_version")
 
     now = (now or _utcnow()).astimezone(timezone.utc)
     try:
         state = _read_state(state_path)
     except UpdateStateError as exc:
         LOGGER.info("Update state could not be read safely: %s", type(exc).__name__)
-        return UpdateResult("error", False, current_version, error=str(exc))
+        return UpdateResult("error", False, current_version, error=str(exc), error_category="state")
     if not state.get("enabled", True) and not force:
         return UpdateResult("disabled", False, current_version)
     last = _parse_time(state.get("last_attempt_utc"))
@@ -176,7 +199,7 @@ def check_for_updates(
         _atomic_state(state, state_path)
     except Exception as exc:
         LOGGER.warning("Update check state could not be stored: %s", type(exc).__name__)
-        return UpdateResult("error", False, current_version, error="Could not safely record the update-check time.")
+        return UpdateResult("error", False, current_version, error="Could not safely record the update-check time.", error_category="state")
 
     try:
         manifest = _fetch(opener)
@@ -205,7 +228,8 @@ def check_for_updates(
         )
     except Exception as exc:
         LOGGER.info("Update check failed safely: %s", type(exc).__name__)
-        return UpdateResult("error", True, current_version, error=f"{type(exc).__name__}: {exc}")
+        category, diagnostic = _diagnose_error(exc)
+        return UpdateResult("error", True, current_version, error=diagnostic, error_category=category)
 
 
 def check_async(current_version: str, callback: Callable[[UpdateResult], None], **kwargs) -> threading.Thread:
