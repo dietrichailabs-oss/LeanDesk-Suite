@@ -14,15 +14,15 @@ jobs:
     if: github.event.pull_request.head.ref == 'codex/qa-artifact-transport-main-8821869'
     runs-on: ubuntu-latest
     steps:
-      - name: Download exact unpublished draft asset
+      - name: Download exact unpublished draft asset by immutable asset ID
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p qa-artifact
-          gh release download v0.8.1-qa-candidate-8821869 \
-            --repo dietrichailabs-oss/LeanDesk-Suite \
-            --pattern LeanDesk_Suite_0.8.1_Final_Windows_Engineering_QA_Handoff.zip \
-            --dir qa-artifact
+          gh api \
+            --header 'Accept: application/octet-stream' \
+            /repos/dietrichailabs-oss/LeanDesk-Suite/releases/assets/538112832 \
+            > qa-artifact/LeanDesk_Suite_0.8.1_Final_Windows_Engineering_QA_Handoff.zip
 
       - name: Verify exact handoff identity
         shell: bash
