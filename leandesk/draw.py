@@ -183,9 +183,9 @@ class DrawFrame(ttk.Frame):
         ttk.Button(ribbon, text="Delete", command=self.delete_selected).pack(side="left", padx=3, pady=17)
         tk.Label(ribbon, text="DRAW", bg=COLORS["panel"], fg=COLORS["coral"], font=("Segoe UI Bold", 14)).pack(side="right", padx=16)
 
-        shell = tk.Frame(self, bg="#2a3140")
+        shell = tk.Frame(self, bg=COLORS["workspace"])
         shell.pack(fill="both", expand=True)
-        self.canvas = tk.Canvas(shell, bg="#2a3140", highlightthickness=0, scrollregion=(0, 0, self.drawing.width + 120, self.drawing.height + 120))
+        self.canvas = tk.Canvas(shell, bg=COLORS["workspace"], highlightthickness=0, scrollregion=(0, 0, self.drawing.width + 120, self.drawing.height + 120))
         xscroll = ttk.Scrollbar(shell, orient="horizontal", command=self.canvas.xview)
         yscroll = ttk.Scrollbar(shell, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(xscrollcommand=xscroll.set, yscrollcommand=yscroll.set)

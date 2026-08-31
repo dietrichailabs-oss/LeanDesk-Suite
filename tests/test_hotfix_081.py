@@ -9,6 +9,7 @@ import tkinter as tk
 import pytest
 
 from leandesk.core import AppSettings
+from leandesk.app import LeanDeskApp
 from leandesk.sheets import SheetGrid, SheetModel
 from leandesk.themes import SUITE_THEMES, get_theme
 from leandesk.ui import COLORS, apply_suite_theme, configure_suite_styles
@@ -105,6 +106,97 @@ def test_all_live_themes_reach_classic_widgets_and_preserve_paper() -> None:
             assert editor.cget("foreground") == "#202124"
     finally:
         root.destroy()
+
+
+THEME_COLOR_OPTIONS = (
+    "background", "foreground", "activebackground", "activeforeground",
+    "highlightbackground", "highlightcolor", "selectbackground",
+    "selectforeground", "insertbackground", "troughcolor", "selectcolor",
+)
+THEME_CANVAS_OPTIONS = (
+    "fill", "outline", "activefill", "activeoutline", "disabledfill", "disabledoutline",
+)
+
+
+def _cancel_scheduled_callbacks(root: tk.Misc) -> None:
+    callback_ids = root.tk.call("after", "info")
+    if isinstance(callback_ids, str):
+        callback_ids = (callback_ids,) if callback_ids else ()
+    for callback_id in callback_ids:
+        try:
+            root.tk.call("after", "cancel", callback_id)
+        except tk.TclError:
+            pass
+
+
+def _whole_app_theme_snapshot(widget: tk.Misc, output: dict[str, object]) -> None:
+    record: dict[str, object] = {"class": widget.winfo_class()}
+    for option in THEME_COLOR_OPTIONS:
+        try:
+            value = widget.cget(option)
+        except tk.TclError:
+            continue
+        if value not in ("", None):
+            record[option] = str(value).lower()
+    if isinstance(widget, tk.Canvas):
+        items: list[dict[str, str]] = []
+        for item_id in widget.find_all():
+            item = {"type": widget.type(item_id)}
+            for option in THEME_CANVAS_OPTIONS:
+                try:
+                    value = widget.itemcget(item_id, option)
+                except tk.TclError:
+                    continue
+                if value not in ("", None):
+                    item[option] = str(value).lower()
+            items.append(item)
+        record["canvas_items"] = items
+    output[str(widget)] = record
+    for child in widget.winfo_children():
+        _whole_app_theme_snapshot(child, output)
+
+
+@pytest.mark.parametrize("theme_name", EXPECTED_THEMES)
+def test_fresh_whole_app_theme_matches_round_trip(
+    monkeypatch: pytest.MonkeyPatch, theme_name: str,
+) -> None:
+    selected_theme = [theme_name]
+    monkeypatch.setattr(
+        AppSettings,
+        "load",
+        lambda: AppSettings(theme=selected_theme[0], auto_check_updates=False),
+    )
+    app = LeanDeskApp()
+    app.withdraw()
+    try:
+        _cancel_scheduled_callbacks(app)
+        app.show_settings()
+        app.update_idletasks()
+        fresh: dict[str, object] = {}
+        _whole_app_theme_snapshot(app, fresh)
+
+        intermediate = "Light" if theme_name == "Dark" else "Dark"
+        apply_suite_theme(app, intermediate)
+        app.update()
+        apply_suite_theme(app, theme_name)
+        app.update()
+        round_trip: dict[str, object] = {}
+        _whole_app_theme_snapshot(app, round_trip)
+
+        assert fresh == round_trip
+        writer = app.frames["Writer"]
+        calendar = app.frames["Calendar"]
+        calendar_buttons = [
+            child for child in calendar.grid_frame.winfo_children()
+            if child.winfo_class() == "Button"
+        ]
+        palette = get_theme(theme_name).colors
+        assert writer.tab_strip.cget("background") == palette["tab_bg"]
+        assert writer.status_frame.cget("background") == palette["status_bg"]
+        assert {button.cget("activebackground") for button in calendar_buttons} == {palette["button_hover"]}
+        assert palette["selection"] in {button.cget("background") for button in calendar_buttons}
+    finally:
+        app.destroy()
 
 
 def test_sheet_grid_draws_every_cell_boundary_and_strong_selection_in_dark_and_light() -> None:

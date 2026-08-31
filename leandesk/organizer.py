@@ -167,7 +167,7 @@ class TasksFrame(ttk.Frame):
             widget = ttk.Combobox(right, textvariable=var, values=values, state="readonly") if values else ttk.Entry(right, textvariable=var)
             widget.pack(fill="x", padx=12)
         tk.Label(right, text="Notes", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12, pady=(7, 2))
-        self.notes_text = tk.Text(right, height=12, wrap="word", bg="#101827", fg=COLORS["text"], insertbackground=COLORS["text"], relief="flat", padx=8, pady=8)
+        self.notes_text = tk.Text(right, height=12, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], insertbackground=COLORS["field_text"], relief="flat", padx=8, pady=8)
         self.notes_text.pack(fill="both", expand=True, padx=12, pady=(0, 12))
         status = StatusBar(self); status.pack(fill="x"); status.add_left(self.status_var); status.add_right(self.count_var, muted=True)
 
@@ -241,7 +241,7 @@ class CalendarFrame(ttk.Frame):
         ttk.Button(ribbon, text="Previous", command=lambda: self.shift_month(-1)).pack(side="left", padx=4, pady=12); ttk.Button(ribbon, text="Today", command=self.go_today).pack(side="left", padx=4, pady=12); ttk.Button(ribbon, text="Next", command=lambda: self.shift_month(1)).pack(side="left", padx=4, pady=12); ttk.Button(ribbon, text="Add Event", command=self.add_event).pack(side="left", padx=12, pady=12); ttk.Button(ribbon, text="Delete Event", command=self.delete_event).pack(side="left", padx=4, pady=12)
         tk.Label(ribbon, textvariable=self.month_var, bg=COLORS["panel"], fg=COLORS["copper"], font=("Segoe UI Bold", 16)).pack(side="right", padx=16)
         body = ttk.Panedwindow(self, orient="horizontal"); body.pack(fill="both", expand=True); self.grid_frame = ttk.Frame(body, style="Panel.TFrame"); side = ttk.Frame(body, style="Panel.TFrame", width=330); body.add(self.grid_frame, weight=5); body.add(side, weight=2)
-        tk.Label(side, text="EVENTS", bg=COLORS["panel"], fg=COLORS["copper"], font=("Segoe UI Semibold", 10)).pack(anchor="w", padx=12, pady=(12, 5)); self.event_list = tk.Listbox(side, bg="#101827", fg=COLORS["text"], selectbackground="#75492d", relief="flat", bd=0, activestyle="none"); self.event_list.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        tk.Label(side, text="EVENTS", bg=COLORS["panel"], fg=COLORS["copper"], font=("Segoe UI Semibold", 10)).pack(anchor="w", padx=12, pady=(12, 5)); self.event_list = tk.Listbox(side, bg=COLORS["field"], fg=COLORS["field_text"], selectbackground=COLORS["selection"], selectforeground=COLORS["button_active_text"], relief="flat", bd=0, activestyle="none"); self.event_list.pack(fill="both", expand=True, padx=10, pady=(0, 10))
         status = StatusBar(self); status.pack(fill="x"); status.add_left(self.status_var)
     def load(self):
         self.events, self.read_only, error, self._store_extra = _load_collection(Path(CALENDAR_FILE), "events", CalendarEvent)
@@ -258,10 +258,10 @@ class CalendarFrame(ttk.Frame):
             self.grid_frame.rowconfigure(row_index, weight=1)
             for col, day in enumerate(week):
                 if not day:
-                    tk.Frame(self.grid_frame, bg="#121a29").grid(row=row_index, column=col, sticky="nsew", padx=1, pady=1); continue
+                    tk.Frame(self.grid_frame, bg=COLORS["ribbon"]).grid(row=row_index, column=col, sticky="nsew", padx=1, pady=1); continue
                 current = date(self.year, self.month, day); count = sum(item.date == current.isoformat() for item in self.events); text = f"{day}\n{count} event{'s' if count != 1 else ''}" if count else str(day)
-                bg = "#314a73" if current == self.selected_date else COLORS["panel2"]
-                button = tk.Button(self.grid_frame, text=text, command=lambda value=current: self.select_date(value), bg=bg, fg=COLORS["text"], activebackground="#3c5476", activeforeground="#ffffff", relief="flat", bd=0, anchor="nw", justify="left", padx=8, pady=7, font=("Segoe UI", 10)); button.grid(row=row_index, column=col, sticky="nsew", padx=1, pady=1)
+                bg = COLORS["selection"] if current == self.selected_date else COLORS["panel2"]
+                button = tk.Button(self.grid_frame, text=text, command=lambda value=current: self.select_date(value), bg=bg, fg=COLORS["text"], activebackground=COLORS["button_hover"], activeforeground=COLORS["button_active_text"], relief="flat", bd=0, anchor="nw", justify="left", padx=8, pady=7, font=("Segoe UI", 10)); button.grid(row=row_index, column=col, sticky="nsew", padx=1, pady=1)
         self.refresh_events()
         if self.on_title_changed: self.on_title_changed(f"Calendar — {calendar.month_name[self.month]} {self.year}", False)
     def select_date(self, value): self.selected_date = value; self.render_month(); self.status_var.set(value.strftime("%A, %B %d, %Y"))
@@ -315,7 +315,7 @@ class ContactsFrame(ttk.Frame):
         tk.Label(right, text="CONTACT DETAILS", bg=COLORS["panel"], fg=COLORS["jade"], font=("Segoe UI Semibold", 10)).pack(anchor="w", padx=12, pady=(12, 5))
         for label, var in (("Name", self.name_var), ("Company", self.company_var), ("Email", self.email_var), ("Phone", self.phone_var), ("Address", self.address_var)):
             tk.Label(right, text=label, bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12, pady=(7, 2)); ttk.Entry(right, textvariable=var).pack(fill="x", padx=12)
-        tk.Label(right, text="Notes", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12, pady=(7, 2)); self.notes_text = tk.Text(right, height=12, wrap="word", bg="#101827", fg=COLORS["text"], insertbackground=COLORS["text"], relief="flat", padx=8, pady=8); self.notes_text.pack(fill="both", expand=True, padx=12, pady=(0, 12))
+        tk.Label(right, text="Notes", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12, pady=(7, 2)); self.notes_text = tk.Text(right, height=12, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], insertbackground=COLORS["field_text"], relief="flat", padx=8, pady=8); self.notes_text.pack(fill="both", expand=True, padx=12, pady=(0, 12))
         status = StatusBar(self); status.pack(fill="x"); status.add_left(self.status_var); status.add_right(self.count_var, muted=True)
     def load(self):
         self.contacts, self.read_only, error, self._store_extra = _load_collection(Path(CONTACTS_FILE), "contacts", Contact)
@@ -354,4 +354,3 @@ class ContactsFrame(ttk.Frame):
             self.current_id = self.contacts[0].contact_id if self.contacts else None
             self.refresh(self.current_id)
             self.status_var.set("Recovered unsaved Contacts data")
-

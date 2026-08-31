@@ -23,6 +23,7 @@ from .save_policy import (
     validate_destination,
     write_atomically,
 )
+from .ui import COLORS, set_theme_roles
 
 
 class WriterFrame(ttk.Frame):
@@ -59,20 +60,20 @@ class WriterFrame(ttk.Frame):
         self.configure(style="WriterRoot.TFrame")
         self._configure_ribbon_styles()
 
-        self.ribbon_shell = tk.Frame(self, bg="#121a29", bd=0, highlightthickness=0)
+        self.ribbon_shell = tk.Frame(self, bg=COLORS["ribbon"], bd=0, highlightthickness=0)
         self.ribbon_shell.pack(fill="x")
 
-        self.tab_strip = tk.Frame(self.ribbon_shell, bg="#111827", height=45)
+        self.tab_strip = tk.Frame(self.ribbon_shell, bg=COLORS["tab_bg"], height=45)
         self.tab_strip.pack(fill="x")
         self.tab_strip.pack_propagate(False)
 
         self.file_button = tk.Menubutton(
             self.tab_strip,
             text="File",
-            bg="#111827",
-            fg="#f4f1ea",
-            activebackground="#263246",
-            activeforeground="#ffffff",
+            bg=COLORS["tab_bg"],
+            fg=COLORS["text"],
+            activebackground=COLORS["tab_hover"],
+            activeforeground=COLORS["button_active_text"],
             relief="flat",
             bd=0,
             padx=18,
@@ -84,10 +85,10 @@ class WriterFrame(ttk.Frame):
         self.file_menu = tk.Menu(
             self.file_button,
             tearoff=False,
-            bg="#172033",
-            fg="#f4f1ea",
-            activebackground="#314a73",
-            activeforeground="#ffffff",
+            bg=COLORS["menu_bg"],
+            fg=COLORS["menu_text"],
+            activebackground=COLORS["menu_active_bg"],
+            activeforeground=COLORS["menu_active_text"],
             bd=0,
             relief="flat",
             font=("Segoe UI", 10),
@@ -110,10 +111,10 @@ class WriterFrame(ttk.Frame):
                 self.tab_strip,
                 text=name,
                 command=lambda value=name: self._show_ribbon_tab(value),
-                bg="#111827",
-                fg="#dbe3f0",
-                activebackground="#263246",
-                activeforeground="#ffffff",
+                bg=COLORS["tab_bg"],
+                fg=COLORS["text"],
+                activebackground=COLORS["tab_hover"],
+                activeforeground=COLORS["button_active_text"],
                 relief="flat",
                 bd=0,
                 padx=16,
@@ -126,9 +127,9 @@ class WriterFrame(ttk.Frame):
 
         self.ribbon_body = tk.Frame(
             self.ribbon_shell,
-            bg="#172033",
+            bg=COLORS["panel"],
             height=150,
-            highlightbackground="#31405a",
+            highlightbackground=COLORS["line"],
             highlightthickness=1,
         )
         self.ribbon_body.pack(fill="x")
@@ -136,22 +137,22 @@ class WriterFrame(ttk.Frame):
 
         self._show_ribbon_tab("Home")
 
-        self.ruler = tk.Canvas(self, height=28, bg="#e8e4d9", highlightthickness=0)
+        self.ruler = tk.Canvas(self, height=28, bg=COLORS["ruler"], highlightthickness=0)
         self.ruler.pack(fill="x")
         self._draw_ruler()
 
-        editor_shell = tk.Frame(self, bg="#0f1724")
+        editor_shell = tk.Frame(self, bg=COLORS["workspace"])
         editor_shell.pack(fill="both", expand=True)
 
-        self.canvas = tk.Canvas(editor_shell, bg="#263044", highlightthickness=0)
+        self.canvas = tk.Canvas(editor_shell, bg=COLORS["workspace"], highlightthickness=0)
         self.canvas.pack(side="left", fill="both", expand=True)
         yscroll = ttk.Scrollbar(editor_shell, orient="vertical")
         yscroll.pack(side="right", fill="y")
 
         page = tk.Frame(
             self.canvas,
-            bg="#fdfcf8",
-            highlightbackground="#d9d5ca",
+            bg=COLORS["paper_alt"],
+            highlightbackground=COLORS["grid"],
             highlightthickness=1,
         )
         self.page_window = self.canvas.create_window((0, 18), window=page, anchor="n")
@@ -161,10 +162,10 @@ class WriterFrame(ttk.Frame):
             undo=True,
             autoseparators=True,
             maxundo=-1,
-            bg="#fdfcf8",
-            fg="#202124",
-            insertbackground="#202124",
-            selectbackground="#9dc9ff",
+            bg=COLORS["paper_alt"],
+            fg=COLORS["paper_text"],
+            insertbackground=COLORS["paper_text"],
+            selectbackground=COLORS["grid"],
             relief="flat",
             borderwidth=0,
             padx=72,
@@ -173,6 +174,13 @@ class WriterFrame(ttk.Frame):
             spacing1=2,
             spacing2=2,
             spacing3=4,
+        )
+        set_theme_roles(
+            self.text,
+            background="paper_alt",
+            foreground="paper_text",
+            insertbackground="paper_text",
+            selectbackground="grid",
         )
         self.text.pack(fill="both", expand=True)
         yscroll.configure(command=self.text.yview)
@@ -193,38 +201,38 @@ class WriterFrame(ttk.Frame):
         self._configure_tags()
         self.text.tag_configure("spell_error", underline=True, foreground="#c9233f")
 
-        self.status_frame = tk.Frame(self, bg="#111827", height=31)
+        self.status_frame = tk.Frame(self, bg=COLORS["status_bg"], height=31)
         self.status_frame.pack(fill="x")
         self.status_frame.pack_propagate(False)
         self.status_var = tk.StringVar(value="Ready")
         self.count_var = tk.StringVar(value="0 words | 0 characters")
         self.path_var = tk.StringVar(value="Unsaved document")
-        tk.Label(self.status_frame, textvariable=self.status_var, bg="#111827", fg="#f4f1ea", font=("Segoe UI", 9)).pack(side="left", padx=10)
-        tk.Label(self.status_frame, textvariable=self.count_var, bg="#111827", fg="#aeb8ca", font=("Segoe UI", 9)).pack(side="left", padx=20)
-        tk.Label(self.status_frame, textvariable=self.path_var, bg="#111827", fg="#7f8ca3", font=("Segoe UI", 8)).pack(side="left", padx=12)
+        tk.Label(self.status_frame, textvariable=self.status_var, bg=COLORS["status_bg"], fg=COLORS["text"], font=("Segoe UI", 9)).pack(side="left", padx=10)
+        tk.Label(self.status_frame, textvariable=self.count_var, bg=COLORS["status_bg"], fg=COLORS["muted"], font=("Segoe UI", 9)).pack(side="left", padx=20)
+        tk.Label(self.status_frame, textvariable=self.path_var, bg=COLORS["status_bg"], fg=COLORS["muted"], font=("Segoe UI", 8)).pack(side="left", padx=12)
 
         tk.Button(
             self.status_frame,
             text="+",
             command=lambda: self.set_zoom(self.zoom + 10),
-            bg="#111827",
-            fg="#f4f1ea",
-            activebackground="#263246",
-            activeforeground="#ffffff",
+            bg=COLORS["status_bg"],
+            fg=COLORS["text"],
+            activebackground=COLORS["button_hover"],
+            activeforeground=COLORS["button_active_text"],
             relief="flat",
             bd=0,
             width=3,
         ).pack(side="right", padx=(0, 6))
         self.zoom_label = tk.StringVar(value=f"{self.zoom}%")
-        tk.Label(self.status_frame, textvariable=self.zoom_label, bg="#111827", fg="#dbe3f0", font=("Segoe UI", 9), width=7).pack(side="right")
+        tk.Label(self.status_frame, textvariable=self.zoom_label, bg=COLORS["status_bg"], fg=COLORS["text"], font=("Segoe UI", 9), width=7).pack(side="right")
         tk.Button(
             self.status_frame,
             text="−",
             command=lambda: self.set_zoom(self.zoom - 10),
-            bg="#111827",
-            fg="#f4f1ea",
-            activebackground="#263246",
-            activeforeground="#ffffff",
+            bg=COLORS["status_bg"],
+            fg=COLORS["text"],
+            activebackground=COLORS["button_hover"],
+            activeforeground=COLORS["button_active_text"],
             relief="flat",
             bd=0,
             width=3,
@@ -235,38 +243,38 @@ class WriterFrame(ttk.Frame):
         style = ttk.Style(self)
         style.configure(
             "Ribbon.TCombobox",
-            fieldbackground="#202b40",
-            background="#202b40",
-            foreground="#f4f1ea",
-            arrowcolor="#9bb8e8",
-            bordercolor="#40506d",
-            lightcolor="#40506d",
-            darkcolor="#40506d",
+            fieldbackground=COLORS["panel2"],
+            background=COLORS["panel2"],
+            foreground=COLORS["text"],
+            arrowcolor=COLORS["cobalt"],
+            bordercolor=COLORS["line"],
+            lightcolor=COLORS["line"],
+            darkcolor=COLORS["line"],
             padding=4,
         )
         style.map(
             "Ribbon.TCombobox",
-            fieldbackground=[("readonly", "#202b40")],
-            foreground=[("readonly", "#f4f1ea")],
+            fieldbackground=[("readonly", COLORS["panel2"])],
+            foreground=[("readonly", COLORS["text"])],
         )
 
     def _draw_ruler(self) -> None:
         self.ruler.delete("all")
         width = max(self.ruler.winfo_width(), 1200)
-        self.ruler.create_rectangle(0, 0, width, 28, fill="#e8e4d9", outline="")
+        self.ruler.create_rectangle(0, 0, width, 28, fill=COLORS["ruler"], outline="")
         start_x = 38
         pixels_per_inch = 70
         for inch in range(0, 19):
             x = start_x + inch * pixels_per_inch
-            self.ruler.create_line(x, 8, x, 27, fill="#706b62", width=1)
+            self.ruler.create_line(x, 8, x, 27, fill=COLORS["ruler_text"], width=1)
             if inch:
-                self.ruler.create_text(x + 4, 3, text=str(inch), fill="#59554f", anchor="nw", font=("Segoe UI", 7))
+                self.ruler.create_text(x + 4, 3, text=str(inch), fill=COLORS["ruler_text"], anchor="nw", font=("Segoe UI", 7))
             for quarter in range(1, 4):
                 qx = x + quarter * pixels_per_inch / 4
                 length = 9 if quarter == 2 else 6
-                self.ruler.create_line(qx, 28 - length, qx, 27, fill="#8c877e")
-        self.ruler.create_polygon(110, 4, 104, 12, 116, 12, fill="#385b91", outline="")
-        self.ruler.create_polygon(800, 24, 794, 16, 806, 16, fill="#385b91", outline="")
+                self.ruler.create_line(qx, 28 - length, qx, 27, fill=COLORS["ruler_text"])
+        self.ruler.create_polygon(110, 4, 104, 12, 116, 12, fill=COLORS["focus"], outline="")
+        self.ruler.create_polygon(800, 24, 794, 16, 806, 16, fill=COLORS["focus"], outline="")
 
     def _tab_button(self, parent, text: str, command, *, italic: bool = False, width: int | None = None) -> tk.Button:
         font = ("Georgia", 12, "italic") if italic else ("Segoe UI", 10)
@@ -274,10 +282,10 @@ class WriterFrame(ttk.Frame):
             parent,
             text=text,
             command=command,
-            bg="#202b40",
-            fg="#f4f1ea",
-            activebackground="#354765",
-            activeforeground="#ffffff",
+            bg=COLORS["button_bg"],
+            fg=COLORS["button_text"],
+            activebackground=COLORS["button_hover"],
+            activeforeground=COLORS["button_active_text"],
             relief="flat",
             bd=0,
             padx=9,
@@ -292,27 +300,27 @@ class WriterFrame(ttk.Frame):
     def _ribbon_group(self, title: str, *, width: int | None = None) -> tuple[tk.Frame, tk.Frame]:
         group = tk.Frame(
             self.ribbon_body,
-            bg="#172033",
-            highlightbackground="#2f3c53",
+            bg=COLORS["panel"],
+            highlightbackground=COLORS["line"],
             highlightthickness=0,
         )
         group.pack(side="left", fill="y", padx=(7, 0), pady=7)
         if width:
             group.configure(width=width)
             group.pack_propagate(False)
-        body = tk.Frame(group, bg="#172033")
+        body = tk.Frame(group, bg=COLORS["panel"])
         body.pack(fill="both", expand=True, padx=4, pady=(2, 0))
-        tk.Label(group, text=title, bg="#172033", fg="#8f9db3", font=("Segoe UI", 8)).pack(side="bottom", pady=(0, 2))
-        tk.Frame(self.ribbon_body, bg="#2b3a52", width=1).pack(side="left", fill="y", pady=14, padx=(7, 0))
+        tk.Label(group, text=title, bg=COLORS["panel"], fg=COLORS["muted"], font=("Segoe UI", 8)).pack(side="bottom", pady=(0, 2))
+        tk.Frame(self.ribbon_body, bg=COLORS["line"], width=1).pack(side="left", fill="y", pady=14, padx=(7, 0))
         return group, body
 
     def _show_ribbon_tab(self, name: str) -> None:
         self.active_ribbon_tab = name
         for tab_name, button in self.tab_buttons.items():
             if tab_name == name:
-                button.configure(bg="#1a263a", fg="#ffffff")
+                button.configure(bg=COLORS["button_pressed"], fg=COLORS["button_active_text"])
             else:
-                button.configure(bg="#111827", fg="#dbe3f0")
+                button.configure(bg=COLORS["tab_bg"], fg=COLORS["text"])
         for child in self.ribbon_body.winfo_children():
             child.destroy()
         builders = {
@@ -373,10 +381,10 @@ class WriterFrame(ttk.Frame):
         spacing_button = tk.Menubutton(
             paragraph,
             textvariable=self.line_spacing_label,
-            bg="#202b40",
-            fg="#f4f1ea",
-            activebackground="#354765",
-            activeforeground="#ffffff",
+            bg=COLORS["button_bg"],
+            fg=COLORS["button_text"],
+            activebackground=COLORS["button_hover"],
+            activeforeground=COLORS["button_active_text"],
             relief="flat",
             bd=0,
             padx=10,
@@ -384,7 +392,7 @@ class WriterFrame(ttk.Frame):
             font=("Segoe UI", 10),
             cursor="hand2",
         )
-        spacing_menu = tk.Menu(spacing_button, tearoff=False, bg="#172033", fg="#f4f1ea", activebackground="#314a73", activeforeground="#ffffff", bd=0)
+        spacing_menu = tk.Menu(spacing_button, tearoff=False, bg=COLORS["menu_bg"], fg=COLORS["menu_text"], activebackground=COLORS["menu_active_bg"], activeforeground=COLORS["menu_active_text"], bd=0)
         for value in ("1.0", "1.15", "1.5", "2.0", "2.5", "3.0"):
             spacing_menu.add_radiobutton(label=value, variable=self.line_spacing_var, value=value, command=lambda value=value: self.apply_line_spacing(value))
         spacing_menu.add_separator()
@@ -403,10 +411,10 @@ class WriterFrame(ttk.Frame):
                 styles,
                 text=label,
                 command=lambda value=tag: self.apply_paragraph_style(value),
-                bg="#202b40" if index else "#294d7b",
-                fg="#f4f1ea",
-                activebackground="#3a5d87",
-                activeforeground="#ffffff",
+                bg=COLORS["button_bg"] if index else COLORS["accent_bg"],
+                fg=COLORS["button_text"],
+                activebackground=COLORS["button_hover"],
+                activeforeground=COLORS["button_active_text"],
                 relief="flat",
                 bd=0,
                 padx=10,
@@ -485,19 +493,19 @@ class WriterFrame(ttk.Frame):
             text="Live spell check",
             variable=self.live_spell_var,
             command=self.toggle_live_spellcheck,
-            bg="#172033",
-            fg="#f4f1ea",
-            activebackground="#172033",
-            activeforeground="#ffffff",
-            selectcolor="#202b40",
+            bg=COLORS["panel"],
+            fg=COLORS["text"],
+            activebackground=COLORS["panel"],
+            activeforeground=COLORS["button_active_text"],
+            selectcolor=COLORS["panel2"],
             font=("Segoe UI", 9),
         )
         live.grid(row=1, column=0, columnspan=2, sticky="w", padx=5, pady=5)
         tk.Label(
             proofing,
             text=f"Offline dictionary: {self.spell_service.engine_name}",
-            bg="#172033",
-            fg="#8f9db3",
+            bg=COLORS["panel"],
+            fg=COLORS["muted"],
             font=("Segoe UI", 8),
         ).grid(row=1, column=2, sticky="w", padx=4)
 
@@ -537,8 +545,8 @@ class WriterFrame(ttk.Frame):
         tk.Label(
             formats,
             text="Native .ldoc • TXT • Markdown • HTML • RTF • basic DOCX • PDF export",
-            bg="#172033",
-            fg="#aeb8ca",
+            bg=COLORS["panel"],
+            fg=COLORS["muted"],
             wraplength=350,
             justify="left",
             font=("Segoe UI", 9),
@@ -820,10 +828,10 @@ class WriterFrame(ttk.Frame):
         menu = tk.Menu(
             self.text,
             tearoff=False,
-            bg="#172033",
-            fg="#f4f1ea",
-            activebackground="#314a73",
-            activeforeground="#ffffff",
+            bg=COLORS["menu_bg"],
+            fg=COLORS["menu_text"],
+            activebackground=COLORS["menu_active_bg"],
+            activeforeground=COLORS["menu_active_text"],
         )
         if word and not self.spell_service.is_correct(word):
             suggestions = self.spell_service.suggestions(word, 8)
@@ -863,10 +871,10 @@ class WriterFrame(ttk.Frame):
         window = tk.Toplevel(self)
         window.title("Personal Dictionary")
         window.geometry("430x430")
-        window.configure(bg="#172033")
-        tk.Label(window, text="PERSONAL DICTIONARY", bg="#172033", fg="#f4f1ea", font=("Segoe UI Semibold", 14)).pack(anchor="w", padx=14, pady=(14, 6))
-        tk.Label(window, text="Words added here are stored locally and used by live spell checking.", bg="#172033", fg="#aeb8ca", wraplength=390, justify="left").pack(anchor="w", padx=14, pady=(0, 8))
-        listbox = tk.Listbox(window, bg="#101827", fg="#f4f1ea", selectbackground="#314a73", relief="flat")
+        window.configure(bg=COLORS["panel"])
+        tk.Label(window, text="PERSONAL DICTIONARY", bg=COLORS["panel"], fg=COLORS["text"], font=("Segoe UI Semibold", 14)).pack(anchor="w", padx=14, pady=(14, 6))
+        tk.Label(window, text="Words added here are stored locally and used by live spell checking.", bg=COLORS["panel"], fg=COLORS["muted"], wraplength=390, justify="left").pack(anchor="w", padx=14, pady=(0, 8))
+        listbox = tk.Listbox(window, bg=COLORS["field"], fg=COLORS["field_text"], selectbackground=COLORS["selection"], relief="flat")
         listbox.pack(fill="both", expand=True, padx=14, pady=6)
         def refresh():
             listbox.delete(0, "end")
@@ -884,7 +892,7 @@ class WriterFrame(ttk.Frame):
                 self.spell_service.remove_personal(listbox.get(selection[0]))
                 refresh()
                 self.schedule_spellcheck(immediate=True)
-        buttons = tk.Frame(window, bg="#172033")
+        buttons = tk.Frame(window, bg=COLORS["panel"])
         buttons.pack(fill="x", padx=14, pady=(4, 14))
         self._tab_button(buttons, "Add Word", add, width=12).pack(side="left", padx=3)
         self._tab_button(buttons, "Remove", remove, width=12).pack(side="left", padx=3)

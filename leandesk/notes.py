@@ -10,7 +10,7 @@ from tkinter import filedialog, messagebox, simpledialog, ttk
 
 from .core import NOTES_FILE, RecentFiles, RecoveryRecord, RecoveryStore, atomic_write_json, atomic_write_text
 from .data_boundary import DataCorruptionError, UnsupportedSchemaVersion, load_json_or_default, merge_known_and_extra, read_bounded
-from .ui import COLORS, StatusBar
+from .ui import COLORS, StatusBar, set_theme_roles
 
 NOTES_SCHEMA_VERSION = 1
 
@@ -121,7 +121,7 @@ class NotesFrame(ttk.Frame):
         search = ttk.Entry(left, textvariable=self.search_var)
         search.pack(fill="x", padx=12, pady=(0, 8))
         search.bind("<KeyRelease>", lambda _e: self.refresh_list())
-        self.note_list = tk.Listbox(left, bg="#101827", fg=COLORS["text"], selectbackground="#5a3e73", selectforeground="#ffffff", relief="flat", bd=0, activestyle="none", font=("Segoe UI", 10))
+        self.note_list = tk.Listbox(left, bg=COLORS["field"], fg=COLORS["field_text"], selectbackground=COLORS["selection"], selectforeground=COLORS["button_active_text"], relief="flat", bd=0, activestyle="none", font=("Segoe UI", 10))
         self.note_list.pack(fill="both", expand=True, padx=10, pady=(0, 10))
         self.note_list.bind("<<ListboxSelect>>", self.on_select)
 
@@ -144,10 +144,17 @@ class NotesFrame(ttk.Frame):
         split.add(preview_frame, weight=1)
         self.split = split
         self.preview_frame = preview_frame
-        self.editor_text = tk.Text(edit_frame, wrap="word", undo=True, bg="#fdfcf8", fg="#202124", insertbackground="#202124", selectbackground="#9dc9ff", relief="flat", padx=30, pady=24, font=("Segoe UI", 11), spacing3=3)
+        self.editor_text = tk.Text(edit_frame, wrap="word", undo=True, bg=COLORS["paper_alt"], fg=COLORS["paper_text"], insertbackground=COLORS["paper_text"], selectbackground=COLORS["grid"], relief="flat", padx=30, pady=24, font=("Segoe UI", 11), spacing3=3)
+        set_theme_roles(
+            self.editor_text,
+            background="paper_alt",
+            foreground="paper_text",
+            insertbackground="paper_text",
+            selectbackground="grid",
+        )
         self.editor_text.pack(fill="both", expand=True)
         self.editor_text.bind("<KeyRelease>", self.editor_changed)
-        self.preview_text = tk.Text(preview_frame, wrap="word", bg="#161d2c", fg=COLORS["text"], relief="flat", padx=28, pady=24, state="disabled", font=("Segoe UI", 11), spacing3=4)
+        self.preview_text = tk.Text(preview_frame, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], relief="flat", padx=28, pady=24, state="disabled", font=("Segoe UI", 11), spacing3=4)
         self.preview_text.pack(fill="both", expand=True)
         self.preview_text.tag_configure("h1", font=("Segoe UI Semibold", 22), foreground=COLORS["orchid"], spacing1=8, spacing3=10)
         self.preview_text.tag_configure("h2", font=("Segoe UI Semibold", 17), foreground=COLORS["cobalt"], spacing1=7, spacing3=7)

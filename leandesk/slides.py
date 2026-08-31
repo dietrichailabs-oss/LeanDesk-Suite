@@ -224,11 +224,11 @@ class SlidesFrame(ttk.Frame):
         body.add(right, weight=2)
 
         tk.Label(left, text="SLIDES", bg=COLORS["panel"], fg=COLORS["amber"], font=("Segoe UI Semibold", 10)).pack(anchor="w", padx=12, pady=(12, 6))
-        self.slide_list = tk.Listbox(left, bg="#101827", fg=COLORS["text"], selectbackground="#5b4770", selectforeground="#ffffff", relief="flat", bd=0, font=("Segoe UI", 10), activestyle="none")
+        self.slide_list = tk.Listbox(left, bg=COLORS["field"], fg=COLORS["field_text"], selectbackground=COLORS["selection"], selectforeground=COLORS["button_active_text"], relief="flat", bd=0, font=("Segoe UI", 10), activestyle="none")
         self.slide_list.pack(fill="both", expand=True, padx=10, pady=(0, 10))
         self.slide_list.bind("<<ListboxSelect>>", self.slide_selected)
 
-        self.canvas = tk.Canvas(center, bg="#2a3140", highlightthickness=0)
+        self.canvas = tk.Canvas(center, bg=COLORS["workspace"], highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.bind("<Configure>", lambda _e: self.render_slide())
 
@@ -238,7 +238,7 @@ class SlidesFrame(ttk.Frame):
         title_entry.pack(fill="x", padx=12, pady=(2, 8))
         title_entry.bind("<KeyRelease>", self.form_changed)
         tk.Label(right, text="Body", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12)
-        self.body_text = tk.Text(right, height=9, wrap="word", bg="#101827", fg=COLORS["text"], insertbackground=COLORS["text"], relief="flat", padx=8, pady=8)
+        self.body_text = tk.Text(right, height=9, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], insertbackground=COLORS["field_text"], relief="flat", padx=8, pady=8)
         self.body_text.pack(fill="x", padx=12, pady=(2, 8))
         self.body_text.bind("<KeyRelease>", self.form_changed)
         tk.Label(right, text="Theme", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12)
@@ -246,7 +246,7 @@ class SlidesFrame(ttk.Frame):
         theme.pack(fill="x", padx=12, pady=(2, 8))
         theme.bind("<<ComboboxSelected>>", self.form_changed)
         tk.Label(right, text="Speaker notes", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12)
-        self.notes_text = tk.Text(right, height=8, wrap="word", bg="#101827", fg=COLORS["text"], insertbackground=COLORS["text"], relief="flat", padx=8, pady=8)
+        self.notes_text = tk.Text(right, height=8, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], insertbackground=COLORS["field_text"], relief="flat", padx=8, pady=8)
         self.notes_text.pack(fill="both", expand=True, padx=12, pady=(2, 12))
         self.notes_text.bind("<KeyRelease>", self.form_changed)
 
@@ -632,4 +632,3 @@ class SlidesFrame(ttk.Frame):
         self.dirty = True
         self.refresh_slides(0)
         self._update_title()
-

@@ -24,7 +24,7 @@ import uuid
 from package_cleanliness import scan_tree
 from source_manifest import build_manifest, sha256_file, verify_manifest
 
-MIN_EXPECTED_TESTS = 372
+MIN_EXPECTED_TESTS = 382
 REQUIRED_TEST_FILES = (
     "test_leandesk.py",
     "test_compatibility.py",
