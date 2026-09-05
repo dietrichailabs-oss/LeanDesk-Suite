@@ -1,0 +1,109 @@
+name: LeanDesk 0.9.0 concise QA evidence summary
+on:
+  push:
+    branches:
+      - engineering/0.9.0-gui-evidence-inspection
+permissions:
+  contents: read
+  actions: read
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify exact evidence and print concise blocker summary
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: '9959669436'
+          EXPECTED_INNER_SHA: EF87285702E857E38CA6EB054BA3AD860A9EA3B3A530E2DA6BE248DD622B64D8
+          EXPECTED_INNER_SIZE: '4852269'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/outer work/inner
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" > work/actions_artifact.zip
+          unzip -q work/actions_artifact.zip -d work/outer
+          INNER="work/outer/LeanDesk_Suite_0.9.0_Packaged_GUI_FAIL_Lifecycle_HOLD_Evidence_20260904.zip"
+          test -f "$INNER"
+          ACTUAL_SIZE=$(stat -c %s "$INNER")
+          ACTUAL_SHA=$(sha256sum "$INNER" | awk '{print toupper($1)}')
+          printf 'VERIFIED_INNER_SIZE=%s\nVERIFIED_INNER_SHA256=%s\n' "$ACTUAL_SIZE" "$ACTUAL_SHA"
+          test "$ACTUAL_SIZE" = "$EXPECTED_INNER_SIZE"
+          test "$ACTUAL_SHA" = "$EXPECTED_INNER_SHA"
+          python3 - "$INNER" <<'PY'
+          import sys, zipfile, pathlib, hashlib, re, json
+          src=pathlib.Path(sys.argv[1]); out=pathlib.Path('work/inner')
+          with zipfile.ZipFile(src) as z:
+              assert z.testzip() is None
+              z.extractall(out)
+              print(f'CRC=PASS ENTRIES={len(z.infolist())}')
+
+          text_ext={'.md','.txt','.json','.csv','.log','.yml','.yaml','.ini','.cfg','.toml','.xml','.ps1','.bat'}
+          key_name=re.compile(r'(readme|report|repro|lifecycle|finding|hold|fail|summary|manifest|source|candidate|identity|hash|gui|screenshot|evidence)',re.I)
+          key_line=re.compile(r'(FAIL|HOLD|finding|expected|actual|repro|root cause|source[-_ ]tree|manifest|candidate|\.exe|installer|sha[- ]?256|DPI|scal|resolution|theme|geometry|first launch|lifecycle|window|visible|blank|off[- ]screen|module)',re.I)
+
+          print('=== PRIORITY FILES ===')
+          files=[p for p in sorted(out.rglob('*')) if p.is_file()]
+          for p in files:
+              rel=p.relative_to(out).as_posix(); b=p.read_bytes()
+              if key_name.search(rel):
+                  print(f'{rel} | {len(b)} | {hashlib.sha256(b).hexdigest().upper()}')
+
+          print('=== SMALL PRIORITY TEXT FULL CONTENT ===')
+          for p in files:
+              rel=p.relative_to(out).as_posix()
+              if p.suffix.lower() not in text_ext or not key_name.search(rel) or p.stat().st_size>80000:
+                  continue
+              b=p.read_bytes()
+              for enc in ('utf-8-sig','utf-16','latin-1'):
+                  try:
+                      s=b.decode(enc); break
+                  except UnicodeDecodeError: pass
+              else: continue
+              print(f'----- BEGIN {rel} -----')
+              print(s[:80000])
+              print(f'----- END {rel} -----')
+
+          print('=== KEY LINES FROM ALL TEXT ===')
+          emitted=0
+          for p in files:
+              if p.suffix.lower() not in text_ext or p.stat().st_size>500000:
+                  continue
+              rel=p.relative_to(out).as_posix(); b=p.read_bytes()
+              for enc in ('utf-8-sig','utf-16','latin-1'):
+                  try:
+                      s=b.decode(enc); break
+                  except UnicodeDecodeError: pass
+              else: continue
+              hits=[]
+              for i,line in enumerate(s.splitlines(),1):
+                  if key_line.search(line):
+                      hits.append((i,line[:500]))
+              if hits:
+                  print(f'FILE {rel}')
+                  for i,line in hits[:120]:
+                      print(f'{i}: {line}')
+                      emitted+=1
+                      if emitted>=1500:
+                          print('KEY_LINE_LIMIT_REACHED')
+                          raise SystemExit(0)
+
+          print('=== NESTED ZIP SOURCE/PACKAGE IDENTIFIERS ===')
+          for p in files:
+              if p.suffix.lower()!='.zip': continue
+              rel=p.relative_to(out).as_posix()
+              try:
+                  with zipfile.ZipFile(p) as z:
+                      print(f'NESTED {rel} CRC={"PASS" if z.testzip() is None else "FAIL"} ENTRIES={len(z.infolist())}')
+                      for name in z.namelist():
+                          if re.search(r'(SOURCE_TREE_ID|SOURCE_MANIFEST|BUILD|MANIFEST|\.exe$|installer|portable|identity|sha256)',name,re.I):
+                              info=z.getinfo(name)
+                              print(f'  {name} SIZE={info.file_size}')
+                              if info.file_size<=100000 and pathlib.Path(name).suffix.lower() in text_ext:
+                                  try:
+                                      txt=z.read(name).decode('utf-8-sig')
+                                      for ln in txt.splitlines():
+                                          if key_line.search(ln): print(f'    {ln[:500]}')
+                                  except Exception: pass
+              except Exception as e:
+                  print(f'NESTED_ERROR {rel}: {e}')
+          PY
