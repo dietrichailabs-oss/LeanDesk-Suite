@@ -72,11 +72,16 @@ def configure_suite_styles(root: tk.Misc, theme_name: str | None = None) -> None
     style.configure("Title.TLabel", background=COLORS["bg"], foreground=COLORS["text"], font=("Segoe UI Semibold", 27))
     style.configure("Subtitle.TLabel", background=COLORS["bg"], foreground=COLORS["copper"], font=("Segoe UI", 10))
     style.configure("Sidebar.TButton", background=COLORS["panel"], foreground=COLORS["text"], anchor="w", padding=(16, 12), borderwidth=0)
-    style.map("Sidebar.TButton", background=[("pressed", COLORS["selection"]), ("active", COLORS["panel2"])])
+    button_state_text = [
+        ("disabled", COLORS["disabled_text"]),
+        ("pressed", COLORS["button_active_text"]),
+        ("active", COLORS["button_active_text"]),
+    ]
+    style.map("Sidebar.TButton", background=[("pressed", COLORS["selection"]), ("active", COLORS["panel2"])], foreground=button_state_text)
     style.configure("Primary.TButton", background=COLORS["accent_bg"], foreground=COLORS["accent_text"], padding=(13, 8), font=("Segoe UI Semibold", 9))
-    style.map("Primary.TButton", background=[("pressed", COLORS["button_pressed"]), ("active", COLORS["accent_hover"])])
+    style.map("Primary.TButton", background=[("pressed", COLORS["button_pressed"]), ("active", COLORS["accent_hover"])], foreground=button_state_text)
     style.configure("TButton", background=COLORS["button_bg"], foreground=COLORS["button_text"], padding=(10, 7), bordercolor=COLORS["line"])
-    style.map("TButton", background=[("pressed", COLORS["button_pressed"]), ("active", COLORS["button_hover"])], foreground=[("disabled", COLORS["disabled_text"])])
+    style.map("TButton", background=[("pressed", COLORS["button_pressed"]), ("active", COLORS["button_hover"])], foreground=button_state_text)
     style.configure("TEntry", fieldbackground=COLORS["field"], foreground=COLORS["field_text"], insertcolor=COLORS["field_text"], bordercolor=COLORS["line"])
     style.configure("TCombobox", fieldbackground=COLORS["field"], background=COLORS["field"], foreground=COLORS["field_text"], arrowcolor=COLORS["cobalt"], bordercolor=COLORS["line"])
     style.map("TCombobox", fieldbackground=[("readonly", COLORS["field"])], foreground=[("readonly", COLORS["field_text"])])
@@ -85,9 +90,13 @@ def configure_suite_styles(root: tk.Misc, theme_name: str | None = None) -> None
     style.map("Treeview", background=[("selected", COLORS["selection"])], foreground=[("selected", COLORS["button_active_text"])])
     style.configure("TNotebook", background=COLORS["bg"], borderwidth=0)
     style.configure("TNotebook.Tab", background=COLORS["tab_bg"], foreground=COLORS["muted"], padding=(13, 7))
-    style.map("TNotebook.Tab", background=[("selected", COLORS["tab_selected_bg"]), ("active", COLORS["tab_hover"])], foreground=[("selected", COLORS["tab_selected_text"])])
+    style.map("TNotebook.Tab", background=[("selected", COLORS["tab_selected_bg"]), ("active", COLORS["tab_hover"])], foreground=[("disabled", COLORS["disabled_text"]), ("selected", COLORS["tab_selected_text"]), ("active", COLORS["button_active_text"])])
     style.configure("TCheckbutton", background=COLORS["panel"], foreground=COLORS["text"])
     style.configure("TRadiobutton", background=COLORS["panel"], foreground=COLORS["text"])
+    # Clam supplies its own active colors. Override both sides of the label
+    # pair rather than inheriting a platform hover foreground/background.
+    for name in ("TCheckbutton", "TRadiobutton"):
+        style.map(name, background=[("pressed", COLORS["button_pressed"]), ("active", COLORS["button_hover"])], foreground=button_state_text)
     style.configure("Horizontal.TScale", background=COLORS["panel"], troughcolor=COLORS["panel3"])
     style.configure("TSeparator", background=COLORS["line"])
     for orientation in ("Vertical", "Horizontal"):
