@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-04T00:22:02.875526+00:00",
-  "source_tree_id": "8E8F20DFFFB1FCE85994DBD619D9EC01FA985DF379ABC345FE74B1CE698D6829",
+  "generated_utc": "2026-09-05T15:25:30.884836+00:00",
+  "source_tree_id": "8393574D81A514D2C4579F7E60913DD7FE09B0C89F4E8611BECF2F11519B1DAD",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 110,
-  "total_bytes": 4233645,
+  "file_count": 113,
+  "total_bytes": 4256446,
   "files": [
     {
       "path": ".gitignore",
@@ -274,8 +274,8 @@
     },
     {
       "path": "leandesk/notes.py",
-      "size": 24238,
-      "sha256": "D3D265447367794FD5BB0EC3DB409EBDCF8AF3B7261878E4B21FA24219F377BE"
+      "size": 24521,
+      "sha256": "CB144DD9214076C065BD22277B4F69AD6DB1BC5A8DB6271F81BE13CE9FBB6FD2"
     },
     {
       "path": "leandesk/ooxml_preflight.py",
@@ -309,13 +309,13 @@
     },
     {
       "path": "leandesk/sheets.py",
-      "size": 61667,
-      "sha256": "8F4181C7E8237F9038FEA114F3100F89EABA5DFAD81638C9D560F9029464568A"
+      "size": 64190,
+      "sha256": "59ED48698096284DA6BD7F8437F0157C509C0D041C5E6F75351A8293DA335652"
     },
     {
       "path": "leandesk/slides.py",
-      "size": 41039,
-      "sha256": "D53F8E833EF6E64F54CA722C79FFC65FA0AC241E710FA39F967BFFA257F12EDF"
+      "size": 41116,
+      "sha256": "F7CD5F7D7B3FB95CF4824234A79635CC87A32A6562FE327835A48B8D6438665D"
     },
     {
       "path": "leandesk/spellcheck.py",
@@ -330,12 +330,12 @@
     {
       "path": "leandesk/themes.py",
       "size": 7052,
-      "sha256": "F8DAEFFD856E21886A02D277CE8B908D4F5A61B637852A5F691DEE6324C349BA"
+      "sha256": "45A8649E09235F2D22F80686684316BAD9518A6943D1A99447493A7EF0CC5B11"
     },
     {
       "path": "leandesk/ui.py",
-      "size": 13128,
-      "sha256": "15F31AA7A47F3A8E0F4274335BAED95D334B4BAAD57DEF1E84C1C7AA08B0D6B9"
+      "size": 14790,
+      "sha256": "721EF9C8A850B8B849632C3446592F1ED17C681CBC175E3D3ECCDC69301EAC8F"
     },
     {
       "path": "leandesk/update_checker.py",
@@ -363,14 +363,19 @@
       "sha256": "432EFD245E50ABD1D169298F69A934F83F1B32180C59E0AB8CB3957A8C9AECE9"
     },
     {
+      "path": "leandesk/windows_print.py",
+      "size": 3636,
+      "sha256": "9BF580F302F66CF3BF5BBA36CD9551BF3A1CB58257DD083B56A8EA83DF1A6C6E"
+    },
+    {
       "path": "leandesk/workspace.py",
       "size": 3496,
       "sha256": "D4F880E7DE2D413620934C0BE0CBC26AD7510CB2F754947A3BC4516EC2837749"
     },
     {
       "path": "leandesk/writer.py",
-      "size": 76944,
-      "sha256": "DC4E1D6B386E2BC0716CE0007048FF887B6450ADDECF2B2573376B6A40615566"
+      "size": 77068,
+      "sha256": "2D224B0DFE7EAF316AA7E3D20418D297652B5190A75FFE6BB9F3FF0AA2B85A85"
     },
     {
       "path": "make_artwork.py",
@@ -508,6 +513,16 @@
       "sha256": "21F70C207284873CFA0533968D20CADD1B938406A839E417E3C8E3B785665ADC"
     },
     {
+      "path": "tests/test_gui06_reference_acceptance.py",
+      "size": 4162,
+      "sha256": "BE6F9D3DA199F20C4A53AF90BD994B278DC1FB08ED3FD6B42171433D2A97BD44"
+    },
+    {
+      "path": "tests/test_gui_fail_090_reproductions.py",
+      "size": 10231,
+      "sha256": "A2009EA84185A55A1B3C5A61A7B0678DA7586027CE478CB3A690FC7717637FF8"
+    },
+    {
       "path": "tests/test_hotfix_081.py",
       "size": 10755,
       "sha256": "831EE18A1087A8383C22B64B62B2EEA44B656F48A678768316A6C72DC1080D97"
@@ -544,8 +559,8 @@
     },
     {
       "path": "tools/run_authoritative_tests.py",
-      "size": 12421,
-      "sha256": "940CD39B1463947BE4B6DB952FA5CC8C47513890CE957FAF0236AE90D10AF17D"
+      "size": 12524,
+      "sha256": "922501958E1A7561C77A0FF45BE335D039336599C199C83E541B611FF9CAA3F0"
     },
     {
       "path": "tools/source_manifest.py",

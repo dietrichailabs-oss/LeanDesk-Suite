@@ -42,7 +42,11 @@ REQUIRED_TEST_FILES = (
         "tests/test_windows_lifecycle_hold_correction.py",
 )
 _EXCLUDED_SOURCE_PARTS = {".pytest_cache", "__pycache__", ".git", "build", "dist"}
-PER_TEST_PROCESS_FILES = {"tests/test_hotfix_081.py", "tests/test_gui_fail_090_reproductions.py"}
+PER_TEST_PROCESS_FILES = {
+    "tests/test_hotfix_081.py",
+    "tests/test_gui_fail_090_reproductions.py",
+    "tests/test_gui06_reference_acceptance.py",
+}
 CORRECTION_2_GUI_FILE = "tests/test_correction_2_qa.py"
 CORRECTION_2_GUI_TEST = "test_actual_gui_save_as_same_imported_source_is_controlled_and_non_destructive"
 

@@ -690,6 +690,17 @@ class SheetGrid(ttk.Frame):
     def selected_addresses(self) -> list[str]:
         return self.selection.addresses()
 
+    def show_formula_reference(self, anchor: str, active: str) -> None:
+        """Outline a reference without moving the formula destination selection."""
+        row1, col1, row2, col2 = SelectionRange(anchor, active).bounds()
+        x1, y1, _, _ = self._cell_bounds(row1, col1)
+        _, _, x2, y2 = self._cell_bounds(row2, col2)
+        self.canvas.delete("formula-reference")
+        self.canvas.create_rectangle(
+            x1 + 1, y1 + 1, x2 - 1, y2 - 1,
+            outline="#0078d4", width=3, dash=(4, 2), tags="formula-reference",
+        )
+
     def _cell_bounds(self, row: int, col: int) -> tuple[float, float, float, float]:
         return (self._x_positions[col], self.HEADER_HEIGHT + row * self.ROW_HEIGHT, self._x_positions[col + 1], self.HEADER_HEIGHT + (row + 1) * self.ROW_HEIGHT)
 
@@ -762,6 +773,8 @@ class SheetGrid(ttk.Frame):
             return self.select_all()
         address = self._address_from_event(event)
         if self.on_reference and self.on_reference(address):
+            self._reference_anchor = address
+            self.show_formula_reference(address, address)
             return "break"
         self.canvas.focus_set()
         extend = bool(getattr(event, "state", 0) & 0x0001)
@@ -771,6 +784,12 @@ class SheetGrid(ttk.Frame):
 
     def _drag_motion(self, event):
         if self._resize_column is None:
+            if getattr(self, "_reference_anchor", None) is not None:
+                address = self._address_from_event(event)
+                reference = SelectionRange(self._reference_anchor, address).label()
+                if self.on_reference(reference, extend=True):
+                    self.show_formula_reference(self._reference_anchor, address)
+                return "break"
             if self._drag_selecting:
                 address = self._address_from_event(event)
                 if address != self.selection.active:
@@ -796,6 +815,7 @@ class SheetGrid(ttk.Frame):
             self.on_change()
             return "break"
         self._drag_selecting = False
+        self._reference_anchor = None
         return None
 
     def _move_selection(self, row_delta: int, col_delta: int, *, extend: bool = False):
@@ -1015,9 +1035,30 @@ class SheetsFrame(ttk.Frame):
         self.active_grid().select_address(address)
         return "break"
 
-    def insert_formula_reference(self, address: str) -> bool:
+    def cancel_formula_reference(self, event=None) -> str:
+        grid = self.active_grid()
+        self.formula_var.set(grid.model.raw(grid.active_address))
+        self._reference_draft = None
+        grid._reference_anchor = None
+        grid.canvas.delete("formula-reference")
+        grid.canvas.focus_set()
+        return "break"
+
+    def insert_formula_reference(self, address: str, *, extend: bool = False) -> bool:
         if self.focus_get() != self.formula_entry or not self.formula_var.get().startswith("="):
             return False
+        if extend:
+            reference_draft = getattr(self, "_reference_draft", None)
+            if reference_draft is None:
+                return False
+            prefix, suffix, previous = reference_draft
+            if self.formula_var.get() != previous:
+                return False
+            updated = prefix + address + suffix
+            self.formula_var.set(updated)
+            self.formula_entry.icursor(len(prefix) + len(address))
+            self._reference_draft = (prefix, suffix, updated)
+            return True
         cursor = self.formula_entry.index(tk.INSERT)
         current = self.formula_var.get()
         prefix = current[:cursor]
@@ -1026,6 +1067,10 @@ class SheetsFrame(ttk.Frame):
         insertion = separator + address
         self.formula_var.set(prefix + insertion + suffix)
         self.formula_entry.icursor(cursor + len(insertion))
+        self._reference_draft = (prefix + separator, suffix, self.formula_var.get())
+        if not getattr(self, "_reference_escape_bound", False):
+            self.formula_entry.bind("<Escape>", self.cancel_formula_reference, add="+")
+            self._reference_escape_bound = True
         return True
 
     def undo(self) -> None:
