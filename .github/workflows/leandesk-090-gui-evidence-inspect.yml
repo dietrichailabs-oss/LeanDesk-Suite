@@ -1,0 +1,89 @@
+name: LeanDesk 0.9.0 isolated QA evidence inspection
+on:
+  push:
+    branches:
+      - engineering/0.9.0-gui-evidence-inspection
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download and inspect exact QA evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: '9959669436'
+          EXPECTED_INNER_SHA: EF87285702E857E38CA6EB054BA3AD860A9EA3B3A530E2DA6BE248DD622B64D8
+          EXPECTED_INNER_SIZE: '4852269'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/outer work/inner
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" > work/actions_artifact.zip
+          echo "OUTER_ACTIONS_ZIP_SHA256=$(sha256sum work/actions_artifact.zip | awk '{print toupper($1)}')"
+          unzip -q work/actions_artifact.zip -d work/outer
+          INNER="work/outer/LeanDesk_Suite_0.9.0_Packaged_GUI_FAIL_Lifecycle_HOLD_Evidence_20260904.zip"
+          test -f "$INNER"
+          ACTUAL_SIZE=$(stat -c %s "$INNER")
+          ACTUAL_SHA=$(sha256sum "$INNER" | awk '{print toupper($1)}')
+          echo "INNER_SIZE=$ACTUAL_SIZE"
+          echo "INNER_SHA256=$ACTUAL_SHA"
+          test "$ACTUAL_SIZE" = "$EXPECTED_INNER_SIZE"
+          test "$ACTUAL_SHA" = "$EXPECTED_INNER_SHA"
+          python3 - "$INNER" <<'PY'
+          import sys, zipfile, hashlib, pathlib, json, struct
+          src=pathlib.Path(sys.argv[1])
+          out=pathlib.Path('work/inner')
+          with zipfile.ZipFile(src) as z:
+              bad=z.testzip()
+              assert bad is None, bad
+              infos=z.infolist()
+              print(f'INNER_ZIP_CRC=PASS ENTRIES={len(infos)}')
+              z.extractall(out)
+          print('=== EVIDENCE INVENTORY START ===')
+          for p in sorted(out.rglob('*')):
+              if not p.is_file():
+                  continue
+              b=p.read_bytes()
+              rel=p.relative_to(out).as_posix()
+              sha=hashlib.sha256(b).hexdigest().upper()
+              extra=''
+              if b.startswith(b'\x89PNG\r\n\x1a\n') and len(b)>=24:
+                  w,h=struct.unpack('>II', b[16:24])
+                  extra=f' PNG={w}x{h}'
+              print(f'FILE {rel} SIZE={len(b)} SHA256={sha}{extra}')
+          print('=== EVIDENCE INVENTORY END ===')
+
+          text_ext={'.md','.txt','.json','.csv','.log','.yml','.yaml','.ini','.cfg','.toml','.xml','.html','.ps1','.bat'}
+          print('=== TEXT EVIDENCE START ===')
+          for p in sorted(out.rglob('*')):
+              if not p.is_file() or p.suffix.lower() not in text_ext:
+                  continue
+              rel=p.relative_to(out).as_posix()
+              b=p.read_bytes()
+              try:
+                  s=b.decode('utf-8-sig')
+              except UnicodeDecodeError:
+                  try: s=b.decode('utf-16')
+                  except UnicodeDecodeError: s=b.decode('latin-1', errors='replace')
+              # Preserve all ordinary QA reports/logs while bounding pathological files.
+              if len(s)>300000:
+                  s=s[:300000]+'\n...[TRUNCATED AFTER 300000 CHARS]...'
+              print(f'\n===== BEGIN {rel} =====\n{s}\n===== END {rel} =====')
+          print('=== TEXT EVIDENCE END ===')
+
+          # Summarize nested ZIP inventories without extracting binaries recursively.
+          print('=== NESTED ZIP INVENTORIES START ===')
+          for p in sorted(out.rglob('*.zip')):
+              rel=p.relative_to(out).as_posix()
+              try:
+                  with zipfile.ZipFile(p) as nz:
+                      bad=nz.testzip()
+                      print(f'NESTED_ZIP {rel} CRC={"PASS" if bad is None else "FAIL:"+str(bad)} ENTRIES={len(nz.infolist())}')
+                      for info in nz.infolist()[:300]:
+                          print(f'  {info.filename} SIZE={info.file_size} COMP={info.compress_size}')
+              except Exception as e:
+                  print(f'NESTED_ZIP_ERROR {rel}: {e!r}')
+          print('=== NESTED ZIP INVENTORIES END ===')
+          PY
