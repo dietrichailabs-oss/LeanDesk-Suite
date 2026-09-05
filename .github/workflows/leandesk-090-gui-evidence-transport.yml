@@ -1,0 +1,41 @@
+name: LeanDesk 0.9.0 GUI FAIL HOLD evidence transport
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  transport:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download unchanged evidence
+        env:
+          HANDOFF_URL: ${{ secrets.LEANDESK_QA_ASSET_URL_TMP }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${HANDOFF_URL:-}"
+          mkdir -p evidence
+          curl --fail --silent --show-error --location --retry 2 --output evidence/LeanDesk_Suite_0.9.0_Packaged_GUI_FAIL_Lifecycle_HOLD_Evidence_20260904.zip "$HANDOFF_URL"
+      - name: Verify size SHA256 and ZIP CRC
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, hashlib, zipfile
+          p = pathlib.Path('evidence/LeanDesk_Suite_0.9.0_Packaged_GUI_FAIL_Lifecycle_HOLD_Evidence_20260904.zip')
+          assert p.stat().st_size == 4852269, 'Size mismatch'
+          digest = hashlib.sha256(p.read_bytes()).hexdigest().upper()
+          assert digest == 'EF87285702E857E38CA6EB054BA3AD860A9EA3B3A530E2DA6BE248DD622B64D8', 'SHA256 mismatch'
+          with zipfile.ZipFile(p) as z:
+              assert z.testzip() is None, 'ZIP CRC failure'
+              print('ZIP_CRC_PASS', len(z.infolist()))
+          print('SHA256_PASS', digest, 'SIZE', p.stat().st_size)
+          PY
+      - name: Upload exact evidence ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: LeanDesk-0.9.0-GUI-FAIL-Lifecycle-HOLD-EF872857
+          path: evidence/LeanDesk_Suite_0.9.0_Packaged_GUI_FAIL_Lifecycle_HOLD_Evidence_20260904.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 3
