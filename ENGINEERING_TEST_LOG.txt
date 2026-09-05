@@ -1,0 +1,54 @@
+LEANDESK SUITE 0.8.0 RECONSTRUCTED CORRECTION 5 — ENGINEERING SOURCE TEST LOG
+
+Classification: Engineering source QA candidate; not release approved.
+Platform used: Linux x86_64, Python 3.13, Xvfb, LibreOffice.
+
+Focused Correction 5 command:
+  xvfb-run -a python -m pytest -p no:cacheprovider -q tests/test_correction_5_qa.py
+
+Focused Correction 5 result:
+  Tests collected: 67
+  Tests passed: 67
+  Tests failed/errors: 0
+
+Canonical recursive command:
+  xvfb-run -a python tools/run_authoritative_tests.py --report AUTHORITATIVE_TEST_GATE.json
+
+Canonical result:
+  Compilation: PASS (in-memory; no bytecode output)
+  Required suites discovered: 7/7
+  Tests collected: 347
+  Tests passed: 347
+  Tests failed: 0
+  Expected duplicate-member fixture warnings: 2
+  Pre-test source cleanliness: PASS
+  Post-test source cleanliness: PASS
+  Gate status: PASS
+
+Legacy discovery command:
+  python -m unittest discover -v
+
+Legacy discovery result:
+  Tests run: 35
+  Passed: 35
+  Failed/errors: 0
+
+Correction 5 focused coverage:
+  Restore private-snapshot identity across A-to-B/A-to-invalid swaps, rename, symlink, truncation, and concurrent mutation: PASS
+  Restore reported SHA-256 equals the immutable archive bytes actually restored: PASS
+  Backup final hash/replace, postreplace mutation, verification, replace, and rollback fault matrix: PASS
+  Successful backup SHA-256 equals exact committed destination: PASS
+  Semantic OOXML XML/relationship classification for .dat, extensionless, mixed-case, override/default mappings: PASS
+  Hostile semantic XML rejected before python-docx/OpenPyXL/python-pptx invocation: PASS
+  Raw CP932 表, ―, ＋, and ± plus adjacent real controls/groups: PASS
+  RTF core, Writer Save As/reopen, and LibreOffice readback: PASS
+  Linked backup-source parent/root, mount/reparse, and parent/root replacement races: PASS
+  Exact source stage cache/bytecode/link cleanliness: PASS
+
+Independent-replay, GUI, historical-source-preservation, update, and installer-source evidence is supplied separately in the master QA handoff.
+
+Windows boundary:
+  No Windows EXE, portable runtime, or compiled Inno Setup installer was produced in this Linux environment. Windows lifecycle evidence remains required after source QA acceptance.
+
+Exact update manifest URL:
+  https://www.dietrichailabs.com/updates/leandesk.json

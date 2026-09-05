@@ -1,0 +1,41 @@
+LEANDESK SUITE END USER LICENSE AGREEMENT
+Version 0.8.1
+
+This End User License Agreement ("Agreement") is between you and Dietrich AI Labs ("Publisher") for LeanDesk Suite ("Software"). By installing or using the Software, you agree to this Agreement.
+
+1. LICENSE
+The Publisher grants you a non-exclusive, revocable license to install and use the Software for lawful personal, educational, or business purposes.
+
+2. USER CONTENT
+You retain ownership of documents, spreadsheets, presentations, notes, diagrams, templates, and other content you create or open with the Software. You are responsible for ensuring that you have the right to use, edit, export, or distribute that content.
+
+3. LOCAL STORAGE AND BACKUPS
+The Software stores settings, recent-file history, recovery records, personal dictionary words, notes, tasks, calendar events, contacts, and templates locally. Recovery and autosave features reduce risk but do not replace independent backups. You are responsible for maintaining backups of important files.
+
+4. FILE COMPATIBILITY
+Office document formats are complex. The Software may not preserve every advanced feature, layout, macro, embedded object, tracked change, comment, formula, animation, or third-party extension. Review exported files before relying on them or distributing them.
+
+5. NO AUTOMATIC CLOUD SERVICE
+The Software does not require a Publisher-operated cloud account. Files opened from synchronized or network locations may still be processed by the provider of those locations under its own terms.
+
+6. THIRD-PARTY COMPONENTS
+The Software may include or use open-source components described in THIRD_PARTY_NOTICES.txt. Third-party formats and applications remain governed by their respective owners and licenses.
+
+7. PROHIBITED USE
+You may not use the Software unlawfully, bypass security controls, infringe intellectual-property rights, or misrepresent the Publisher as endorsing content created with the Software.
+
+8. DISCLAIMER
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND TO THE MAXIMUM EXTENT PERMITTED BY LAW. THE PUBLISHER DOES NOT GUARANTEE ERROR-FREE OPERATION, PERFECT FILE COMPATIBILITY, OR RECOVERY OF LOST DATA.
+
+9. LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE PUBLISHER WILL NOT BE LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST DATA, LOST PROFITS, OR BUSINESS INTERRUPTION.
+
+10. TERMINATION
+This license terminates automatically if you materially violate this Agreement. You may stop using and uninstall the Software at any time.
+
+11. GOVERNING LAW
+This Agreement is governed by the laws of the State of New Jersey, United States, without regard to conflict-of-law rules.
+
+12. CONTACT
+Publisher: Dietrich AI Labs
+Project: LeanDesk Suite
