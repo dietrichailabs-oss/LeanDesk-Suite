@@ -1,0 +1,76 @@
+name: LeanDesk 0.9.0 exact source inventory
+on:
+  push:
+    branches:
+      - engineering/0.9.0-gui-evidence-inspection
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify evidence and locate exact failed source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: '9959669436'
+          EXPECTED_INNER_SHA: EF87285702E857E38CA6EB054BA3AD860A9EA3B3A530E2DA6BE248DD622B64D8
+          EXPECTED_SOURCE_ID: 8E8F20DFFFB1FCE85994DBD619D9EC01FA985DF379ABC345FE74B1CE698D6829
+          EXPECTED_SOURCE_MANIFEST_SHA: 51B5D96F710AD6D3A956A7F22BBD477ED78F3D2390A4E22A0FC8AF31A0EFCBE9
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/outer work/inner
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" > work/actions_artifact.zip
+          unzip -q work/actions_artifact.zip -d work/outer
+          INNER="work/outer/LeanDesk_Suite_0.9.0_Packaged_GUI_FAIL_Lifecycle_HOLD_Evidence_20260904.zip"
+          test "$(sha256sum "$INNER" | awk '{print toupper($1)}')" = "$EXPECTED_INNER_SHA"
+          unzip -q "$INNER" -d work/inner
+          echo '=== FILTERED FILE INVENTORY ==='
+          find work/inner -type f -printf '%P\t%s\n' | sort | grep -Ei '(source|candidate|manifest|tree|build|release|handoff|\.zip$|\.py$|\.iss$|\.spec$|\.ps1$|\.bat$)' || true
+          echo '=== SOURCE ID / MANIFEST CONTENTS ==='
+          while IFS= read -r -d '' f; do
+            rel=${f#work/inner/}
+            echo "----- $rel -----"
+            cat "$f" || true
+          done < <(find work/inner -type f \( -iname 'SOURCE_TREE_ID.txt' -o -iname 'SOURCE_MANIFEST.json' -o -iname '*source*manifest*.json' \) -print0)
+          echo '=== NESTED ZIP INVENTORY + HASHES ==='
+          python3 - <<'PY'
+          import pathlib, zipfile, hashlib, re, json
+          root=pathlib.Path('work/inner')
+          expected='8E8F20DFFFB1FCE85994DBD619D9EC01FA985DF379ABC345FE74B1CE698D6829'
+          man_sha='51B5D96F710AD6D3A956A7F22BBD477ED78F3D2390A4E22A0FC8AF31A0EFCBE9'
+          for p in sorted(root.rglob('*.zip')):
+              b=p.read_bytes(); rel=p.relative_to(root).as_posix()
+              print(f'ZIP {rel} SIZE={len(b)} SHA256={hashlib.sha256(b).hexdigest().upper()}')
+              try:
+                  with zipfile.ZipFile(p) as z:
+                      print(f'  CRC={"PASS" if z.testzip() is None else "FAIL"} ENTRIES={len(z.infolist())}')
+                      names=z.namelist()
+                      for n in names:
+                          if re.search(r'(SOURCE_TREE_ID|SOURCE_MANIFEST|source.*\.zip$|\.py$|\.iss$|BUILD_|requirements|lean_desk_suite)', n, re.I):
+                              info=z.getinfo(n)
+                              print(f'  FILE {n} SIZE={info.file_size}')
+                              if n.endswith('SOURCE_TREE_ID.txt') and info.file_size<1024:
+                                  txt=z.read(n).decode('utf-8-sig', errors='replace').strip()
+                                  print(f'    SOURCE_TREE_ID={txt}')
+                              if n.endswith('SOURCE_MANIFEST.json') and info.file_size<2000000:
+                                  data=z.read(n)
+                                  print(f'    MANIFEST_SHA256={hashlib.sha256(data).hexdigest().upper()}')
+                      # Detect a source-root ZIP by exact ID+manifest pair.
+                      id_names=[n for n in names if n.endswith('SOURCE_TREE_ID.txt')]
+                      for idn in id_names:
+                          try: sid=z.read(idn).decode('utf-8-sig').strip()
+                          except Exception: continue
+                          if sid==expected:
+                              prefix=idn[:-len('SOURCE_TREE_ID.txt')]
+                              cand=prefix+'SOURCE_MANIFEST.json'
+                              print(f'  EXACT_SOURCE_ID_MATCH at prefix={prefix!r}')
+                              if cand in names:
+                                  m=z.read(cand); sha=hashlib.sha256(m).hexdigest().upper()
+                                  print(f'  EXACT_MANIFEST_AT {cand} SHA256={sha} EXPECTED_MATCH={sha==man_sha}')
+              except Exception as e:
+                  print(f'  ERROR {e!r}')
+          PY
+          echo '=== ALL SOURCE-RELATED PATHS (INCLUDING DIRECTORIES) ==='
+          find work/inner -printf '%P\n' | sort | grep -Ei '(source|candidate|build|release)' || true
