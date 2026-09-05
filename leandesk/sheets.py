@@ -1025,6 +1025,9 @@ class SheetsFrame(ttk.Frame):
         self.status_var.set(f"{address}: {value}")
 
     def commit_formula_bar(self, _event=None):
+        self.active_grid().canvas.delete("formula-reference")
+        self.active_grid()._reference_anchor = None
+        self._reference_draft = None
         address = self.active_address.get().strip().upper()
         try:
             split_cell(address)
