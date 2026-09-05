@@ -356,10 +356,14 @@ class NotesFrame(ttk.Frame):
 
     def new_note(self) -> None:
         self.commit_current()
-        title = simpledialog.askstring("New note", "Title:", initialvalue="New Note", parent=self) or "New Note"
-        note = Note.new(title)
+        title = simpledialog.askstring("New note", "Title:", initialvalue="New Note", parent=self)
+        if title is None:
+            return
+        note = Note.new(title.strip() or "New Note")
         self.notes.append(note)
-        self.current_id = note.note_id
+        # Populate the editor before save_now commits it to the selected record.
+        # Otherwise the previous note's title and body overwrite the new note.
+        self.load_note(note.note_id)
         self.save_now()
         self.refresh_list(select_id=note.note_id)
 

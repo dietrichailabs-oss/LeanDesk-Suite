@@ -1216,11 +1216,14 @@ class SheetsFrame(ttk.Frame):
 
     def rename_sheet(self) -> None:
         sheet = self.active_sheet()
+        selected_tab = self.notebook.select()
         value = simpledialog.askstring("Rename sheet", "Sheet name:", initialvalue=sheet.name, parent=self)
         if value and value.strip():
             sheet.name = value.strip()[:31]
             self.mark_dirty()
-            self.rebuild_tabs()
+            # Renaming does not change the grid or the active sheet. Rebuilding
+            # every tab discarded selection and silently activated Sheet1.
+            self.notebook.tab(selected_tab, text=sheet.name)
 
     def delete_sheet(self) -> None:
         if len(self.workbook.sheets) == 1:
