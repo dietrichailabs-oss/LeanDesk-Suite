@@ -1036,6 +1036,9 @@ class SheetsFrame(ttk.Frame):
             return "break"
         self.active_grid().set_cells([(address, self.formula_var.get())])
         self.active_grid().select_address(address)
+        # Enter ends formula editing; subsequent clicks must select cells rather
+        # than insert another reference into the committed formula.
+        self.active_grid().canvas.focus_set()
         return "break"
 
     def cancel_formula_reference(self, event=None) -> str:

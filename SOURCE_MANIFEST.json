@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-05T16:12:27.357221+00:00",
-  "source_tree_id": "049F8C23D6C5B4EB5521F6125224AE88AEC396AC801588E7C5CEBCDFC3A6C1F0",
+  "generated_utc": "2026-09-05T18:20:23.155833+00:00",
+  "source_tree_id": "E46B585286226B9DDEAC36F75CABAA66D45BB572A12A3911BFF37DBCFCF326DE",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
   "file_count": 113,
-  "total_bytes": 4256597,
+  "total_bytes": 4258568,
   "files": [
     {
       "path": ".gitignore",
@@ -309,8 +309,8 @@
     },
     {
       "path": "leandesk/sheets.py",
-      "size": 64341,
-      "sha256": "D881CB99A7DEF2F723228746ED0AD0D349EF3D2874E7D2A8F277837D456E9C83"
+      "size": 64536,
+      "sha256": "591326A60EAA0EAE6FD5D67679198EFBAB1BC5D0B492A7AD29C99E35AC30963F"
     },
     {
       "path": "leandesk/slides.py",
@@ -514,8 +514,8 @@
     },
     {
       "path": "tests/test_gui06_reference_acceptance.py",
-      "size": 4162,
-      "sha256": "BE6F9D3DA199F20C4A53AF90BD994B278DC1FB08ED3FD6B42171433D2A97BD44"
+      "size": 5938,
+      "sha256": "973708A76296C9BA49FE62CA4F1705AECE64F035034E607EE39ECE980067C583"
     },
     {
       "path": "tests/test_gui_fail_090_reproductions.py",

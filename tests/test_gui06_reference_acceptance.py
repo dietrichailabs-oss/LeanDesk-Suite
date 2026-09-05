@@ -112,3 +112,45 @@ def test_multiple_ranges_keep_separate_reference_spans(sheet_frame):
     frame.formula_var.set(frame.formula_var.get() + ")")
     frame.commit_formula_bar()
     assert grid.model.value("C1") == 43
+
+
+@pytest.mark.parametrize("use_drag", [False, True])
+def test_enter_then_cell_click_selects_without_reopening_formula(sheet_frame, use_drag):
+    root, frame, grid = sheet_frame
+    draft(root, frame, "=SUM(" if use_drag else "=SUM(A1:B1)")
+    if use_drag:
+        drag(root, grid, (0, 0), (0, 1))
+        frame.formula_var.set(frame.formula_var.get() + ")")
+    frame.formula_entry.event_generate("<Return>")
+    root.update()
+    assert root.focus_get() == grid.canvas
+    assert grid.model.raw("C1") == "=SUM(A1:B1)"
+    assert grid.model.value("C1") == 36
+    assert grid._reference_anchor is None
+    assert frame._reference_draft is None
+    before = frame.workbook.to_dict()
+    # No forced focus or programmatic selection between Enter and the click:
+    # this is the sequence that failed in the signed Windows package.
+    drag(root, grid, (0, 3), (0, 3))
+    assert grid.active_address == frame.active_address.get() == "D1"
+    assert grid.selection.label() == "D1"
+    assert frame.formula_var.get() == ""
+    assert not grid.canvas.find_withtag("formula-reference")
+    assert frame.workbook.to_dict() == before
+
+
+def test_formula_editing_can_be_resumed_after_enter(sheet_frame):
+    root, frame, grid = sheet_frame
+    draft(root, frame, "=SUM(A1:B1)")
+    frame.formula_entry.event_generate("<Return>")
+    root.update()
+    assert root.focus_get() == grid.canvas
+    draft(root, frame, grid.model.raw("C1") + "+")
+    drag(root, grid, (1, 0), (1, 0))
+    assert frame.formula_var.get() == "=SUM(A1:B1)+A2"
+    assert grid.active_address == "C1"
+    frame.formula_entry.event_generate("<Return>")
+    root.update()
+    assert grid.model.value("C1") == 39
+    assert root.focus_get() == grid.canvas
+    assert not grid.canvas.find_withtag("formula-reference")
