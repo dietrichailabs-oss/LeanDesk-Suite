@@ -13,7 +13,7 @@ from tkinter import filedialog, messagebox, simpledialog, ttk
 
 from .core import NOTES_FILE, RecentFiles, RecoveryRecord, RecoveryStore, atomic_write_json, atomic_write_text
 from .data_boundary import DataCorruptionError, UnsupportedSchemaVersion, load_json_or_default, merge_known_and_extra, read_bounded
-from .ui import COLORS, StatusBar, set_theme_roles
+from .ui import COLORS, StatusBar, set_theme_roles, ResponsiveToolbar, ResponsivePanedwindow
 
 NOTES_SCHEMA_VERSION = 1
 
@@ -106,7 +106,7 @@ class NotesFrame(ttk.Frame):
         self.load()
 
     def _build_ui(self) -> None:
-        ribbon = tk.Frame(self, bg=COLORS["panel"], height=80, highlightbackground=COLORS["line"], highlightthickness=1)
+        ribbon = ResponsiveToolbar(self, bg=COLORS["panel"], height=80, highlightbackground=COLORS["line"], highlightthickness=1)
         ribbon.pack(fill="x")
         ribbon.pack_propagate(False)
         for label, command in (
@@ -120,7 +120,7 @@ class NotesFrame(ttk.Frame):
             ttk.Button(ribbon, text=label, command=command).pack(side="left", padx=4, pady=14)
         tk.Label(ribbon, text="NOTES", bg=COLORS["panel"], fg=COLORS["orchid"], font=("Segoe UI Bold", 14)).pack(side="right", padx=16)
 
-        body = ttk.Panedwindow(self, orient="horizontal")
+        body = ResponsivePanedwindow(self, orient="horizontal")
         body.pack(fill="both", expand=True)
         left = ttk.Frame(body, style="Panel.TFrame", width=270)
         editor = ttk.Frame(body)
@@ -135,7 +135,7 @@ class NotesFrame(ttk.Frame):
         self.note_list.pack(fill="both", expand=True, padx=10, pady=(0, 10))
         self.note_list.bind("<<ListboxSelect>>", self.on_select)
 
-        meta = tk.Frame(editor, bg=COLORS["panel2"], height=72)
+        meta = ResponsiveToolbar(editor, bg=COLORS["panel2"], height=72)
         meta.pack(fill="x")
         meta.pack_propagate(False)
         ttk.Entry(meta, textvariable=self.title_var, font=("Segoe UI Semibold", 14)).pack(side="left", fill="x", expand=True, padx=(10, 6), pady=14)
@@ -148,7 +148,7 @@ class NotesFrame(ttk.Frame):
         self.tags_var.trace_add("write", lambda *_: self.editor_changed())
         self.parent_var.trace_add("write", lambda *_: self.editor_changed())
 
-        split = ttk.Panedwindow(editor, orient="horizontal")
+        split = ResponsivePanedwindow(editor, orient="horizontal")
         split.pack(fill="both", expand=True)
         edit_frame = ttk.Frame(split)
         preview_frame = ttk.Frame(split, style="Panel.TFrame")

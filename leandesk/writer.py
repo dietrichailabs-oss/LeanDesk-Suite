@@ -25,6 +25,7 @@ from .save_policy import (
     write_atomically,
 )
 from .ui import COLORS, set_theme_roles
+from .windows_print import print_rtf_document, PrintUnavailableError
 
 
 class WriterFrame(ttk.Frame):
@@ -1628,11 +1629,10 @@ class WriterFrame(ttk.Frame):
         if os.name != "nt":
             messagebox.showinfo("Print", "Printing is available in the Windows build.", parent=self)
             return
-        temp = Path(tempfile.gettempdir()) / "LeanDesk_Print.rtf"
-        write_text_document(self.serialize(), temp)
         try:
-            os.startfile(str(temp), "print")
-        except OSError as exc:
+            result = print_rtf_document(self.serialize(), owner=self.winfo_toplevel().winfo_id())
+            self.status_var.set("Print job submitted" if result == "submitted" else "Printing cancelled")
+        except PrintUnavailableError as exc:
             messagebox.showerror("Print", str(exc), parent=self)
 
 

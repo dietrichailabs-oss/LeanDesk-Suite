@@ -102,7 +102,9 @@ def set_theme_roles(widget: tk.Misc, **roles: str) -> tk.Misc:
 
 
 def _semantic_role(widget: tk.Misc, option: str, value: object, old_colors: dict[str, str]) -> str | None:
-    if not isinstance(value, str) or not value.startswith("#"):
+    # ttk can return a Tcl color object rather than a Python str.
+    value = str(value)
+    if not value.startswith("#"):
         return None
     normalized = value.lower()
     fixed_by_option = {
@@ -278,3 +280,45 @@ class StatusBar(tk.Frame):
         label = tk.Label(self, textvariable=variable, bg=COLORS["bg"], fg=COLORS["muted"] if muted else COLORS["text"], font=("Segoe UI", 9))
         label.pack(side="right", padx=10)
         return label
+
+
+class ResponsiveToolbar(tk.Frame):
+    """Wrap existing toolbar children without removing or replacing commands."""
+
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+        self._layout_job = None
+        self.bind("<Configure>", self._schedule_layout, add="+")
+        self.bind("<<LeanDeskThemeChanged>>", self._schedule_layout, add="+")
+        self._schedule_layout()
+
+    def _schedule_layout(self, _event=None):
+        if self._layout_job is None:
+            self._layout_job = self.after_idle(self._layout)
+
+    def _layout(self):
+        self._layout_job = None
+        available = max(1, self.winfo_width() - 12)
+        x, y, row_height = 6, 6, 0
+        for child in self.winfo_children():
+            width = min(available, max(1, child.winfo_reqwidth()))
+            height = max(28, child.winfo_reqheight())
+            if x > 6 and x + width > available + 6:
+                x, y, row_height = 6, y + row_height + 6, 0
+            if child.winfo_manager() == "pack":
+                child.pack_forget()
+            child.place(x=x, y=y, width=width, height=height)
+            x += width + 6
+            row_height = max(row_height, height)
+        height = y + row_height + 6
+        if int(self.cget("height")) != height:
+            self.configure(height=height)
+
+
+class ResponsivePanedwindow(ttk.Panedwindow):
+    """Let pane weights allocate space rather than embedded Text request sizes."""
+
+    def add(self, child, **kwargs):
+        child.configure(width=1)
+        child.pack_propagate(False)
+        return super().add(child, **kwargs)

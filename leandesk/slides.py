@@ -14,7 +14,7 @@ from typing import Any
 from .core import RecentFiles, RecoveryRecord, RecoveryStore, atomic_write_json
 from .data_boundary import DataCorruptionError, UnsupportedSchemaVersion, merge_known_and_extra, read_bounded, strict_json_load_bytes
 from .compatibility import SLIDES_COMPAT, convert_with_libreoffice
-from .ui import COLORS, StatusBar
+from .ui import COLORS, StatusBar, ResponsiveToolbar, ResponsivePanedwindow
 from .save_policy import (
     ImportedSourceProtectionError,
     SavePolicyError,
@@ -269,7 +269,7 @@ class SlidesFrame(ttk.Frame):
         self.refresh_slides(0)
 
     def _build_ui(self) -> None:
-        ribbon = tk.Frame(self, bg=COLORS["panel"], height=92, highlightbackground=COLORS["line"], highlightthickness=1)
+        ribbon = ResponsiveToolbar(self, bg=COLORS["panel"], height=92, highlightbackground=COLORS["line"], highlightthickness=1)
         ribbon.pack(fill="x")
         ribbon.pack_propagate(False)
         for label, command in (
@@ -282,7 +282,7 @@ class SlidesFrame(ttk.Frame):
             ttk.Button(ribbon, text=label, command=command).pack(side="left", padx=3, pady=17)
         tk.Label(ribbon, text="SLIDES", bg=COLORS["panel"], fg=COLORS["amber"], font=("Segoe UI Bold", 14)).pack(side="right", padx=16)
 
-        body = ttk.Panedwindow(self, orient="horizontal")
+        body = ResponsivePanedwindow(self, orient="horizontal")
         body.pack(fill="both", expand=True)
         left = ttk.Frame(body, style="Panel.TFrame", width=210)
         center = ttk.Frame(body)
@@ -407,9 +407,9 @@ class SlidesFrame(ttk.Frame):
             return
         slide = self.current_slide()
         theme = THEMES.get(slide.theme, THEMES["Midnight"])
-        width = max(600, self.canvas.winfo_width())
-        height = max(420, self.canvas.winfo_height())
-        ratio = min((width - 80) / 960, (height - 70) / 540)
+        width = max(1, self.canvas.winfo_width())
+        height = max(1, self.canvas.winfo_height())
+        ratio = max(0.001, min(max(1, width - 24) / 960, max(1, height - 24) / 540))
         sw, sh = int(960 * ratio), int(540 * ratio)
         x1, y1 = (width - sw) // 2, (height - sh) // 2
         x2, y2 = x1 + sw, y1 + sh

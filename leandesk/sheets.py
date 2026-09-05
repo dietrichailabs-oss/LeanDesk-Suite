@@ -17,7 +17,7 @@ from typing import Any
 from .core import RecentFiles, RecoveryRecord, RecoveryStore, atomic_write_json
 from .data_boundary import DataCorruptionError, UnsupportedSchemaVersion, merge_known_and_extra, read_bounded, strict_json_load_bytes
 from .compatibility import SHEETS_COMPAT, convert_with_libreoffice
-from .ui import COLORS, StatusBar
+from .ui import COLORS, StatusBar, ResponsiveToolbar
 from .save_policy import (
     ImportedSourceProtectionError,
     SavePolicyError,
@@ -941,7 +941,7 @@ class SheetsFrame(ttk.Frame):
         self.rebuild_tabs()
 
     def _build_ui(self) -> None:
-        ribbon = tk.Frame(self, bg=COLORS["panel"], height=96, highlightbackground=COLORS["line"], highlightthickness=1)
+        ribbon = ResponsiveToolbar(self, bg=COLORS["panel"], height=96, highlightbackground=COLORS["line"], highlightthickness=1)
         ribbon.pack(fill="x")
         ribbon.pack_propagate(False)
         for label, command in (

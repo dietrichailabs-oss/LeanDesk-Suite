@@ -6,6 +6,8 @@ physical formula drag, DPI, and full lifecycle evidence remain separate gates.
 """
 from pathlib import Path
 import os
+import subprocess
+from types import SimpleNamespace
 import tkinter as tk
 from tkinter import ttk
 
@@ -103,6 +105,7 @@ def test_gui03_print_does_not_depend_on_rtf_shell_verb(root, monkeypatch, tmp_pa
     monkeypatch.setattr(writer.tempfile, "gettempdir", lambda: str(tmp_path))
     monkeypatch.setattr(writer.messagebox, "showerror", lambda *a, **k: errors.append(a))
     monkeypatch.setattr(writer.messagebox, "showinfo", lambda *a, **k: errors.append(a))
+    monkeypatch.setattr(subprocess, "run", lambda *a, **k: SimpleNamespace(returncode=0, stdout='{"status":"cancelled"}', stderr=""))
     frame.print_document()
     assert frame.text.get("1.0", "end-1c") == before
     assert not any(Path(p).suffix.lower() == ".rtf" and op == "print" for p, op in calls), "Writer still relies on a registered RTF shell print verb"
@@ -180,3 +183,51 @@ def test_gui06_synthetic_drag_reference_contract(root, start, end, expected):
     frame.commit_formula_bar()
     if expected == "A1:B1":
         assert frame.active_sheet().value("C1") == 36
+
+
+@pytest.mark.parametrize("theme", ["Dark", "Light", "Midnight Copper", "Slate Blue", "Forest Slate", "Burgundy Office", "Desert Sand", "Ocean Mist", "Graphite Teal", "Lavender Office"])
+def test_gui04_explicit_ttk_foreground_roundtrip(root, theme):
+    from leandesk.ui import COLORS
+    label = ttk.Label(root, text="LEANDESK", foreground=COLORS["text"])
+    label.pack()
+    apply_suite_theme(root, theme)
+    root.update()
+    assert str(label.cget("foreground")).lower() == COLORS["text"].lower()
+    apply_suite_theme(root, "Midnight Copper")
+    apply_suite_theme(root, theme)
+    assert str(label.cget("foreground")).lower() == COLORS["text"].lower()
+
+
+def test_gui02_slide_background_fits_actual_preview(root):
+    frame = mount(root, slides.SlidesFrame)
+    root.geometry("1024x700")
+    root.update()
+    frame.render_slide()
+    rectangles = [i for i in frame.canvas.find_all() if frame.canvas.type(i) == "rectangle"]
+    x1, y1, x2, y2 = frame.canvas.coords(rectangles[0])
+    assert 0 <= x1 < x2 <= frame.canvas.winfo_width()
+    assert 0 <= y1 < y2 <= frame.canvas.winfo_height()
+
+
+@pytest.mark.parametrize("outcome", ["submitted", "cancelled", "error", "timeout"])
+def test_gui03_native_print_dispatch_cleanup(root, monkeypatch, tmp_path, outcome):
+    from leandesk.windows_print import print_rtf_document, PrintUnavailableError
+    from leandesk.document_formats import LeanDocument
+    seen = []
+    def run(command, **kwargs):
+        path = Path(kwargs["env"]["LEANDESK_PRINT_RTF"])
+        assert path.is_file()
+        seen.append(path)
+        assert "-STA" in command
+        if outcome == "timeout":
+            raise subprocess.TimeoutExpired(command, 300)
+        if outcome == "error":
+            return SimpleNamespace(returncode=1, stdout='{"status":"error","message":"No printer available"}', stderr="")
+        return SimpleNamespace(returncode=0, stdout='{"status":"' + outcome + '"}', stderr="")
+    monkeypatch.setattr(subprocess, "run", run)
+    if outcome in {"error", "timeout"}:
+        with pytest.raises(PrintUnavailableError):
+            print_rtf_document(LeanDocument(), owner=root.winfo_id())
+    else:
+        assert print_rtf_document(LeanDocument(), owner=root.winfo_id()) == outcome
+    assert seen and all(not p.exists() for p in seen)
