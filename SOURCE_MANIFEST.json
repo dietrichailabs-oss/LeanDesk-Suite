@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-05T22:11:00.952506+00:00",
-  "source_tree_id": "F70F09F542A5FE2932E293B5B3773B53900E04DFB153B1C3839860380106F94F",
+  "generated_utc": "2026-09-06T00:24:31.346218+00:00",
+  "source_tree_id": "49B6BF7E713010E801C5760C9FE87993C82A98DF6F61AC4D4610446976BB538E",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 114,
-  "total_bytes": 4262110,
+  "file_count": 115,
+  "total_bytes": 4268528,
   "files": [
     {
       "path": ".gitignore",
@@ -229,8 +229,8 @@
     },
     {
       "path": "leandesk/app.py",
-      "size": 34784,
-      "sha256": "369A7E1D6BDB498370F83FC14FD008170A2FA6C7B404632281C715048F0AB308"
+      "size": 35232,
+      "sha256": "44371F72E7A287A9074D775E54BB6A9AC8C3850BE9ADF082E58BDA66318E1FC3"
     },
     {
       "path": "leandesk/backup_integrity.py",
@@ -264,8 +264,8 @@
     },
     {
       "path": "leandesk/draw.py",
-      "size": 30284,
-      "sha256": "62A5D77DCD237A2733B65D7AB5CB51EE36632DE55A76A301B3FEBA72DB44D9A6"
+      "size": 30312,
+      "sha256": "36EAECF5C2032A70557D103E8D14166080E3E5F8DA671D0A88D271CBA4B8E464"
     },
     {
       "path": "leandesk/import_safety.py",
@@ -374,8 +374,8 @@
     },
     {
       "path": "leandesk/writer.py",
-      "size": 77068,
-      "sha256": "2D224B0DFE7EAF316AA7E3D20418D297652B5190A75FFE6BB9F3FF0AA2B85A85"
+      "size": 77035,
+      "sha256": "4C03F76BAB3F1ADA8F0D06183F97ACFFBD7C95B09A411BBDA62E60FFF1114428"
     },
     {
       "path": "make_artwork.py",
@@ -548,6 +548,11 @@
       "sha256": "8ADA264A1BA6B2D188D87F20018A444B594025E8F221AE0BAB76D11E2852B0A2"
     },
     {
+      "path": "tests/test_responsive_layout_090.py",
+      "size": 5885,
+      "sha256": "AF258EA863585ED2E6535B14786AE74E0CFE18BE74A2AC84C6D1D96F0F2C836A"
+    },
+    {
       "path": "tests/test_spreadsheet_features.py",
       "size": 9323,
       "sha256": "F7B3BF6A9057FBE34D0BF7D309AEFE199FFDCAE6B0038BAA48A49BFBB9880A3B"
@@ -564,8 +569,8 @@
     },
     {
       "path": "tools/run_authoritative_tests.py",
-      "size": 12612,
-      "sha256": "CB9D6CC21A6FDF14AADF8FA30D054155B6E590D1A38C62CDEF3D06A3786001FE"
+      "size": 12702,
+      "sha256": "D7FB156B5D021190B6BEF255D694CE9E1A0BC33CF5DEDBE888F8AE0DFD39B96B"
     },
     {
       "path": "tools/source_manifest.py",

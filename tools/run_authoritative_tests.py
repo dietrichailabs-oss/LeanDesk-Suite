@@ -41,9 +41,11 @@ REQUIRED_TEST_FILES = (
         "tests/test_presentation_tools.py",
         "tests/test_windows_lifecycle_hold_correction.py",
         "tests/test_hover_label_contrast.py",
+        "tests/test_responsive_layout_090.py",
 )
 _EXCLUDED_SOURCE_PARTS = {".pytest_cache", "__pycache__", ".git", "build", "dist"}
 PER_TEST_PROCESS_FILES = {
+    "tests/test_responsive_layout_090.py",
     "tests/test_hover_label_contrast.py",
     "tests/test_hotfix_081.py",
     "tests/test_gui_fail_090_reproductions.py",

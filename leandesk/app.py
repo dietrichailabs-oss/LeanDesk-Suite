@@ -240,12 +240,22 @@ class LeanDeskApp(tk.Tk):
         for index, (name, description, color) in enumerate(modules):
             card = ttk.Frame(cards, style="Card.TFrame")
             card.grid(row=index // 3, column=index % 3, sticky="nsew", padx=6, pady=6)
-            cards.columnconfigure(index % 3, weight=1)
-            ttk.Label(card, text=name.upper(), style="Card.TLabel", foreground=color, font=("Segoe UI Bold", 17)).pack(anchor="w", padx=16, pady=(15, 4))
-            ttk.Label(card, text=description, style="Card.TLabel", foreground=COLORS["muted"], wraplength=310, justify="left").pack(anchor="w", padx=16, pady=(0, 12))
+            cards.columnconfigure(index % 3, weight=1, uniform="home-cards")
+            title = ttk.Label(card, text=name.upper(), style="Card.TLabel", foreground=color, font=("Segoe UI Bold", 17), anchor="w", justify="left")
+            title.pack(fill="x", padx=16, pady=(15, 4))
+            ttk.Label(card, text="READY FOR TESTING", style="Card.TLabel", foreground=color, font=("Segoe UI Semibold", 8)).pack(anchor="w", padx=16, pady=(0, 6))
+            summary = ttk.Label(card, text=description, style="Card.TLabel", foreground=COLORS["muted"], wraplength=180, justify="left", anchor="w")
+            summary.pack(fill="x", padx=16, pady=(0, 12))
+
+            def wrap_card(event, labels=(title, summary)):
+                available = max(1, event.width - 32)
+                for label in labels:
+                    if int(label.cget("wraplength")) != available:
+                        label.configure(wraplength=available)
+
+            card.bind("<Configure>", wrap_card, add="+")
             target = "Tasks" if name == "Organizer" else name
             ttk.Button(card, text="OPEN", command=lambda value=target: self.show_module(value)).pack(anchor="w", padx=16, pady=(0, 15))
-            ttk.Label(card, text="READY FOR TESTING", style="Card.TLabel", foreground=color, font=("Segoe UI Semibold", 8)).place(relx=1.0, x=-15, y=17, anchor="ne")
 
         recent_panel = ttk.Frame(home, style="Panel.TFrame")
         recent_panel.pack(fill="both", expand=True, pady=(18, 0))

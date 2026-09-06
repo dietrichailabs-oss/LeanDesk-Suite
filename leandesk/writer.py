@@ -24,7 +24,7 @@ from .save_policy import (
     validate_destination,
     write_atomically,
 )
-from .ui import COLORS, set_theme_roles
+from .ui import COLORS, ResponsiveToolbar, set_theme_roles
 from .windows_print import print_rtf_document, PrintUnavailableError
 
 
@@ -130,7 +130,7 @@ class WriterFrame(ttk.Frame):
             button.pack(side="left", padx=1)
             self.tab_buttons[name] = button
 
-        self.ribbon_body = tk.Frame(
+        self.ribbon_body = ResponsiveToolbar(
             self.ribbon_shell,
             bg=COLORS["panel"],
             height=150,
@@ -138,7 +138,6 @@ class WriterFrame(ttk.Frame):
             highlightthickness=1,
         )
         self.ribbon_body.pack(fill="x")
-        self.ribbon_body.pack_propagate(False)
 
         self._show_ribbon_tab("Home")
 
@@ -310,13 +309,11 @@ class WriterFrame(ttk.Frame):
             highlightthickness=0,
         )
         group.pack(side="left", fill="y", padx=(7, 0), pady=7)
-        if width:
-            group.configure(width=width)
-            group.pack_propagate(False)
+        # Keep each command group's natural requested size. Fixed widths used
+        # to crop the Styles gallery and Font controls before any overflow.
         body = tk.Frame(group, bg=COLORS["panel"])
         body.pack(fill="both", expand=True, padx=4, pady=(2, 0))
         tk.Label(group, text=title, bg=COLORS["panel"], fg=COLORS["muted"], font=("Segoe UI", 8)).pack(side="bottom", pady=(0, 2))
-        tk.Frame(self.ribbon_body, bg=COLORS["line"], width=1).pack(side="left", fill="y", pady=14, padx=(7, 0))
         return group, body
 
     def _show_ribbon_tab(self, name: str) -> None:
@@ -337,6 +334,7 @@ class WriterFrame(ttk.Frame):
             "Help": self._build_help_ribbon,
         }
         builders[name]()
+        self.ribbon_body._schedule_layout()
 
     def _build_home_ribbon(self) -> None:
         _, clipboard = self._ribbon_group("Clipboard", width=152)

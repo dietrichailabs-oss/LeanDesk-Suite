@@ -13,7 +13,7 @@ from typing import Any
 from .core import RecentFiles, RecoveryRecord, RecoveryStore, atomic_write_json, atomic_write_text
 from .data_boundary import DataCorruptionError, UnsupportedSchemaVersion, merge_known_and_extra, read_bounded, strict_json_load_bytes
 from .save_policy import SavePolicyError, mark_save_boundary, validate_destination, write_atomically
-from .ui import COLORS, StatusBar
+from .ui import COLORS, ResponsiveToolbar, StatusBar
 
 
 @dataclass
@@ -186,7 +186,7 @@ class DrawFrame(ttk.Frame):
         self.render()
 
     def _build_ui(self) -> None:
-        ribbon = tk.Frame(self, bg=COLORS["panel"], height=90, highlightbackground=COLORS["line"], highlightthickness=1)
+        ribbon = ResponsiveToolbar(self, bg=COLORS["panel"], height=90, highlightbackground=COLORS["line"], highlightthickness=1)
         ribbon.pack(fill="x")
         ribbon.pack_propagate(False)
         for label, command in (("New", self.new_drawing), ("Open", self.open_drawing), ("Save", self.save), ("Save As", self.save_as), ("Export PNG", self.export_png), ("Export SVG", self.export_svg)):
