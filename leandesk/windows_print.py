@@ -39,7 +39,16 @@ try {
     $dialog.PrintDocument($paginator, 'LeanDesk Writer document')
     @{status='submitted'} | ConvertTo-Json -Compress
 } catch {
-    @{status='error'; message=$_.Exception.Message} | ConvertTo-Json -Compress
+    $details = New-Object System.Collections.Generic.List[string]
+    $exception = $_.Exception
+    for ($depth = 0; $null -ne $exception -and $depth -lt 8; $depth++) {
+        $details.Add(('{0}: {1} (HRESULT 0x{2:X8})' -f $exception.GetType().FullName, $exception.Message, $exception.HResult))
+        if ($exception -is [System.Runtime.CompilerServices.RuntimeWrappedException]) {
+            $details.Add([string]$exception.WrappedException)
+        }
+        $exception = $exception.InnerException
+    }
+    @{status='error'; message=($details -join ' -> ')} | ConvertTo-Json -Compress
     exit 1
 }
 '''
@@ -65,6 +74,8 @@ def print_rtf_document(document: LeanDocument, *, owner: int = 0) -> str:
                 creationflags=subprocess.CREATE_NO_WINDOW,
             )
             reply = json.loads(result.stdout.strip())
+            if not isinstance(reply, dict):
+                raise PrintUnavailableError("Windows printing returned an invalid response; submission was not confirmed.")
             if result.returncode or reply.get("status") not in {"submitted", "cancelled"}:
                 raise PrintUnavailableError("Windows could not submit the print job. Check that a printer (including Microsoft Print to PDF) is installed and available. " + str(reply.get("message", "")))
             return reply["status"]

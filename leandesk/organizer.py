@@ -173,7 +173,7 @@ class TasksFrame(ttk.Frame):
             widget = ttk.Combobox(right, textvariable=var, values=values, state="readonly") if values else ttk.Entry(right, textvariable=var)
             widget.pack(fill="x", padx=12)
         tk.Label(right, text="Notes", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12, pady=(7, 2))
-        self.notes_text = tk.Text(right, height=12, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], insertbackground=COLORS["field_text"], relief="flat", padx=8, pady=8)
+        self.notes_text = tk.Text(right, width=28, height=12, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], insertbackground=COLORS["field_text"], relief="flat", padx=8, pady=8)
         self.notes_text.pack(fill="both", expand=True, padx=12, pady=(0, 12))
         status = StatusBar(self); status.pack(fill="x"); status.add_left(self.status_var); status.add_right(self.count_var, muted=True)
 
@@ -331,7 +331,7 @@ class ContactsFrame(ttk.Frame):
         tk.Label(right, text="CONTACT DETAILS", bg=COLORS["panel"], fg=COLORS["jade"], font=("Segoe UI Semibold", 10)).pack(anchor="w", padx=12, pady=(12, 5))
         for label, var in (("Name", self.name_var), ("Company", self.company_var), ("Job title", self.job_title_var), ("Email", self.email_var), ("Phone", self.phone_var), ("Address", self.address_var), ("Website", self.website_var), ("Birthday", self.birthday_var), ("Categories", self.categories_var)):
             tk.Label(right, text=label, bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12, pady=(7, 2)); ttk.Entry(right, textvariable=var).pack(fill="x", padx=12)
-        tk.Label(right, text="Notes", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12, pady=(7, 2)); self.notes_text = tk.Text(right, height=12, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], insertbackground=COLORS["field_text"], relief="flat", padx=8, pady=8); self.notes_text.pack(fill="both", expand=True, padx=12, pady=(0, 12))
+        tk.Label(right, text="Notes", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12, pady=(7, 2)); self.notes_text = tk.Text(right, width=28, height=12, wrap="word", bg=COLORS["field"], fg=COLORS["field_text"], insertbackground=COLORS["field_text"], relief="flat", padx=8, pady=8); self.notes_text.pack(fill="both", expand=True, padx=12, pady=(0, 12))
         status = StatusBar(self); status.pack(fill="x"); status.add_left(self.status_var); status.add_right(self.count_var, muted=True)
     def load(self):
         self.contacts, self.read_only, error, self._store_extra = _load_collection(Path(CONTACTS_FILE), "contacts", Contact)

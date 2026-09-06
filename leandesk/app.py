@@ -55,7 +55,7 @@ class LeanDeskApp(tk.Tk):
         self.title(f"{APP_NAME} {APP_VERSION}")
         width, height, x, y = initial_window_bounds(self.winfo_screenwidth(), self.winfo_screenheight())
         self.geometry(f"{width}x{height}+{x}+{y}")
-        self.minsize(min(1180, width), min(720, height))
+        self.minsize(min(640, width), min(360, height))
         self.configure(bg=COLORS["bg"])
         icon = resource_path("lean_desk_suite.ico")
         if os.name == "nt" and icon.is_file():
@@ -84,6 +84,12 @@ class LeanDeskApp(tk.Tk):
         self.sidebar_buttons: dict[str, ttk.Button] = {}
         self._build_menu()
         self._build_shell()
+        # Scrolling is the fallback when DPI/window bounds constrain the UI.
+        from .ui import AccessibleViewport
+        shell = self.content.master
+        sidebar = next(child for child in shell.winfo_children() if child is not self.content)
+        AccessibleViewport(sidebar, minimum_width=196, minimum_height=0, sidebar=True)
+        AccessibleViewport(self.content, minimum_width=780, minimum_height=700)
         self.show_home()
         self.after(350, self._offer_recovery)
         self.after(1500, self._schedule_automatic_update_check)
@@ -250,7 +256,7 @@ class LeanDeskApp(tk.Tk):
             def wrap_card(event, labels=(title, summary)):
                 available = max(1, event.width - 32)
                 for label in labels:
-                    if int(label.cget("wraplength")) != available:
+                    if int(label.cget("wraplength") or 0) != available:
                         label.configure(wraplength=available)
 
             card.bind("<Configure>", wrap_card, add="+")
@@ -397,11 +403,27 @@ class LeanDeskApp(tk.Tk):
         ttk.Label(card, textvariable=theme_description, style="Panel.TLabel", foreground=COLORS["muted"], wraplength=720).pack(anchor="w", padx=18, pady=(0, 10))
 
         def preview_theme(_event=None) -> None:
-            theme = apply_suite_theme(self, theme_var.get())
+            previous = self.settings.theme
+            theme = get_theme(theme_var.get())
+            self.settings.theme = theme.name
+            try:
+                if not self.settings.save():
+                    raise OSError("Settings are read-only; the original settings file was preserved.")
+            except OSError as exc:
+                self.settings.theme = previous
+                theme_var.set(previous)
+                messagebox.showwarning("Theme not saved", str(exc), parent=self)
+                return
+            theme = apply_suite_theme(self, theme.name)
             theme_var.set(theme.name)
             theme_description.set(theme.description)
 
         theme_picker.bind("<<ComboboxSelected>>", preview_theme)
+        def wrap_settings_labels(event):
+            for label in card.winfo_children():
+                if isinstance(label, ttk.Label):
+                    label.configure(wraplength=max(100, event.width - 36))
+        card.bind("<Configure>", wrap_settings_labels, add="+")
         ttk.Separator(card).pack(fill="x", padx=18, pady=8)
         ttk.Checkbutton(card, text="Enable live Writer spell checking", variable=live_var).pack(anchor="w", padx=18, pady=(18, 8))
         ttk.Label(card, text="Autosave recovery interval (seconds)", style="Panel.TLabel", foreground=COLORS["muted"]).pack(anchor="w", padx=18)

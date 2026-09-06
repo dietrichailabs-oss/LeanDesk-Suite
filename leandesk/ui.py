@@ -291,6 +291,126 @@ class StatusBar(tk.Frame):
         return label
 
 
+class AccessibleViewport(ttk.Frame):
+    """Scrollable fallback retaining the page's parent, bindings and layout."""
+
+    def __init__(self, page, *, minimum_width, minimum_height, sidebar=False):
+        master = page.master
+        page.pack_forget()
+        super().__init__(master)
+        self.page = page
+        self.minimum_width = minimum_width
+        self.minimum_height = minimum_height
+        self.sidebar = sidebar
+        self._bounded_entries = {}
+        remaining = master.pack_slaves()
+        options = {"side": "left", "fill": "y" if sidebar else "both", "expand": not sidebar}
+        if sidebar and remaining:
+            options["before"] = remaining[0]
+        self.pack(**options)
+        self.canvas = tk.Canvas(self, highlightthickness=0, background=COLORS["bg"], width=1, height=1)
+        self.vertical = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.horizontal = ttk.Scrollbar(self, orient="horizontal", command=self.canvas.xview)
+        self.canvas.configure(xscrollcommand=self.horizontal.set, yscrollcommand=self.vertical.set)
+        self.canvas.grid(row=0, column=0, sticky="nsew")
+        self.vertical.grid(row=0, column=1, sticky="ns")
+        self.horizontal.grid(row=1, column=0, sticky="ew")
+        self.rowconfigure(0, weight=1)
+        self.columnconfigure(0, weight=1)
+        # Canvas window items can contain a child of an ancestor of the canvas.
+        self.window = self.canvas.create_window(0, 0, window=page, anchor="nw")
+        if sidebar:
+            page.pack_propagate(True)
+        self.canvas.bind("<Configure>", self._layout)
+        page.bind("<Configure>", self._layout, add="+")
+        self.bind("<<LeanDeskThemeChanged>>", self._layout)
+        self.bind_all("<FocusIn>", self._focus_changed, add="+")
+        self.bind_all("<Map>", self._page_mapped, add="+")
+        self.bind_all("<MouseWheel>", self._wheel, add="+")
+
+    def _contains(self, widget):
+        while widget is not None:
+            if widget is self.page:
+                return True
+            widget = getattr(widget, "master", None)
+        return False
+
+    def _layout(self, _event=None):
+        for entry, original in list(self._bounded_entries.items()):
+            if not entry.winfo_exists():
+                del self._bounded_entries[entry]
+            elif self.canvas.winfo_width() >= original["pixels"] + 24:
+                entry.configure(width=original["width"])
+                entry.pack_configure(fill=original["fill"], anchor=original["anchor"])
+                del self._bounded_entries[entry]
+        scale = max(1.0, float(self.tk.call("tk", "scaling")) / (96 / 72))
+        width = max(self.canvas.winfo_width(), round(self.minimum_width * scale))
+        height = max(self.canvas.winfo_height(), round(self.minimum_height * scale), self.page.winfo_reqheight())
+        if self.sidebar:
+            width = max(width, self.page.winfo_reqwidth())
+            self.canvas.configure(width=width)
+        self.canvas.configure(background=COLORS["bg"], scrollregion=(0, 0, width, height))
+        self.canvas.itemconfigure(self.window, width=width, height=height)
+        # Geometry propagation can finish after this Configure callback. Use
+        # the settled page bounds rather than leaving the requested bounds.
+        self.after_idle(self._sync_region)
+
+    def _sync_region(self):
+        if self.page.winfo_exists():
+            self.canvas.configure(scrollregion=(
+                0, 0,
+                max(self.canvas.winfo_width(), self.page.winfo_width()),
+                max(self.canvas.winfo_height(), self.page.winfo_height()),
+            ))
+
+    def _focus_changed(self, event):
+        if self._contains(event.widget):
+            self.after_idle(lambda widget=event.widget: self._reveal(widget))
+
+    def _page_mapped(self, event):
+        if self._contains(event.widget):
+            self.after_idle(self._layout)
+
+    def _reveal(self, widget):
+        if not widget.winfo_exists():
+            return
+        # A stretched Entry wider than the viewport hides its insertion point.
+        # Bound that field while scrolling is needed; restore its original pack
+        # behavior when the window becomes wide enough again.
+        if isinstance(widget, ttk.Entry) and widget.winfo_manager() == "pack":
+            available = max(80, self.canvas.winfo_width() - 24)
+            if widget.winfo_width() > available:
+                options = widget.pack_info()
+                self._bounded_entries.setdefault(widget, {
+                    "pixels": widget.winfo_width(), "width": widget.cget("width"),
+                    "fill": options["fill"], "anchor": options["anchor"],
+                })
+                font = widget.cget("font") or "TkTextFont"
+                character = max(1, int(self.tk.call("font", "measure", font, "0")))
+                widget.configure(width=max(4, (available - 36) // character))
+                widget.pack_configure(fill="none", anchor="w")
+                widget.update_idletasks()
+        self._sync_region()
+        left = widget.winfo_rootx() - self.page.winfo_rootx()
+        top = widget.winfo_rooty() - self.page.winfo_rooty()
+        for start, size, origin, available, total, move in (
+            (left, widget.winfo_width(), self.canvas.canvasx(0), self.canvas.winfo_width(), self.page.winfo_width(), self.canvas.xview_moveto),
+            (top, widget.winfo_height(), self.canvas.canvasy(0), self.canvas.winfo_height(), self.page.winfo_height(), self.canvas.yview_moveto),
+        ):
+            if start < origin:
+                move(max(0, start) / max(1, total))
+            elif start + size > origin + available:
+                move(max(0, start + size - available) / max(1, total))
+
+    def _wheel(self, event):
+        if self._contains(event.widget):
+            units = -int(event.delta / 120)
+            if units:
+                view = self.canvas.xview_scroll if event.state & 0x0001 else self.canvas.yview_scroll
+                view(units, "units")
+                return "break"
+
+
 class ResponsiveToolbar(tk.Frame):
     """Wrap existing toolbar children without removing or replacing commands."""
 

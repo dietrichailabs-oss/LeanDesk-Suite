@@ -788,9 +788,42 @@ class SlidesFrame(ttk.Frame):
         source = Presentation(prepared.open())
         slides: list[SlideModel] = []
         for source_slide in source.slides:
-            texts = [shape.text.strip() for shape in source_slide.shapes if hasattr(shape, "text") and shape.text.strip()]
-            slide_title = texts[0] if texts else "Slide"
-            body = "\n\n".join(texts[1:])
+            # Keep editable objects separate from LeanDesk's title/body frames.
+            text_shapes = [shape for shape in source_slide.shapes
+                           if shape.has_text_frame and shape.shape_type != MSO_SHAPE_TYPE.AUTO_SHAPE]
+            heading_shapes = text_shapes[:2]
+            heading_ids = {shape.shape_id for shape in heading_shapes}
+            slide_title = heading_shapes[0].text if heading_shapes else "Slide"
+            body = heading_shapes[1].text if len(heading_shapes) > 1 else ""
+            objects = []
+            scale_x, scale_y = 960 / source.slide_width, 540 / source.slide_height
+            for shape in source_slide.shapes:
+                if shape.shape_id in heading_ids:
+                    continue
+                geometry = dict(x=max(0, min(960, shape.left * scale_x)),
+                                y=max(0, min(540, shape.top * scale_y)),
+                                width=max(1, min(960, shape.width * scale_x)),
+                                height=max(1, min(540, shape.height * scale_y)))
+                if shape.has_table:
+                    table = shape.table
+                    rows, cols = len(table.rows), len(table.columns)
+                    objects.append(SlideObject(kind="table", **geometry,
+                        data={"rows": rows, "cols": cols,
+                              "values": [[table.cell(row, col).text for col in range(cols)] for row in range(rows)]}))
+                elif shape.has_chart:
+                    chart = shape.chart
+                    if chart.series and chart.plots:
+                        objects.append(SlideObject(kind="chart", **geometry,
+                            text=chart.series[0].name,
+                            data={"categories": [category.label for category in chart.plots[0].categories],
+                                  "values": list(chart.series[0].values)}))
+                elif shape.has_text_frame:
+                    kind = "shape" if shape.shape_type == MSO_SHAPE_TYPE.AUTO_SHAPE else "text"
+                    item = SlideObject(kind=kind, **geometry, text=shape.text)
+                    size = shape.text_frame.paragraphs[0].font.size
+                    if size is not None:
+                        item.font_size = max(8, min(96, round(size.pt)))
+                    objects.append(item)
             image_data = ""
             image_media_type = ""
             for shape in source_slide.shapes:
@@ -805,7 +838,7 @@ class SlidesFrame(ttk.Frame):
                 notes = source_slide.notes_slide.notes_text_frame.text or ""
             except Exception:
                 pass
-            slides.append(SlideModel(slide_title, body, "Midnight", notes, "", image_data, image_media_type))
+            slides.append(SlideModel(slide_title, body, "Midnight", notes, "", image_data, image_media_type, objects=objects))
         source_title = title or (Path(path).stem if isinstance(path, (str, Path)) else "Imported Presentation")
         return DeckModel(source_title, slides or [SlideModel()])
 
