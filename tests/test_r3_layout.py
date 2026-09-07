@@ -115,3 +115,44 @@ def test_viewport_page_is_not_occluded_by_its_newer_canvas(sidebar):
         for job in root.tk.call('after', 'info'):
             root.tk.call('after', 'cancel', job)
         root.destroy()
+
+
+@pytest.mark.parametrize('sidebar', [False, True])
+def test_focusing_visible_control_does_not_scroll_its_ancestor_page(sidebar):
+    """Focus entering a page must not reveal the oversized ancestor itself."""
+    import tkinter as tk
+    from tkinter import ttk
+    from leandesk.ui import AccessibleViewport
+
+    root = tk.Tk()
+    root.geometry('640x480+0+0')
+    try:
+        shell = ttk.Frame(root)
+        shell.pack(fill='both', expand=True)
+        page = ttk.Frame(shell)
+        page.pack(fill='both', expand=True)
+        button = ttk.Button(page, text='Already visible action')
+        button.pack(anchor='nw', padx=12, pady=12)
+        viewport = AccessibleViewport(page, minimum_width=240,
+                                      minimum_height=900, sidebar=sidebar)
+        for _ in range(3):
+            root.update_idletasks()
+            root.update()
+        root.focus_force()
+        root.update()
+        viewport.canvas.yview_moveto(0)
+        root.update()
+        before = (button.winfo_rootx(), button.winfo_rooty(),
+                  viewport.canvas.xview(), viewport.canvas.yview())
+        button.focus_force()
+        for _ in range(3):
+            root.update_idletasks()
+            root.update()
+        assert root.focus_get() is button
+        after = (button.winfo_rootx(), button.winfo_rooty(),
+                 viewport.canvas.xview(), viewport.canvas.yview())
+        assert after == before, f'Visible action moved on focus: {before} -> {after}'
+    finally:
+        for job in root.tk.call('after', 'info'):
+            root.tk.call('after', 'cancel', job)
+        root.destroy()

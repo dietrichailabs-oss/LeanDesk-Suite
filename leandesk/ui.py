@@ -368,8 +368,9 @@ class AccessibleViewport(ttk.Frame):
             ))
 
     def _focus_changed(self, event):
-        if self._contains(event.widget):
-            self.after_idle(lambda widget=event.widget: self._reveal(widget))
+        if self._contains(event.widget) and event.widget is self.focus_get():
+            self.after_idle(lambda widget=event.widget:
+                            self._reveal(widget) if widget is self.focus_get() else None)
 
     def _page_mapped(self, event):
         if self._contains(event.widget):
