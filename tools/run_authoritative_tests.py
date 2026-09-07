@@ -24,7 +24,7 @@ import uuid
 from package_cleanliness import scan_tree
 from source_manifest import build_manifest, sha256_file, verify_manifest
 
-MIN_EXPECTED_TESTS = 584
+MIN_EXPECTED_TESTS = 586
 REQUIRED_TEST_FILES = (
     "tests/test_r3_home_callback.py",
     "tests/test_r3_corrections.py",

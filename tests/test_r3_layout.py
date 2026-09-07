@@ -80,3 +80,38 @@ def test_all_views_controls_remain_reachable_at_viewport_and_scaling(tmp_path, w
                             env=environment, capture_output=True, text=True, timeout=180)
     assert result.returncode == 0, result.stdout + result.stderr
     assert result.stdout.count('R3_LAYOUT_VIEW') == 30
+
+
+@pytest.mark.parametrize('sidebar', [False, True])
+def test_viewport_page_is_not_occluded_by_its_newer_canvas(sidebar):
+    """Mapping and geometry alone do not prove a native window is visible."""
+    import tkinter as tk
+    from tkinter import ttk
+    from leandesk.ui import AccessibleViewport
+
+    root = tk.Tk()
+    root.geometry('640x480+0+0')
+    try:
+        shell = ttk.Frame(root)
+        shell.pack(fill='both', expand=True)
+        page = ttk.Frame(shell)
+        page.pack(fill='both', expand=True)
+        button = ttk.Button(page, text='Visible workspace control')
+        button.pack(anchor='nw', padx=12, pady=12)
+        viewport = AccessibleViewport(page, minimum_width=240,
+                                      minimum_height=300, sidebar=sidebar)
+        for _ in range(3):
+            root.update_idletasks()
+            root.update()
+        assert page.winfo_ismapped()
+        assert button.winfo_ismapped()
+        x = button.winfo_rootx() + button.winfo_width() // 2
+        y = button.winfo_rooty() + button.winfo_height() // 2
+        actual = root.winfo_containing(x, y)
+        assert actual is button, (
+            f'Visible control is covered by {actual}; viewport={viewport}'
+        )
+    finally:
+        for job in root.tk.call('after', 'info'):
+            root.tk.call('after', 'cancel', job)
+        root.destroy()

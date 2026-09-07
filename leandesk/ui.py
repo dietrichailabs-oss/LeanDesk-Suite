@@ -319,6 +319,10 @@ class AccessibleViewport(ttk.Frame):
         self.columnconfigure(0, weight=1)
         # Canvas window items can contain a child of an ancestor of the canvas.
         self.window = self.canvas.create_window(0, 0, window=page, anchor="nw")
+        # The page predates this sibling viewport. Canvas geometry management
+        # does not raise its native window above the newer canvas on Windows.
+        # Keep the actual page visible, not merely mapped with valid bounds.
+        page.lift(self)
         if sidebar:
             page.pack_propagate(True)
         self.canvas.bind("<Configure>", self._layout)
