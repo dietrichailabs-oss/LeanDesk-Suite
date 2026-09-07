@@ -1329,6 +1329,7 @@ class SheetsFrame(ttk.Frame):
             from openpyxl import Workbook
             from openpyxl.comments import Comment
             from openpyxl.styles import Alignment, Font, PatternFill
+            from openpyxl.worksheet.table import Table, TableColumn, TableStyleInfo
         except ImportError as exc:
             raise RuntimeError("XLSX support requires openpyxl.") from exc
         workbook = Workbook()
@@ -1360,6 +1361,22 @@ class SheetsFrame(ttk.Frame):
                     cell.number_format = "#,##0"
             for address, comment in model.comments.items():
                 sheet[address].comment = Comment(comment, "LeanDesk")
+            for spec in self.workbook.office_features_for(model).tables.values():
+                table = Table(displayName=spec.name, ref=spec.range_ref)
+                from openpyxl.utils.cell import range_boundaries
+                first_col, first_row, last_col, _ = range_boundaries(spec.range_ref)
+                headers = [str(sheet.cell(first_row, column).value or "")
+                           for column in range(first_col, last_col + 1)]
+                if any(not header for header in headers) or len(set(headers)) != len(headers):
+                    raise ValueError("Excel tables require nonempty, unique column headers.")
+                table.tableColumns = [TableColumn(id=index, name=header)
+                                      for index, header in enumerate(headers, 1)]
+                table.tableStyleInfo = TableStyleInfo(
+                    name=spec.style if spec.style.startswith("TableStyle") else "TableStyle" + spec.style,
+                    showRowStripes=spec.banded_rows,
+                    showColumnStripes=spec.banded_columns,
+                )
+                sheet.add_table(table)
         workbook.save(path)
 
     @staticmethod
@@ -1403,7 +1420,18 @@ class SheetsFrame(ttk.Frame):
                         model.comments[cell.coordinate] = cell.comment.text
             sheets.append(model)
         source_title = title or (Path(path).stem if isinstance(path, (str, Path)) else "Imported Workbook")
-        return WorkbookModel(source_title, sheets or [SheetModel()])
+        result = WorkbookModel(source_title, sheets or [SheetModel()])
+        for source, model in zip(workbook.worksheets, sheets):
+            store = result.office_features_for(model)
+            for table in source.tables.values():
+                spec = store.create_table(model, table.ref, name=table.displayName, has_headers=True)
+                if table.tableStyleInfo is not None:
+                    style = table.tableStyleInfo
+                    spec.style = (style.name or "TableStyleMedium2").removeprefix("TableStyle")
+                    spec.banded_rows = bool(style.showRowStripes)
+                    spec.banded_columns = bool(style.showColumnStripes)
+        workbook.close()
+        return result
 
     def recover_record(self, record: RecoveryRecord) -> None:
         if record.module != "Sheets" or not self.confirm_discard():

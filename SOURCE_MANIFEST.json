@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-07T00:57:00.893822+00:00",
-  "source_tree_id": "7DE953B086A75F7AFB51DC19ED040204E38A07C245BCF78ED733F8357268ECF2",
+  "generated_utc": "2026-09-07T16:47:25.344684+00:00",
+  "source_tree_id": "156B421719F0BC3564790C68D65DD99640AC13E3FD41913976F5F54CA20E7D28",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 118,
-  "total_bytes": 4291854,
+  "file_count": 119,
+  "total_bytes": 4295586,
   "files": [
     {
       "path": ".gitignore",
@@ -309,8 +309,8 @@
     },
     {
       "path": "leandesk/sheets.py",
-      "size": 64536,
-      "sha256": "591326A60EAA0EAE6FD5D67679198EFBAB1BC5D0B492A7AD29C99E35AC30963F"
+      "size": 66400,
+      "sha256": "7039997983C6B1B0CCBDA87D57CA88F2FC432161C8DDCD6555935167F1BC8F95"
     },
     {
       "path": "leandesk/slides.py",
@@ -576,6 +576,11 @@
       "path": "tests/test_windows_lifecycle_hold_correction.py",
       "size": 547,
       "sha256": "0465EEC661583103057CC8A623123CCDF02FBCC315FC44EEEE84F9FF7C941EFB"
+    },
+    {
+      "path": "tests/test_xlsx_table_roundtrip_r3.py",
+      "size": 1868,
+      "sha256": "FFF117E93BCC77C20C33F40B7AF9EC5813A2CA76709B7809F9AC649986069652"
     },
     {
       "path": "tools/package_cleanliness.py",
