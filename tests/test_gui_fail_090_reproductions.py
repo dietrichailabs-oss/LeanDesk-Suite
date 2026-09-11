@@ -105,8 +105,33 @@ def test_gui03_print_does_not_depend_on_rtf_shell_verb(root, monkeypatch, tmp_pa
     monkeypatch.setattr(writer.tempfile, "gettempdir", lambda: str(tmp_path))
     monkeypatch.setattr(writer.messagebox, "showerror", lambda *a, **k: errors.append(a))
     monkeypatch.setattr(writer.messagebox, "showinfo", lambda *a, **k: errors.append(a))
-    monkeypatch.setattr(subprocess, "run", lambda *a, **k: SimpleNamespace(returncode=0, stdout='{"status":"cancelled"}', stderr=""))
+    class CancelledPrintProcess:
+        returncode = 0
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def communicate(self, timeout=None):
+            return '{"status":"cancelled"}', ""
+
+        def poll(self):
+            return self.returncode
+
+        def kill(self):
+            raise AssertionError("Completed print process should not be killed")
+
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **k: CancelledPrintProcess())
     frame.print_document()
+    import time
+    deadline = time.monotonic() + 5
+    while getattr(frame, "_print_job", None) is not None and time.monotonic() < deadline:
+        root.update()
+        time.sleep(0.01)
+    assert frame._print_job is None, "Asynchronous print did not complete"
+    assert frame.status_var.get() == "Printing cancelled"
     assert frame.text.get("1.0", "end-1c") == before
     assert not any(Path(p).suffix.lower() == ".rtf" and op == "print" for p, op in calls), "Writer still relies on a registered RTF shell print verb"
     assert not list(tmp_path.glob("LeanDesk_Print*")), "Print temporary file was leaked"

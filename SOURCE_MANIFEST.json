@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-07T16:47:25.344684+00:00",
-  "source_tree_id": "156B421719F0BC3564790C68D65DD99640AC13E3FD41913976F5F54CA20E7D28",
+  "generated_utc": "2026-09-11T00:56:52.423530+00:00",
+  "source_tree_id": "4BD034ECF455BD0FA979342AAF7DF04679C62F210BE78A7BAEF2A68474CCD2A2",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 119,
-  "total_bytes": 4295586,
+  "file_count": 120,
+  "total_bytes": 4303889,
   "files": [
     {
       "path": ".gitignore",
@@ -364,8 +364,8 @@
     },
     {
       "path": "leandesk/windows_print.py",
-      "size": 4316,
-      "sha256": "58B9E1E7333AA177AFA8C25715D79E638F14134C711EFDDB0E4EC6968207355B"
+      "size": 7709,
+      "sha256": "382020700FEFAF18DE18568199C25A178FFA7EC85F0037A84F7D0DD45E790932"
     },
     {
       "path": "leandesk/workspace.py",
@@ -374,8 +374,8 @@
     },
     {
       "path": "leandesk/writer.py",
-      "size": 77035,
-      "sha256": "4C03F76BAB3F1ADA8F0D06183F97ACFFBD7C95B09A411BBDA62E60FFF1114428"
+      "size": 78087,
+      "sha256": "00AE8E1E15B235EF66A3CF555CC212C3D9990420FFFD81B47EA7FB8BDE787914"
     },
     {
       "path": "make_artwork.py",
@@ -519,8 +519,8 @@
     },
     {
       "path": "tests/test_gui_fail_090_reproductions.py",
-      "size": 10231,
-      "sha256": "A2009EA84185A55A1B3C5A61A7B0678DA7586027CE478CB3A690FC7717637FF8"
+      "size": 10937,
+      "sha256": "B839BCD78456B54727129813E715710E4B74391171A7569FDB52CBB563117B03"
     },
     {
       "path": "tests/test_hotfix_081.py",
@@ -546,6 +546,11 @@
       "path": "tests/test_presentation_tools.py",
       "size": 3358,
       "sha256": "8ADA264A1BA6B2D188D87F20018A444B594025E8F221AE0BAB76D11E2852B0A2"
+    },
+    {
+      "path": "tests/test_print_correction.py",
+      "size": 3152,
+      "sha256": "BE6C5E5CB275DC28608344CB36C12C70F449A220C3C9F8E3F047E7D1D91236A7"
     },
     {
       "path": "tests/test_r3_corrections.py",

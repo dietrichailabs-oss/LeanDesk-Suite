@@ -1627,11 +1627,41 @@ class WriterFrame(ttk.Frame):
         if os.name != "nt":
             messagebox.showinfo("Print", "Printing is available in the Windows build.", parent=self)
             return
+        if getattr(self, "_print_job", None) is not None:
+            self.status_var.set("Printing is already in progress")
+            return
+        from .windows_print import PrintJob
+
+        root = self.winfo_toplevel()
+        document = self.serialize()
         try:
-            result = print_rtf_document(self.serialize(), owner=self.winfo_toplevel().winfo_id())
-            self.status_var.set("Print job submitted" if result == "submitted" else "Printing cancelled")
+            job = PrintJob(document, owner=root.winfo_id(), operation=print_rtf_document)
         except PrintUnavailableError as exc:
             messagebox.showerror("Print", str(exc), parent=self)
+            return
+        self._print_job = job
+        self.status_var.set("Printing: choose a printer or cancel in the print dialog")
+
+        def destroyed(event):
+            if event.widget is root:
+                job.cancel()
+
+        destroy_binding = root.bind("<Destroy>", destroyed, add="+")
+
+        def finished():
+            if not job.done:
+                self.after(100, finished)
+                return
+            self._print_job = None
+            root.unbind("<Destroy>", destroy_binding)
+            try:
+                result = job.result()
+                self.status_var.set("Print job submitted" if result == "submitted" else "Printing cancelled")
+            except PrintUnavailableError as exc:
+                self.status_var.set("Print submission was not confirmed")
+                messagebox.showerror("Print", str(exc), parent=self)
+
+        self.after(100, finished)
 
 
 # LeanDesk correction-1: imported foreign sources are never ordinary-Save targets.
