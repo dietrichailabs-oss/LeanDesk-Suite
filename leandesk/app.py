@@ -728,7 +728,12 @@ class LeanDeskApp(tk.Tk):
             pass
         self.settings.default_zoom = self.frames["Writer"].zoom
         self.settings.save()
-        self.destroy()
+        # A File-menu command still owns native Tk border resources until its
+        # callback returns. Destroying the root here can crash Tk after a live
+        # theme change. Let that callback unwind before tearing down widgets.
+        if not getattr(self, "_close_scheduled", False):
+            self._close_scheduled = True
+            self.after_idle(self.destroy)
 
 
 def main() -> int:
