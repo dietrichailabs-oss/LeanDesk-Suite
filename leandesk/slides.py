@@ -406,25 +406,33 @@ class SlidesFrame(ttk.Frame):
         if not self.deck.slides:
             return
         slide = self.current_slide()
+        self._render_slide_content(self.canvas, slide, selected_object_id=self.selected_object_id)
+        self._image_ref = getattr(self.canvas, "_leandesk_image_ref", None)
+
+    @staticmethod
+    def _render_slide_content(canvas, slide: SlideModel, *, selected_object_id=None) -> None:
+        """Draw the same slide content in the editor and in Presenter."""
+        canvas.delete("all")
+        canvas._leandesk_image_ref = None
         theme = THEMES.get(slide.theme, THEMES["Midnight"])
-        width = max(1, self.canvas.winfo_width())
-        height = max(1, self.canvas.winfo_height())
+        width = max(1, canvas.winfo_width())
+        height = max(1, canvas.winfo_height())
         ratio = max(0.001, min(max(1, width - 24) / 960, max(1, height - 24) / 540))
         sw, sh = int(960 * ratio), int(540 * ratio)
         x1, y1 = (width - sw) // 2, (height - sh) // 2
         x2, y2 = x1 + sw, y1 + sh
-        self.canvas.create_rectangle(x1, y1, x2, y2, fill=theme["background"], outline="#556070", width=1)
-        self.canvas.create_rectangle(x1, y1, x1 + max(8, int(12 * ratio)), y2, fill=theme["accent"], outline="")
-        self.canvas.create_text(x1 + int(72 * ratio), y1 + int(105 * ratio), text=slide.title or "Untitled Slide", fill=theme["title"], anchor="nw", width=int(780 * ratio), font=("Segoe UI Semibold", max(16, int(31 * ratio))))
-        self.canvas.create_text(x1 + int(75 * ratio), y1 + int(210 * ratio), text=slide.body, fill=theme["body"], anchor="nw", width=int(770 * ratio), font=("Segoe UI", max(10, int(18 * ratio))))
+        canvas.create_rectangle(x1, y1, x2, y2, fill=theme["background"], outline="#556070", width=1)
+        canvas.create_rectangle(x1, y1, x1 + max(8, int(12 * ratio)), y2, fill=theme["accent"], outline="")
+        canvas.create_text(x1 + int(72 * ratio), y1 + int(105 * ratio), text=slide.title or "Untitled Slide", fill=theme["title"], anchor="nw", width=int(780 * ratio), font=("Segoe UI Semibold", max(16, int(31 * ratio))))
+        canvas.create_text(x1 + int(75 * ratio), y1 + int(210 * ratio), text=slide.body, fill=theme["body"], anchor="nw", width=int(770 * ratio), font=("Segoe UI", max(10, int(18 * ratio))))
         for item in slide.objects:
             left = x1 + int(item.x * ratio)
             top = y1 + int(item.y * ratio)
             right = left + int(item.width * ratio)
             bottom = top + int(item.height * ratio)
-            outline = theme["accent"] if item.object_id == self.selected_object_id else item.stroke
+            outline = theme["accent"] if item.object_id == selected_object_id else item.stroke
             if item.kind == "text":
-                self.canvas.create_text(left, top, text=item.text, fill=theme["body"], anchor="nw", width=max(20, right - left), font=("Segoe UI", max(8, int(item.font_size * ratio))))
+                canvas.create_text(left, top, text=item.text, fill=theme["body"], anchor="nw", width=max(20, right - left), font=("Segoe UI", max(8, int(item.font_size * ratio))))
             elif item.kind == "table":
                 rows = max(1, int(item.data.get("rows", 2)))
                 cols = max(1, int(item.data.get("cols", 2)))
@@ -435,9 +443,9 @@ class SlidesFrame(ttk.Frame):
                         cy1 = top + (bottom - top) * row / rows
                         cx2 = left + (right - left) * (col + 1) / cols
                         cy2 = top + (bottom - top) * (row + 1) / rows
-                        self.canvas.create_rectangle(cx1, cy1, cx2, cy2, fill=theme["background"], outline=outline)
+                        canvas.create_rectangle(cx1, cy1, cx2, cy2, fill=theme["background"], outline=outline)
                         value = values[row][col] if isinstance(values, list) and row < len(values) and isinstance(values[row], list) and col < len(values[row]) else ""
-                        self.canvas.create_text(cx1 + 5, (cy1 + cy2) / 2, text=value, anchor="w", fill=theme["body"], font=("Segoe UI", max(7, int(12 * ratio))))
+                        canvas.create_text(cx1 + 5, (cy1 + cy2) / 2, text=value, anchor="w", fill=theme["body"], font=("Segoe UI", max(7, int(12 * ratio))))
             elif item.kind == "chart":
                 values = item.data.get("values", [3, 5, 2])
                 numeric = [float(value) for value in values if isinstance(value, (int, float))] or [1.0]
@@ -445,21 +453,21 @@ class SlidesFrame(ttk.Frame):
                 bar_width = (right - left) / max(1, len(numeric))
                 for index, value in enumerate(numeric):
                     bar_height = (bottom - top - 20) * value / maximum
-                    self.canvas.create_rectangle(left + index * bar_width + 4, bottom - bar_height, left + (index + 1) * bar_width - 4, bottom, fill=item.fill, outline=outline)
+                    canvas.create_rectangle(left + index * bar_width + 4, bottom - bar_height, left + (index + 1) * bar_width - 4, bottom, fill=item.fill, outline=outline)
             else:
-                self.canvas.create_rectangle(left, top, right, bottom, fill=item.fill, outline=outline, width=2)
+                canvas.create_rectangle(left, top, right, bottom, fill=item.fill, outline=outline, width=2)
                 if item.text:
-                    self.canvas.create_text((left + right) / 2, (top + bottom) / 2, text=item.text, fill="#FFFFFF", font=("Segoe UI", max(8, int(item.font_size * ratio))))
-        self.canvas.create_oval(x2 - int(150 * ratio), y2 - int(120 * ratio), x2 - int(50 * ratio), y2 - int(20 * ratio), outline=theme["accent"], width=max(2, int(3 * ratio)))
+                    canvas.create_text((left + right) / 2, (top + bottom) / 2, text=item.text, fill="#FFFFFF", font=("Segoe UI", max(8, int(item.font_size * ratio))))
+        canvas.create_oval(x2 - int(150 * ratio), y2 - int(120 * ratio), x2 - int(50 * ratio), y2 - int(20 * ratio), outline=theme["accent"], width=max(2, int(3 * ratio)))
         if slide.image_data:
             try:
                 from PIL import Image, ImageTk
                 image = Image.open(io.BytesIO(_validate_embedded_image(slide.image_data)))
-                image.thumbnail((int(300 * ratio), int(170 * ratio)))
-                self._image_ref = ImageTk.PhotoImage(image)
-                self.canvas.create_image(x2 - int(190 * ratio), y2 - int(125 * ratio), image=self._image_ref, anchor="se")
+                image.thumbnail((max(1, int(300 * ratio)), max(1, int(170 * ratio))))
+                canvas._leandesk_image_ref = ImageTk.PhotoImage(image, master=canvas)
+                canvas.create_image(x2 - int(190 * ratio), y2 - int(125 * ratio), image=canvas._leandesk_image_ref, anchor="se")
             except Exception:
-                self._image_ref = None
+                canvas._leandesk_image_ref = None
 
     def _update_title(self) -> None:
         name = self.current_path.name if self.current_path else self.deck.title
@@ -681,15 +689,11 @@ class SlidesFrame(ttk.Frame):
         index = [self.current_index()]
 
         def render():
-            canvas.delete("all")
             slide = self.deck.slides[index[0]]
+            self._render_slide_content(canvas, slide)
             theme = THEMES.get(slide.theme, THEMES["Midnight"])
-            width, height = max(800, canvas.winfo_width()), max(450, canvas.winfo_height())
-            margin = 35
-            canvas.create_rectangle(margin, margin, width - margin, height - margin, fill=theme["background"], outline="")
-            canvas.create_text(margin + 70, margin + 90, text=slide.title, fill=theme["title"], anchor="nw", width=width - 2 * margin - 140, font=("Segoe UI Semibold", 34))
-            canvas.create_text(margin + 75, margin + 220, text=slide.body, fill=theme["body"], anchor="nw", width=width - 2 * margin - 150, font=("Segoe UI", 22))
-            canvas.create_text(width - margin - 20, height - margin - 15, text=f"{index[0] + 1} / {len(self.deck.slides)}", fill=theme["accent"], anchor="se", font=("Segoe UI", 12))
+            width, height = max(1, canvas.winfo_width()), max(1, canvas.winfo_height())
+            canvas.create_text(max(1, width - 20), max(1, height - 15), text=f"{index[0] + 1} / {len(self.deck.slides)}", fill=theme["accent"], anchor="se", font=("Segoe UI", 12))
 
         def step(delta):
             index[0] = max(0, min(len(self.deck.slides) - 1, index[0] + delta))

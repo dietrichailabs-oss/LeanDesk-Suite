@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-12T18:04:25.292762+00:00",
-  "source_tree_id": "1346E3CC8B5A6F2405EEB8957305108E60DADBCC15F5394E4C89341E8347F60A",
+  "generated_utc": "2026-09-12T19:21:54.324710+00:00",
+  "source_tree_id": "BC04ED4AD038C433AD46B2C168137630733EEE68DB0BF762881AA82789133081",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 123,
-  "total_bytes": 4315529,
+  "file_count": 124,
+  "total_bytes": 4320579,
   "files": [
     {
       "path": ".gitignore",
@@ -314,8 +314,8 @@
     },
     {
       "path": "leandesk/slides.py",
-      "size": 43255,
-      "sha256": "0FD189F2F177D9502EAB446E2ECB77AE861F08CD113CB655C5BDA74483E5A773"
+      "size": 43209,
+      "sha256": "73B2B314D2539F08C2FC6A5442D652496D82C5C83F4709864F3A8F4030FE38FA"
     },
     {
       "path": "leandesk/spellcheck.py",
@@ -576,6 +576,11 @@
       "path": "tests/test_responsive_layout_090.py",
       "size": 5885,
       "sha256": "AF258EA863585ED2E6535B14786AE74E0CFE18BE74A2AC84C6D1D96F0F2C836A"
+    },
+    {
+      "path": "tests/test_slides_presenter_content.py",
+      "size": 5096,
+      "sha256": "D4232A7C090DE7DB80C20416DC23624BE70FF5890632602210FBDE58779FBF99"
     },
     {
       "path": "tests/test_spreadsheet_features.py",
