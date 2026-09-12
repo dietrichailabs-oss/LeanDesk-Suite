@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 import tkinter as tk
-from tkinter import colorchooser, filedialog, font as tkfont, messagebox, ttk
+from tkinter import colorchooser, filedialog, font as tkfont, messagebox, simpledialog, ttk
 
 from .core import AppSettings, RecentFiles, RecoveryRecord, RecoveryStore
 from .document_formats import LeanDocument, TagRange, read_text_document, write_text_document

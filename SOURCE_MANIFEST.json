@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-11T11:29:25.432665+00:00",
-  "source_tree_id": "C9367F6956E1EEFEA470EB5DD23E90349761E402FE9038BB3300EF4DD716A926",
+  "generated_utc": "2026-09-12T17:13:30.460039+00:00",
+  "source_tree_id": "1D820A1EA501281B510279AD352DA39B6DD325F85733A85989CA6EB4AAF566BF",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 121,
-  "total_bytes": 4307151,
+  "file_count": 122,
+  "total_bytes": 4309998,
   "files": [
     {
       "path": ".gitignore",
@@ -374,8 +374,8 @@
     },
     {
       "path": "leandesk/writer.py",
-      "size": 78087,
-      "sha256": "00AE8E1E15B235EF66A3CF555CC212C3D9990420FFFD81B47EA7FB8BDE787914"
+      "size": 78101,
+      "sha256": "6DDC84C331787B88301F5D386F7391DA573EB1C83E9876AB337BA23B9F3C29D7"
     },
     {
       "path": "make_artwork.py",
@@ -586,6 +586,11 @@
       "path": "tests/test_windows_lifecycle_hold_correction.py",
       "size": 547,
       "sha256": "0465EEC661583103057CC8A623123CCDF02FBCC315FC44EEEE84F9FF7C941EFB"
+    },
+    {
+      "path": "tests/test_writer_dialog_regression.py",
+      "size": 2833,
+      "sha256": "7771838B8ADD832DE4AE1469E3F68E4599A4CAE9E0FF0095FA7C6D0A60B0E895"
     },
     {
       "path": "tests/test_xlsx_table_roundtrip_r3.py",
