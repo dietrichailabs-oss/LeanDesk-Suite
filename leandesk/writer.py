@@ -1436,31 +1436,32 @@ class WriterFrame(ttk.Frame):
         # passes. Tk indices include embedded windows and UTF-16 code units.
         lines, tags = [""], []
         objects: list[dict[str, object]] = []
-        paragraph_seen = False
-        windows_on_line = 0
+        block_seen = False
         for block in doc.element.body:
             if block.tag == qn("w:p"):
                 paragraph = Paragraph(block, doc)
-                if paragraph_seen:
+                if block_seen:
                     lines.append("")
-                    windows_on_line = 0
                 first_line = len(lines)
                 parts = paragraph.text.split("\n")
                 lines[-1] += parts[0]
                 if len(parts) > 1:
                     lines.extend(parts[1:])
-                    windows_on_line = 0
-                paragraph_seen = True
+                block_seen = True
                 if paragraph.style and paragraph.style.name.startswith("Heading"):
                     level = paragraph.style.name.split()[-1]
                     if level in {"1", "2", "3"}:
                         tags.append(TagRange(f"heading_{level}", f"{first_line}.0", f"{len(lines)}.end"))
             elif block.tag == qn("w:tbl"):
+                # A DOCX table is a body block, not an inline window in the
+                # preceding paragraph. Reserve its own Tk line; the exporter
+                # emits that line's table without adding an empty paragraph.
+                if block_seen:
+                    lines.append("")
                 table = Table(block, doc)
                 data = [[cell.text for cell in row.cells] for row in table.rows]
-                column = len(lines[-1].encode("utf-16-le")) // 2 + windows_on_line
-                objects.append({"id": uuid.uuid4().hex, "kind": "table", "rows": len(data), "cols": max((len(row) for row in data), default=1), "data": data, "index": f"{len(lines)}.{column}"})
-                windows_on_line += 1
+                objects.append({"id": uuid.uuid4().hex, "kind": "table", "rows": len(data), "cols": max((len(row) for row in data), default=1), "data": data, "index": f"{len(lines)}.0"})
+                block_seen = True
         if title is None:
             title = Path(path).stem if isinstance(path, (str, Path)) else "Imported Document"
         if not isinstance(title, str) or not title:
