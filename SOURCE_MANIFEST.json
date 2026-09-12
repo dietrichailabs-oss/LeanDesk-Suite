@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-12T17:13:30.460039+00:00",
-  "source_tree_id": "1D820A1EA501281B510279AD352DA39B6DD325F85733A85989CA6EB4AAF566BF",
+  "generated_utc": "2026-09-12T18:04:25.292762+00:00",
+  "source_tree_id": "1346E3CC8B5A6F2405EEB8957305108E60DADBCC15F5394E4C89341E8347F60A",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 122,
-  "total_bytes": 4309998,
+  "file_count": 123,
+  "total_bytes": 4315529,
   "files": [
     {
       "path": ".gitignore",
@@ -374,8 +374,8 @@
     },
     {
       "path": "leandesk/writer.py",
-      "size": 78101,
-      "sha256": "6DDC84C331787B88301F5D386F7391DA573EB1C83E9876AB337BA23B9F3C29D7"
+      "size": 80738,
+      "sha256": "814594E2EEC02392ED8252D0EAB3D9E3C9310F60C6D728165C811ECB0F42542E"
     },
     {
       "path": "make_artwork.py",
@@ -591,6 +591,11 @@
       "path": "tests/test_writer_dialog_regression.py",
       "size": 2833,
       "sha256": "7771838B8ADD832DE4AE1469E3F68E4599A4CAE9E0FF0095FA7C6D0A60B0E895"
+    },
+    {
+      "path": "tests/test_writer_docx_object_order.py",
+      "size": 2894,
+      "sha256": "AD04B7BECB09AB1D8AD70BD1B849D97172F6C7110571765422A0C9CC3AB7AE32"
     },
     {
       "path": "tests/test_xlsx_table_roundtrip_r3.py",

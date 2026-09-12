@@ -1428,21 +1428,43 @@ class WriterFrame(ttk.Frame):
         from .ooxml_preflight import prepare_ooxml
         prepared = prepare_ooxml(path, "docx")
         doc = Document(prepared.open())
-        lines, tags = [], []
-        for line_no, paragraph in enumerate(doc.paragraphs, start=1):
-            lines.append(paragraph.text)
-            if paragraph.style and paragraph.style.name.startswith("Heading"):
-                level = paragraph.style.name.split()[-1]
-                if level in {"1", "2", "3"}:
-                    tags.append(TagRange(f"heading_{level}", f"{line_no}.0", f"{line_no}.end"))
+        from docx.oxml.ns import qn
+        from docx.table import Table
+        from docx.text.paragraph import Paragraph
+
+        # Paragraphs and tables must be read in body order, not in separate
+        # passes. Tk indices include embedded windows and UTF-16 code units.
+        lines, tags = [""], []
+        objects: list[dict[str, object]] = []
+        paragraph_seen = False
+        windows_on_line = 0
+        for block in doc.element.body:
+            if block.tag == qn("w:p"):
+                paragraph = Paragraph(block, doc)
+                if paragraph_seen:
+                    lines.append("")
+                    windows_on_line = 0
+                first_line = len(lines)
+                parts = paragraph.text.split("\n")
+                lines[-1] += parts[0]
+                if len(parts) > 1:
+                    lines.extend(parts[1:])
+                    windows_on_line = 0
+                paragraph_seen = True
+                if paragraph.style and paragraph.style.name.startswith("Heading"):
+                    level = paragraph.style.name.split()[-1]
+                    if level in {"1", "2", "3"}:
+                        tags.append(TagRange(f"heading_{level}", f"{first_line}.0", f"{len(lines)}.end"))
+            elif block.tag == qn("w:tbl"):
+                table = Table(block, doc)
+                data = [[cell.text for cell in row.cells] for row in table.rows]
+                column = len(lines[-1].encode("utf-16-le")) // 2 + windows_on_line
+                objects.append({"id": uuid.uuid4().hex, "kind": "table", "rows": len(data), "cols": max((len(row) for row in data), default=1), "data": data, "index": f"{len(lines)}.{column}"})
+                windows_on_line += 1
         if title is None:
             title = Path(path).stem if isinstance(path, (str, Path)) else "Imported Document"
         if not isinstance(title, str) or not title:
             title = "Imported Document"
-        objects: list[dict[str, object]] = []
-        for table in doc.tables:
-            data = [[cell.text for cell in row.cells] for row in table.rows]
-            objects.append({"id": uuid.uuid4().hex, "kind": "table", "rows": len(data), "cols": max((len(row) for row in data), default=1), "data": data, "index": "end-1c"})
         seen_images: set[str] = set()
         for relationship in doc.part.rels.values():
             if "image" not in relationship.reltype:
@@ -1495,13 +1517,42 @@ class WriterFrame(ttk.Frame):
             field = OxmlElement("w:fldSimple")
             field.set(qn("w:instr"), "PAGE")
             run._r.append(field)
-        for line in document.text.splitlines() or [""]:
-            doc.add_paragraph(line)
+        from bisect import bisect_right
+
+        lines = document.text.split("\n")
         objects = document.metadata.get("objects", [])
+        ordered = []
         if isinstance(objects, list):
-            for item in objects:
-                if not isinstance(item, dict):
+            for ordinal, item in enumerate(objects):
+                if not isinstance(item, dict) or item.get("kind") not in {"table", "image"}:
                     continue
+                position = str(item.get("index", "end-1c")).split(".")
+                if len(position) == 2 and all(part.isdigit() for part in position):
+                    line_no = max(1, min(len(lines), int(position[0])))
+                    column = int(position[1])
+                else:
+                    line_no = len(lines)
+                    column = len(lines[-1].encode("utf-16-le")) // 2 + len(objects)
+                ordered.append((line_no, column, ordinal, item))
+        ordered.sort(key=lambda row: row[:3])
+        by_line: dict[int, list[tuple[int, dict]]] = {}
+        for line_no, column, _, item in ordered:
+            by_line.setdefault(line_no, []).append((column, item))
+
+        for line_no, line in enumerate(lines, start=1):
+            boundaries = [0]
+            for character in line:
+                boundaries.append(boundaries[-1] + len(character.encode("utf-16-le")) // 2)
+            cursor = 0
+            events = by_line.get(line_no, [])
+            for preceding_windows, (column, item) in enumerate(events):
+                # Text.get omits embedded windows, although Text.index counts
+                # each window. Remove those slots before splitting plain text.
+                units = max(0, column - preceding_windows)
+                offset = max(cursor, min(len(line), bisect_right(boundaries, units) - 1))
+                if offset > cursor:
+                    doc.add_paragraph(line[cursor:offset])
+                cursor = offset
                 if item.get("kind") == "table":
                     rows, cols = int(item.get("rows", 1)), int(item.get("cols", 1))
                     table = doc.add_table(rows=max(1, rows), cols=max(1, cols))
@@ -1517,6 +1568,8 @@ class WriterFrame(ttk.Frame):
                         doc.add_picture(io.BytesIO(payload), width=Inches(6.0))
                     except Exception:
                         continue
+            if cursor < len(line) or not events:
+                doc.add_paragraph(line[cursor:])
         doc.save(str(path))
 
     @staticmethod
