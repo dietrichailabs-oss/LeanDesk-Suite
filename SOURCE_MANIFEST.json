@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-13T16:25:24.791985+00:00",
-  "source_tree_id": "6E9E341FBE57F5D18148008B898069FB12CAE224521B9050EF4EE81DCD048D0A",
+  "generated_utc": "2026-09-13T19:13:03.822889+00:00",
+  "source_tree_id": "19AF5C244094341A855FFF6FEC5A63F18131B68BD2C5080FE7B8A716FF2CD691",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 130,
-  "total_bytes": 4345090,
+  "file_count": 132,
+  "total_bytes": 4353515,
   "files": [
     {
       "path": ".gitignore",
@@ -229,8 +229,8 @@
     },
     {
       "path": "leandesk/app.py",
-      "size": 36804,
-      "sha256": "525698047F45FDDCE2FB2C8D254B4248E884F717AD67F1405A25645EC0436C1A"
+      "size": 37081,
+      "sha256": "EF9CC085FE6D5A9A93757B4DC86725746DF522EA2DDCD1386ECD675D6C98D5D5"
     },
     {
       "path": "leandesk/backup_integrity.py",
@@ -371,6 +371,11 @@
       "path": "leandesk/updates/version_compare.py",
       "size": 3638,
       "sha256": "432EFD245E50ABD1D169298F69A934F83F1B32180C59E0AB8CB3957A8C9AECE9"
+    },
+    {
+      "path": "leandesk/windows_geometry.py",
+      "size": 4623,
+      "sha256": "0979FC057D12EBB7A81628EA6DA330EA519E4C9E5162B75EDBD3BA2D535F6113"
     },
     {
       "path": "leandesk/windows_print.py",
@@ -611,6 +616,11 @@
       "path": "tests/test_spreadsheet_features.py",
       "size": 9323,
       "sha256": "F7B3BF6A9057FBE34D0BF7D309AEFE199FFDCAE6B0038BAA48A49BFBB9880A3B"
+    },
+    {
+      "path": "tests/test_windows_geometry.py",
+      "size": 3525,
+      "sha256": "C6F45ED843D142BF078085F0660A7EF4B720E65A4A242067E98821FD6FD0B563"
     },
     {
       "path": "tests/test_windows_lifecycle_hold_correction.py",

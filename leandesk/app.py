@@ -94,6 +94,10 @@ class LeanDeskApp(tk.Tk):
         self.after(350, self._offer_recovery)
         self.after(1500, self._schedule_automatic_update_check)
         self.protocol("WM_DELETE_WINDOW", self.on_close)
+        # Tk's requested client bounds exclude the native frame and taskbar.
+        # Clamp once at startup; do not constrain later intentional resizing.
+        from .windows_geometry import fit_startup_window
+        self.startup_window_placement = fit_startup_window(self)
 
     def _build_menu(self) -> None:
         menu = tk.Menu(self)
