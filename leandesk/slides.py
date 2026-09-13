@@ -720,12 +720,13 @@ class SlidesFrame(ttk.Frame):
             from pptx.enum.chart import XL_CHART_TYPE
             from pptx.enum.shapes import MSO_SHAPE
             from pptx.dml.color import RGBColor
-            from pptx.util import Inches, Pt
+            from pptx.util import Emu, Inches, Pt
         except ImportError as exc:
             raise RuntimeError("PPTX support requires python-pptx.") from exc
         presentation = Presentation()
-        presentation.slide_width = Inches(13.333)
-        presentation.slide_height = Inches(7.5)
+        # Match the import canvas exactly; a rounded inch width accumulates drift.
+        presentation.slide_width = Pt(960)
+        presentation.slide_height = Pt(540)
         for model in self.deck.slides:
             slide = presentation.slides.add_slide(presentation.slide_layouts[6])
             theme = THEMES.get(model.theme, THEMES["Midnight"])
@@ -755,8 +756,8 @@ class SlidesFrame(ttk.Frame):
                 except Exception:
                     pass
             for item in model.objects:
-                left, top = Inches(item.x / 72), Inches(item.y / 72)
-                width, height = Inches(item.width / 72), Inches(item.height / 72)
+                left, top = Emu(round(item.x * 12700)), Emu(round(item.y * 12700))
+                width, height = Emu(round(item.width * 12700)), Emu(round(item.height * 12700))
                 if item.kind == "text":
                     shape = slide.shapes.add_textbox(left, top, width, height)
                     shape.text_frame.text = item.text

@@ -11,7 +11,8 @@ import tempfile
 import threading
 import time
 
-from .document_formats import LeanDocument, write_text_document
+from .document_formats import LeanDocument
+from .print_rtf import writer_print_rtf
 
 
 class PrintUnavailableError(RuntimeError):
@@ -153,7 +154,11 @@ def print_rtf_document(document: LeanDocument, *, owner: int = 0, cancel_event=N
     try:
         with tempfile.TemporaryDirectory(prefix="LeanDesk_Print_") as directory:
             path = Path(directory) / "document.rtf"
-            write_text_document(document, path)
+            try:
+                content = writer_print_rtf(document)
+            except (ValueError, TypeError) as exc:
+                raise PrintUnavailableError(f"Document could not be prepared for printing: {exc}") from exc
+            path.write_text(content, encoding="ascii")
             environment = os.environ.copy()
             environment["LEANDESK_PRINT_RTF"] = str(path)
             encoded = base64.b64encode(_SCRIPT.encode("utf-16le")).decode("ascii")

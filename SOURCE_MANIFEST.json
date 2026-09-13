@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-13T13:20:27.369397+00:00",
-  "source_tree_id": "F972EAE6501467945CB16667E010BB0C438F94625B7040B269041F9271C02EAF",
+  "generated_utc": "2026-09-13T16:25:24.791985+00:00",
+  "source_tree_id": "6E9E341FBE57F5D18148008B898069FB12CAE224521B9050EF4EE81DCD048D0A",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 127,
-  "total_bytes": 4335470,
+  "file_count": 130,
+  "total_bytes": 4345090,
   "files": [
     {
       "path": ".gitignore",
@@ -298,6 +298,11 @@
       "sha256": "D672DE54365EEB9D905F26C5000D6D828E05E9B2157C040B0A3DA6D09AFBE93C"
     },
     {
+      "path": "leandesk/print_rtf.py",
+      "size": 4440,
+      "sha256": "CD0B3099D932C3F560896B288D28253C628D01DE43D7715FD83996F041155198"
+    },
+    {
       "path": "leandesk/rtf_codec.py",
       "size": 17164,
       "sha256": "FAD2DA22FB1500DDFD56DBF6C1CCEA5A16CC33CE8FE11AACAC89988C6B8B445B"
@@ -319,8 +324,8 @@
     },
     {
       "path": "leandesk/slides.py",
-      "size": 43314,
-      "sha256": "83849FCB0755801A0D3C0AA4A907421FA3ED140B3CCCE93C35BD5BA9D3AA878F"
+      "size": 43419,
+      "sha256": "E275BA52E0FBCB0ED675162C35E03548929C3CD09B5ECFCAC5574D3A099F237E"
     },
     {
       "path": "leandesk/spellcheck.py",
@@ -369,8 +374,8 @@
     },
     {
       "path": "leandesk/windows_print.py",
-      "size": 7709,
-      "sha256": "382020700FEFAF18DE18568199C25A178FFA7EC85F0037A84F7D0DD45E790932"
+      "size": 7964,
+      "sha256": "FE29DCC3822C7271111D8D171E4B2D9286A849430FCB16A276EF37493DA6CBBB"
     },
     {
       "path": "leandesk/workspace.py",
@@ -553,6 +558,11 @@
       "sha256": "8A25CDF89D808A40F44C5445F486370DB480A2903A678C9D688A2C8BBDD2141E"
     },
     {
+      "path": "tests/test_pptx_exact_geometry.py",
+      "size": 1439,
+      "sha256": "AB0AC3C0513430D416FBEB03CAD2219917B4BD41F5D837F8329FE249CF2208E0"
+    },
+    {
       "path": "tests/test_presentation_tools.py",
       "size": 3358,
       "sha256": "8ADA264A1BA6B2D188D87F20018A444B594025E8F221AE0BAB76D11E2852B0A2"
@@ -561,6 +571,11 @@
       "path": "tests/test_print_correction.py",
       "size": 3152,
       "sha256": "BE6C5E5CB275DC28608344CB36C12C70F449A220C3C9F8E3F047E7D1D91236A7"
+    },
+    {
+      "path": "tests/test_print_table_content.py",
+      "size": 3381,
+      "sha256": "81F737307D81834F6129968D56C5E1A9575F2BA923F2AA500522A5A0400DAA5A"
     },
     {
       "path": "tests/test_r3_corrections.py",
