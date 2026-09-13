@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-12T23:27:18.341258+00:00",
-  "source_tree_id": "8054CBB943502087BB1FBA2C906254F4EBAC1956134A69B5763231CD6F0A87EA",
+  "generated_utc": "2026-09-13T13:20:27.369397+00:00",
+  "source_tree_id": "F972EAE6501467945CB16667E010BB0C438F94625B7040B269041F9271C02EAF",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 125,
-  "total_bytes": 4324360,
+  "file_count": 127,
+  "total_bytes": 4335470,
   "files": [
     {
       "path": ".gitignore",
@@ -313,9 +313,14 @@
       "sha256": "7039997983C6B1B0CCBDA87D57CA88F2FC432161C8DDCD6555935167F1BC8F95"
     },
     {
+      "path": "leandesk/slide_table_editor.py",
+      "size": 7045,
+      "sha256": "A65EEE0BF945C564857F6FE0D8F9C814A23A7471F9AC4DCD20205E772A15F430"
+    },
+    {
       "path": "leandesk/slides.py",
-      "size": 43209,
-      "sha256": "73B2B314D2539F08C2FC6A5442D652496D82C5C83F4709864F3A8F4030FE38FA"
+      "size": 43314,
+      "sha256": "83849FCB0755801A0D3C0AA4A907421FA3ED140B3CCCE93C35BD5BA9D3AA878F"
     },
     {
       "path": "leandesk/spellcheck.py",
@@ -576,6 +581,11 @@
       "path": "tests/test_responsive_layout_090.py",
       "size": 5885,
       "sha256": "AF258EA863585ED2E6535B14786AE74E0CFE18BE74A2AC84C6D1D96F0F2C836A"
+    },
+    {
+      "path": "tests/test_slide_table_editor.py",
+      "size": 3960,
+      "sha256": "6486FED837A50C0B417746D7E67377770D38A93A348560857F4B99EBADD8CF24"
     },
     {
       "path": "tests/test_slides_presenter_content.py",

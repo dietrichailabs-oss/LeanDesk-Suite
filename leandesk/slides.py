@@ -299,6 +299,9 @@ class SlidesFrame(ttk.Frame):
         self.canvas = tk.Canvas(center, bg=COLORS["workspace"], highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.bind("<Configure>", lambda _e: self.render_slide())
+        from .slide_table_editor import install_table_editor
+
+        install_table_editor(self, ribbon)
 
         tk.Label(right, text="SLIDE CONTENT", bg=COLORS["panel"], fg=COLORS["amber"], font=("Segoe UI Semibold", 10)).pack(anchor="w", padx=12, pady=(12, 5))
         tk.Label(right, text="Title", bg=COLORS["panel"], fg=COLORS["muted"]).pack(anchor="w", padx=12)
