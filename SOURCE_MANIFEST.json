@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-13T22:23:01.696863+00:00",
-  "source_tree_id": "A7FF229A0D027481795BAAE7C34EF54B631B183C4D5287B85CC9B48EFD95E5D3",
+  "generated_utc": "2026-09-13T22:47:46.952053+00:00",
+  "source_tree_id": "F34395531B784ACD351EF153AC687D579F940E4F0F0A9405539BB1A69B53C3D9",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
   "file_count": 133,
-  "total_bytes": 4356886,
+  "total_bytes": 4357570,
   "files": [
     {
       "path": ".gitignore",
@@ -599,8 +599,8 @@
     },
     {
       "path": "tests/test_r3_viewport_scrollbars.py",
-      "size": 2927,
-      "sha256": "633E15148802F009BF4F13D043CD81EA6A5AA83CDA001B8D97AB8D95404D981F"
+      "size": 3611,
+      "sha256": "706D142E6CA34A68465E1928D3B3C77EC3F2432C4B2E055A31B8F2397AADB25F"
     },
     {
       "path": "tests/test_responsive_layout_090.py",

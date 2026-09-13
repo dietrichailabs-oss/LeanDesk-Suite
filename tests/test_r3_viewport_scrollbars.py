@@ -1,19 +1,24 @@
 """Native scrollbar reachability, not a substitute for packaged Windows QA."""
 import os
+import subprocess
+import sys
+
+import pytest
+
+
+PROCESS = r'''
+import os
+import sys
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk
-
-import pytest
 
 import leandesk.app as app_module
 from leandesk.core import AppSettings
 from leandesk.ui import AccessibleViewport
 
 
-@pytest.mark.parametrize("width,height", [(1024, 768), (1365, 768), (1366, 768), (1920, 1080)])
-@pytest.mark.parametrize("percent", [100, 125, 150, 175, 200])
-def test_real_shell_scrollbars_are_not_covered_by_oversized_pages(monkeypatch, width, height, percent):
+def exercise(width, height, percent):
     profile = os.environ.get("LEANDESK_GUI_REPRO_PROFILE")
     assert profile and Path(os.environ["LOCALAPPDATA"]).resolve() == Path(profile).resolve()
     settings = AppSettings.load()
@@ -25,7 +30,7 @@ def test_real_shell_scrollbars_are_not_covered_by_oversized_pages(monkeypatch, w
         root.tk.call("tk", "scaling", (96 / 72) * percent / 100)
         return original(root, theme)
 
-    monkeypatch.setattr(app_module, "configure_suite_styles", configure)
+    app_module.configure_suite_styles = configure
     app = app_module.LeanDeskApp()
     failures = []
     app.report_callback_exception = lambda *args: failures.append(args)
@@ -66,3 +71,22 @@ def test_real_shell_scrollbars_are_not_covered_by_oversized_pages(monkeypatch, w
         for job in app.tk.call("after", "info"):
             app.tk.call("after", "cancel", job)
         app.destroy()
+
+exercise(*(int(value) for value in sys.argv[1:]))
+print("NATIVE_SCROLLBAR_REACHABILITY_PASS", flush=True)
+'''
+
+
+@pytest.mark.parametrize("width,height", [(1024, 768), (1365, 768), (1366, 768), (1920, 1080)])
+@pytest.mark.parametrize("percent", [100, 125, 150, 175, 200])
+def test_real_shell_scrollbars_are_not_covered_by_oversized_pages(tmp_path, width, height, percent):
+    env = os.environ.copy()
+    profile = str(tmp_path / "profile")
+    env.update(LOCALAPPDATA=profile, LEANDESK_GUI_REPRO_PROFILE=profile,
+               PYTHONDONTWRITEBYTECODE="1")
+    result = subprocess.run(
+        [sys.executable, "-c", PROCESS, str(width), str(height), str(percent)],
+        env=env, capture_output=True, text=True, timeout=180,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "NATIVE_SCROLLBAR_REACHABILITY_PASS" in result.stdout
