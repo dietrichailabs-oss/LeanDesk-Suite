@@ -294,11 +294,15 @@ class StatusBar(tk.Frame):
 class AccessibleViewport(ttk.Frame):
     """Scrollable fallback retaining the page's parent, bindings and layout."""
 
-    def __init__(self, page, *, minimum_width, minimum_height, sidebar=False):
-        master = page.master
-        page.pack_forget()
+    def __init__(self, page=None, *, master=None, minimum_width, minimum_height, sidebar=False):
+        if page is not None:
+            if master is not None:
+                raise ValueError("Supply an existing page or a new page's master, not both")
+            master = page.master
+            page.pack_forget()
+        elif master is None:
+            raise ValueError("A new viewport page requires a master")
         super().__init__(master)
-        self.page = page
         self.minimum_width = minimum_width
         self.minimum_height = minimum_height
         self.sidebar = sidebar
@@ -309,6 +313,11 @@ class AccessibleViewport(ttk.Frame):
             options["before"] = remaining[0]
         self.pack(**options)
         self.canvas = tk.Canvas(self, highlightthickness=0, background=COLORS["bg"], width=1, height=1)
+        if page is None:
+            # A native child of the canvas is clipped to its visible area.
+            # Raising an older sibling page instead can cover the scrollbars.
+            page = ttk.Frame(self.canvas, style="Panel.TFrame" if sidebar else "TFrame")
+        self.page = page
         self.vertical = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.horizontal = ttk.Scrollbar(self, orient="horizontal", command=self.canvas.xview)
         self.canvas.configure(xscrollcommand=self.horizontal.set, yscrollcommand=self.vertical.set)
@@ -322,7 +331,10 @@ class AccessibleViewport(ttk.Frame):
         # The page predates this sibling viewport. Canvas geometry management
         # does not raise its native window above the newer canvas on Windows.
         # Keep the actual page visible, not merely mapped with valid bounds.
-        page.lift(self)
+        if page.master is not self.canvas:
+            # Compatibility for existing callers that supply a constructed page.
+            # The application shell creates its pages inside the canvas instead.
+            page.lift(self)
         if sidebar:
             page.pack_propagate(True)
         self.canvas.bind("<Configure>", self._layout)

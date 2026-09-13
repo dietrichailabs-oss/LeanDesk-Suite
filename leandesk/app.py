@@ -17,7 +17,7 @@ from .organizer import CalendarFrame, ContactsFrame, TasksFrame
 from .sheets import SheetsFrame
 from .slides import SlidesFrame
 from .themes import get_theme
-from .ui import COLORS, apply_suite_theme, configure_suite_styles, theme_names
+from .ui import AccessibleViewport, COLORS, apply_suite_theme, configure_suite_styles, theme_names
 from .writer import WriterFrame
 from .compatibility import cleanup_stale_conversion_roots, module_for_suffix
 from .update_checker import MANIFEST_URL, UpdateResult, check_async, set_enabled
@@ -84,12 +84,6 @@ class LeanDeskApp(tk.Tk):
         self.sidebar_buttons: dict[str, ttk.Button] = {}
         self._build_menu()
         self._build_shell()
-        # Scrolling is the fallback when DPI/window bounds constrain the UI.
-        from .ui import AccessibleViewport
-        shell = self.content.master
-        sidebar = next(child for child in shell.winfo_children() if child is not self.content)
-        AccessibleViewport(sidebar, minimum_width=196, minimum_height=0, sidebar=True)
-        AccessibleViewport(self.content, minimum_width=780, minimum_height=700)
         self.show_home()
         self.after(350, self._offer_recovery)
         self.after(1500, self._schedule_automatic_update_check)
@@ -136,9 +130,10 @@ class LeanDeskApp(tk.Tk):
     def _build_shell(self) -> None:
         shell = ttk.Frame(self)
         shell.pack(fill="both", expand=True)
-        sidebar = ttk.Frame(shell, style="Panel.TFrame", width=196)
-        sidebar.pack(side="left", fill="y")
-        sidebar.pack_propagate(False)
+        sidebar_viewport = AccessibleViewport(
+            master=shell, minimum_width=196, minimum_height=0, sidebar=True
+        )
+        sidebar = sidebar_viewport.page
         self.sidebar = sidebar
 
         brand = ttk.Frame(sidebar, style="Panel.TFrame")
@@ -172,8 +167,10 @@ class LeanDeskApp(tk.Tk):
         ttk.Button(sidebar, text="?   Help", command=self.open_readme, style="Sidebar.TButton").pack(fill="x", padx=8, pady=2)
         ttk.Label(sidebar, text="Local-first productivity", style="Panel.TLabel", foreground=COLORS["muted"], font=("Segoe UI", 8)).pack(side="bottom", anchor="w", padx=18, pady=16)
 
-        self.content = ttk.Frame(shell)
-        self.content.pack(side="left", fill="both", expand=True)
+        content_viewport = AccessibleViewport(
+            master=shell, minimum_width=780, minimum_height=700
+        )
+        self.content = content_viewport.page
         callbacks = dict(on_recent_changed=self.refresh_home_recent, on_title_changed=self._update_window_title)
         self.frames["Writer"] = WriterFrame(self.content, recent=self.recent, settings=self.settings, **callbacks)
         self.frames["Sheets"] = SheetsFrame(self.content, recent=self.recent, **callbacks)
