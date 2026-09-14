@@ -709,6 +709,10 @@ class SheetGrid(ttk.Frame):
             address = self._address_from_event(event)
         else:
             address = self.active_address
+        # Keep the displayed address, selected range and active-cell outline
+        # together even when this edit targets a different cell. Escape must
+        # not leave the previous selection behind.
+        self.select_address(address)
         row, col = split_cell(address)
         left, top, right, bottom = self._cell_bounds(row, col)
         x = left - self.canvas.canvasx(0)
@@ -717,8 +721,6 @@ class SheetGrid(ttk.Frame):
             return "break"
         if self.editor:
             self.editor.destroy()
-        self.active_address = address
-        self.on_selection(address, self.model.raw(address))
         self.editor = ttk.Entry(self.canvas)
         self.editor.insert(0, self.model.raw(address))
         self.editor.place(x=x + 1, y=y + 1, width=max(20, right - left - 2), height=max(18, bottom - top - 2))

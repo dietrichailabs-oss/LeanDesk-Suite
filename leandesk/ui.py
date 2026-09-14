@@ -414,6 +414,13 @@ class AccessibleViewport(ttk.Frame):
             (left, widget.winfo_width(), self.canvas.canvasx(0), self.canvas.winfo_width(), self.page.winfo_width(), self.canvas.xview_moveto),
             (top, widget.winfo_height(), self.canvas.canvasy(0), self.canvas.winfo_height(), self.page.winfo_height(), self.canvas.yview_moveto),
         ):
+            if size > available:
+                # A large editor/canvas cannot fit in this viewport. Preserve
+                # its visible portion so focus does not move a pointer target
+                # between press and double-click/release events.
+                if start + size <= origin or start >= origin + available:
+                    move(max(0, start) / max(1, total))
+                continue
             if start < origin:
                 move(max(0, start) / max(1, total))
             elif start + size > origin + available:
