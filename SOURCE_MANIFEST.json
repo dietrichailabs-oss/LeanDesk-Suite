@@ -2,15 +2,15 @@
   "schema": 2,
   "candidate": "0.9.0-office-completion",
   "classification": "ENGINEERING_SOURCE_QA_CANDIDATE_NOT_RELEASE_APPROVED",
-  "generated_utc": "2026-09-14T22:20:24.138098+00:00",
-  "source_tree_id": "79250BE2C7A16F946B5D34CA95D76BE9A5466DF77F80D8C1366BA430CD805177",
+  "generated_utc": "2026-09-16T10:59:45.000742+00:00",
+  "source_tree_id": "78A1ADB6A5419F0041D862C3A87564F4734F4BA2E0D256AB080AD0E0248CBD3E",
   "identity_algorithm": "SHA-256 of UTF-8 canonical JSON for the sorted files array using sort_keys=True and separators=(comma,colon); SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt are intentionally excluded from the files array.",
   "excluded_identity_files": [
     "SOURCE_MANIFEST.json",
     "SOURCE_TREE_ID.txt"
   ],
-  "file_count": 134,
-  "total_bytes": 4362621,
+  "file_count": 135,
+  "total_bytes": 4366901,
   "files": [
     {
       "path": ".gitignore",
@@ -344,8 +344,8 @@
     },
     {
       "path": "leandesk/ui.py",
-      "size": 23023,
-      "sha256": "1E41C1691855231A2C4C75FEFEE787689C842A2ACBBCC642E5D9DFC27BFE253B"
+      "size": 23203,
+      "sha256": "2F450EF13EE07394AB4E23161E1C1E1FEC0B4E32250AF8CBCC63BCFD0EF900E0"
     },
     {
       "path": "leandesk/update_checker.py",
@@ -601,6 +601,11 @@
       "path": "tests/test_r3_layout.py",
       "size": 6347,
       "sha256": "67D4E59A72FB014542399F6D8BF8D6ADB580B19E18E551358ACBC30214100820"
+    },
+    {
+      "path": "tests/test_r3_partial_editor_focus.py",
+      "size": 4100,
+      "sha256": "8904BFE98B4B42075F6FF362F705445E00ABE9CBDA7E4D879B0FC9381516E72F"
     },
     {
       "path": "tests/test_r3_viewport_scrollbars.py",

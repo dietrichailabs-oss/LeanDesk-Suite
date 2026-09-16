@@ -414,10 +414,12 @@ class AccessibleViewport(ttk.Frame):
             (left, widget.winfo_width(), self.canvas.canvasx(0), self.canvas.winfo_width(), self.page.winfo_width(), self.canvas.xview_moveto),
             (top, widget.winfo_height(), self.canvas.canvasy(0), self.canvas.winfo_height(), self.page.winfo_height(), self.canvas.yview_moveto),
         ):
-            if size > available:
-                # A large editor/canvas cannot fit in this viewport. Preserve
-                # its visible portion so focus does not move a pointer target
-                # between press and double-click/release events.
+            if size > available or isinstance(widget, tk.Canvas):
+                # A canvas owns its internal navigation. Keep its visible
+                # portion stationary even when it fits the viewport but is
+                # partly below a toolbar; otherwise the first click moves
+                # the target before the double-click/release can arrive.
+                # Completely offscreen canvases still become reachable.
                 if start + size <= origin or start >= origin + available:
                     move(max(0, start) / max(1, total))
                 continue
