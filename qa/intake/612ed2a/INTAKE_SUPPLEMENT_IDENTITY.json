@@ -1,0 +1,39 @@
+{
+  "parent_master_filename": "LeanDesk_Suite_0.9.0_612ed2a_Engineering_QA_Master_20260926T152024Z.zip",
+  "parent_master_byte_size": 1434421966,
+  "parent_master_sha256": "B54AFFAFA79BC12D258BB70D7F400F92F2521FF17D6B375340A15C8E5C383ABA",
+  "frozen_commit": "612ed2a4829ee43f4513647c6fdd922d466f3a32",
+  "git_tree": "bbfb4e772d45bf84eca49ad106e80d535eac83bc",
+  "source_tree_id": "6C97A4F38BB370E4F64A67DBB1CFB64063392B37605493D397341F2D9D119456",
+  "extracted_files": [
+    {
+      "filename": "README_ENGINEERING_HANDOFF.md",
+      "byte_size": 2813,
+      "sha256": "AB8832EF53B56BD00F035C9B9C06A9FD73DB4EB5E2983BD46C32290BFEDAE5DA"
+    },
+    {
+      "filename": "CURRENT_DISPOSITION.json",
+      "byte_size": 3744,
+      "sha256": "D1167723C195CD9CF76DA7BA4AA0579E7CED9CFE3238C2D83B657BFC4294CA43"
+    },
+    {
+      "filename": "CURRENT_REQUIREMENTS_MATRIX.json",
+      "byte_size": 2604,
+      "sha256": "3CFA419EC3262B55E76AA65C043D357897E2750C30BE26493DD94E9C6B8DCA21"
+    },
+    {
+      "filename": "EVIDENCE_MANIFEST.json",
+      "byte_size": 5160827,
+      "sha256": "CF957AE007D5568B436B5AC273E95FD596640C072B5FF609F0C9A16387C73429"
+    }
+  ],
+  "byte_identity_statement": "The four extracted files are byte-identical copies from the exact parent master.",
+  "supplement_zip_filename": "LeanDesk_Suite_0.9.0_612ed2a_Independent_QA_Intake_Supplement.zip",
+  "supplement_zip_byte_size": null,
+  "supplement_zip_sha256": null,
+  "final_zip_identity_location": "External INTAKE_SUPPLEMENT_RECEIPT.json and GitHub issue #7 intake supplement comment.",
+  "self_reference_note": "Final ZIP size and SHA-256 are recorded externally to avoid circular self-reference, as authorized by the user.",
+  "creation_utc": "2026-09-26T17:01:29.764259Z",
+  "classification": "TRANSPORT_ONLY_NO_PRODUCT_CHANGE",
+  "state_statement": "No product/source/build/test state changed. This is transport-only metadata for Independent QA intake."
+}

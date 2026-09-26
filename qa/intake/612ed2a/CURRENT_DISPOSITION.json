@@ -1,0 +1,87 @@
+{
+  "status": "ENGINEERING_CANDIDATE_INDEPENDENT_QA_PENDING",
+  "commit": "612ed2a4829ee43f4513647c6fdd922d466f3a32",
+  "git_tree": "bbfb4e772d45bf84eca49ad106e80d535eac83bc",
+  "source_tree_id": "6C97A4F38BB370E4F64A67DBB1CFB64063392B37605493D397341F2D9D119456",
+  "frozen_branch": "codex/qa-frozen-0.9.0-612ed2a",
+  "commit_url": "https://github.com/dietrichailabs-oss/LeanDesk-Suite/commit/612ed2a4829ee43f4513647c6fdd922d466f3a32",
+  "source_gate": {
+    "collected": 817,
+    "passed": 808,
+    "expected_libreoffice_skips": 9,
+    "failed": 0
+  },
+  "signed_binaries": [
+    {
+      "filename": "LeanDesk_Suite.exe",
+      "size": 43435912,
+      "sha256": "E1920950342511FDEF6062936FAC3C6890BC71CC200195AC6DC8FC99D792AC03",
+      "authenticode": "Valid",
+      "signtool_exit_code": 0,
+      "subject": "CN=Dietrich AI Labs",
+      "thumbprint": "C7FB96DDE901E3D57637804A63AC11FDDE0B5D32",
+      "not_before_utc": "2026-07-15T18:46:19.0000000Z",
+      "not_after_utc": "2031-07-15T18:56:19.0000000Z",
+      "timestamp_subject": "CN=DigiCert SHA256 RSA4096 Timestamp Responder 2026 1, O=\"DigiCert, Inc.\", C=US"
+    },
+    {
+      "filename": "LeanDesk_Suite_Setup_0.9.0.exe",
+      "size": 45394704,
+      "sha256": "44DE6B1B1ADBFD8411EAAD3276DAA7260A3FD60C637B9B7839A3A13200AB19FD",
+      "authenticode": "Valid",
+      "signtool_exit_code": 0,
+      "subject": "CN=Dietrich AI Labs",
+      "thumbprint": "C7FB96DDE901E3D57637804A63AC11FDDE0B5D32",
+      "not_before_utc": "2026-07-15T18:46:19.0000000Z",
+      "not_after_utc": "2031-07-15T18:56:19.0000000Z",
+      "timestamp_subject": "CN=DigiCert SHA256 RSA4096 Timestamp Responder 2026 1, O=\"DigiCert, Inc.\", C=US"
+    }
+  ],
+  "packages": [
+    {
+      "filename": "LeanDesk_Suite_Portable_0.9.0.zip",
+      "size": 46167422,
+      "sha256": "67B1F7C5B998BD4D21DB716A325838383F9A67F8095CE71AE192CF21F57C40A9"
+    },
+    {
+      "filename": "LeanDesk_Suite_Installer_0.9.0.zip",
+      "size": 48089101,
+      "sha256": "121C95008717CB028CAD9AA7E17D7197D303C14C7402FEAFCD10D55EE288F713"
+    },
+    {
+      "filename": "LeanDesk_Suite_Complete_0.9.0.zip",
+      "size": 96386460,
+      "sha256": "A24040A1B85C78822C914FD37456CA8FB33B57AB94501DA59E344E49EA4C2E45"
+    }
+  ],
+  "affected_gui": "Ten-theme normal/hover Writer observations, ribbon reconstruction, close/reopen and installed smoke reconciled",
+  "exact_1365_desktop": "ENVIRONMENT_LIMITATION_ACCEPTED",
+  "installed_smoke": {
+    "exact_installed_hash": "E1920950342511FDEF6062936FAC3C6890BC71CC200195AC6DC8FC99D792AC03",
+    "normal_user": true,
+    "signature": "Valid",
+    "signtool_exit_code": 0,
+    "remaining_processes": [],
+    "installer_exit_code": null,
+    "app_exit_code": null
+  },
+  "independent_qa_pass": false,
+  "release_approved": false,
+  "release_id": 383426345,
+  "release_draft_verified_before_upload": true,
+  "parent_commit": "c0a71036e89d2f7fbbc14f4e7aeb6d7273992272",
+  "limitations": [
+    "Accepted parent lifecycle evidence retains parent identities; not represented as a fresh full lifecycle on 612ed2a.",
+    "Installed smoke was interactive; numeric installer/app exit codes were not captured.",
+    "Blank QA recovery prompt and missing isolated Desktop warning retained.",
+    "Keyboard focus on the Writer style tiles was not directly established in the new visual run; source regression covers semantic normal/active contrast and parent representative focus evidence remains historical.",
+    "Initial installed-report transport failure occurred after runtime completion and is preserved alongside successful retry receipts."
+  ],
+  "no_changes": [
+    "main",
+    "released 0.8.1",
+    "live website",
+    "live updater"
+  ],
+  "created_utc": "2026-09-26T15:20:29.933230+00:00"
+}

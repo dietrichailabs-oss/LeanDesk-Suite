@@ -1,0 +1,67 @@
+[
+  {
+    "requirement": "Exact source and new full gate",
+    "disposition": "ENGINEERING_PASS",
+    "evidence": "Evidence/Current/writer-normal-full-gate-01/"
+  },
+  {
+    "requirement": "Signed exact EXE and installer",
+    "disposition": "ENGINEERING_PASS",
+    "evidence": "Evidence/Current/raw-612ed2a-affected-01/SIGNATURE_VERIFICATION.json"
+  },
+  {
+    "requirement": "Affected Writer normal/hover and reopen",
+    "disposition": "ENGINEERING_PASS_WITH_RECORDED_LIMITATIONS",
+    "evidence": "Evidence/Current/WRITER_612ED2A_VM_RECONCILIATION_01.md"
+  },
+  {
+    "requirement": "Installed candidate smoke",
+    "disposition": "ENGINEERING_PASS_WITH_EXIT_CODE_LIMITATION",
+    "evidence": "Evidence/Current/raw-612ed2a-installed-01/"
+  },
+  {
+    "requirement": "Remaining geometry/DPI on parent",
+    "disposition": "PARENT_EVIDENCE_RETAINED_UNCHANGED_LAYOUT",
+    "evidence": "Historical/Continuation/FINALGUI_200_RECONCILIATION_01.md"
+  },
+  {
+    "requirement": "Broader parent hover with Writer correction",
+    "disposition": "PARENT_EVIDENCE_PLUS_AFFECTED_CORRECTION",
+    "evidence": "Historical/Continuation/PACKAGED_HOVER_OBSERVATIONS_10.json"
+  },
+  {
+    "requirement": "Sheets selection/reference/fill contract",
+    "disposition": "PARENT_EVIDENCE_RETAINED_UNCHANGED_SHEETS",
+    "evidence": "Historical/Continuation/SHEETS_GESTURE_CONTRACT_01.md"
+  },
+  {
+    "requirement": "All registered clean-stage shell dispatch",
+    "disposition": "PARENT_EVIDENCE_RETAINED_UNCHANGED_DISPATCH",
+    "evidence": "Historical/Continuation/CLEAN_SHELL_FINAL_RECONCILIATION_04.md"
+  },
+  {
+    "requirement": "Exact-parent live updater",
+    "disposition": "PARENT_EVIDENCE_RETAINED_UNCHANGED_UPDATER",
+    "evidence": "Historical/Continuation/live-updater-host-exact-20260923T004854Z/"
+  },
+  {
+    "requirement": "Exact 1365 desktop",
+    "disposition": "ENVIRONMENT_LIMITATION_ACCEPTED",
+    "evidence": "Historical/Continuation/QA_DEFINITIVE_DISPOSITION_5785311739.json"
+  },
+  {
+    "requirement": "Frozen Git provenance",
+    "disposition": "REMOTE_COMMIT_AND_TREE_VERIFIED",
+    "evidence": "https://github.com/dietrichailabs-oss/LeanDesk-Suite/commit/612ed2a4829ee43f4513647c6fdd922d466f3a32"
+  },
+  {
+    "requirement": "Prior evidence preservation",
+    "disposition": "UNCHANGED_PRIOR_MASTER_PLUS_CONTINUATION",
+    "evidence": "Historical/Superseded/LeanDesk_Suite_0.9.0_c0a7103_Engineering_QA_HOLD_Master_20260922T215923Z.zip"
+  },
+  {
+    "requirement": "Independent QA / public release",
+    "disposition": "PENDING_NOT_APPROVED",
+    "evidence": "CURRENT_DISPOSITION.json"
+  }
+]
