@@ -410,12 +410,14 @@ class WriterFrame(ttk.Frame):
         _, styles = self._ribbon_group("Styles", width=238)
         style_items = (("Normal", "normal"), ("Heading 1", "heading_1"), ("Heading 2", "heading_2"), ("Heading 3", "heading_3"), ("Title", "heading_1"))
         for index, (label, tag) in enumerate(style_items):
+            background_role = "button_bg" if index else "button_pressed"
+            foreground_role = "button_text" if index else "button_active_text"
             button = tk.Button(
                 styles,
                 text=label,
                 command=lambda value=tag: self.apply_paragraph_style(value),
-                bg=COLORS["button_bg"] if index else COLORS["accent_bg"],
-                fg=COLORS["button_text"],
+                bg=COLORS[background_role],
+                fg=COLORS[foreground_role],
                 activebackground=COLORS["button_hover"],
                 activeforeground=COLORS["button_active_text"],
                 relief="flat",
@@ -424,6 +426,15 @@ class WriterFrame(ttk.Frame):
                 pady=15,
                 font=("Segoe UI", 10 if index else 10, "bold" if index else "normal"),
                 cursor="hand2",
+            )
+            # Preserve the readable highlight pair across live theme switches;
+            # equal palette values must not collapse to unrelated color roles.
+            set_theme_roles(
+                button,
+                background=background_role,
+                foreground=foreground_role,
+                activebackground="button_hover",
+                activeforeground="button_active_text",
             )
             button.grid(row=index // 3, column=index % 3, sticky="nsew", padx=2, pady=2)
             styles.columnconfigure(index % 3, weight=1)
