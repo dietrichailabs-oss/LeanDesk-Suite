@@ -1,104 +1,143 @@
-<p align="center">
-  <img src="assets/leandesk-suite-banner.svg" alt="LeanDesk Suite — a focused, local-first office suite for Windows" width="100%">
-</p>
+![LeanDesk Suite banner](assets/leandesk-suite-banner.png)
 
-<h1 align="center">LeanDesk Suite 0.8.0</h1>
+# LeanDesk Suite 0.8.1 — UI and Update Hotfix Candidate
 
-<p align="center">
-  A focused, local-first Windows productivity suite from Dietrich AI Labs.
-</p>
+**Lean tools. Fast work.**
 
-<p align="center">
-  <img alt="Platform: Windows 10 and 11" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0d6f85">
-  <img alt="Version 0.8.0" src="https://img.shields.io/badge/version-0.8.0-18a9a7">
-  <img alt="Local first" src="https://img.shields.io/badge/local--first-yes-127086">
-  <img alt="Online account not required" src="https://img.shields.io/badge/online_account-not_required-103f55">
-</p>
+LeanDesk Suite is a local-first Windows productivity suite built around the tools people use most, without a required account, cloud service, telemetry, or subscription.
 
-LeanDesk Suite brings Writer, Sheets, Slides, Notes, Draw, Tasks, Calendar, and Contacts into one Windows desktop workspace. Normal operation does not require an online account or cloud service.
+Version 0.8.1 is an Engineering hotfix candidate routed to Independent QA. It restores the ten-theme suite appearance system, visible Sheets cell boundaries, and the fixed official update check while preserving the C6 application and compatibility baseline. Cross-suite import remains best-effort rather than a claim of pixel-perfect Microsoft Office, LibreOffice/OpenOffice, or Apple iWork round trips.
 
-## Official download
+## Included modules
 
-- [Download LeanDesk Suite 0.8.0 from Dietrich AI Labs](https://downloads.dietrichailabs.com/LeanDesk_Suite_0.8.0.zip)
-- [Browse GitHub Releases](https://github.com/dietrichailabs-oss/LeanDesk-Suite/releases)
-- File: `LeanDesk_Suite_0.8.0.zip`
-- Size: `85,645,756 bytes`
-- SHA-256: `A943C7B4CC743836139DDEFF8B4EB670264ECBC2329256F5B5FB853AE8FFA16A`
+### Writer
 
-Verify the complete SHA-256 before opening or extracting the package. Do not run LeanDesk directly from inside the ZIP archive.
+- Clean original ribbon with `File`, `Home`, `Insert`, `Layout`, `Review`, `View`, and `Help`
+- New, Open, Save, Save As, Export PDF, and Print under the File menu
+- Clipboard, Font, Paragraph, Styles, Editing, and Proofing groups
+- Clearly slanted italic control
+- Line spacing from 1.0 through 3.0, custom spacing, and paragraph spacing
+- Offline spell checking with a bundled English dictionary of more than 100,000 words
+- Live red-underlined spelling alerts
+- Right-click replacement suggestions
+- Personal dictionary stored locally
+- Native `.ldoc`, TXT, Markdown, HTML, Unicode-safe plain-text RTF, bounded basic DOCX, and PDF export
+- Formatting, headings, lists, indentation, alignment, colors, and highlighting
+- Find and replace, counts, zoom, autosave recovery, and recent files
 
-## Package layout
+### Sheets
 
-- `LeanDesk_Suite_Setup_0.8.0.exe` — recommended Windows installer
-- `LeanDesk_Suite.exe` — standalone portable executable
-- `Documentation/` — changelog, license, EULA, third-party notices, and version record
-- `Verification/` — public signing certificate, signature report, and release provenance
-- `SHA256SUMS.txt` — SHA-256 hashes for every distributed file
+- Multiple worksheets
+- Editable 200-row by 52-column grids (A1 through AZ200)
+- Formula bar and A1 cell addressing
+- Arithmetic formulas and cell references
+- `SUM`, `AVERAGE`, `MIN`, `MAX`, and `COUNT`
+- Native `.lsheet` workbooks
+- CSV import/export
+- XLSX import/export through OpenPyXL after shared bounded OOXML package preflight
+- Add, rename, delete, duplicate-style workflow, and recalculation
 
-## Included tools
+### Slides
 
-| Tool | Purpose |
-| --- | --- |
-| **Writer** | Text documents, Markdown, HTML, basic DOCX/RTF import, and PDF export |
-| **Sheets** | CSV, native workbooks, formulas, and bounded XLSX import/export |
-| **Slides** | Native presentations and focused PPTX import/export |
-| **Notes** | Markdown notes, notebooks, tags, search, and local saving |
-| **Draw** | Lightweight diagrams with SVG and PNG export |
-| **Tasks** | Local task and priority management |
-| **Calendar** | Local dates and scheduling |
-| **Contacts** | Local contact organization |
+- Slide list, title, body, speaker notes, and normalized embedded images
+- Five built-in visual themes
+- Add, duplicate, delete, and reorder slides
+- Presenter window with keyboard navigation
+- Native `.ldeck` presentation format
+- PPTX import/export through python-pptx after shared bounded OOXML package preflight
 
-Office and OpenDocument compatibility is practical and bounded. Complex layouts, macros, embedded objects, tracked changes, advanced formulas, animations, and exact formatting may not round-trip. Review exported files before relying on them for critical work.
+### Notes
 
-## Install
+- Local Markdown notes
+- Notebooks, tags, search, and pinned notes
+- Split editor and formatted preview
+- Automatic local saving
+- Markdown import/export
 
-1. Download and completely extract `LeanDesk_Suite_0.8.0.zip`.
-2. Run `LeanDesk_Suite_Setup_0.8.0.exe`.
-3. Follow the installer prompts.
-4. Launch LeanDesk Suite from the Start menu.
+### Draw
 
-The installer registers supported formats under Windows **Open with** without silently replacing existing default applications. Native LeanDesk file associations are optional.
+- Rectangle, ellipse, line, arrow, and text tools
+- Selection, movement, color controls, and deletion
+- Native `.ldraw` drawing format
+- SVG and PNG export
 
-## Portable use
+### Personal organizer
 
-Completely extract the release ZIP, then run `LeanDesk_Suite.exe`. LeanDesk stores profile data under:
+- **Tasks:** due dates, priorities, status, projects, notes, search, completion, and local storage
+- **Calendar:** month view and local events
+- **Contacts:** searchable contact records and notes
+
+## Shared suite foundation
+
+Every module uses one launcher, sidebar, installer, local-data location, recent-file list, theme system, and publisher identity. The Windows installer registers LeanDesk under **Open with** for supported Office, OpenDocument, legacy, iWork, text, and native formats without silently replacing the user’s existing defaults. Native LeanDesk defaults remain an optional installer choice.
+
+## Local data
 
 ```text
 %LOCALAPPDATA%\Dietrich AI Labs\LeanDesk Suite
 ```
 
-User-created profile data is preserved when the application is uninstalled.
+Settings, recovery records, personal dictionary words, notes, tasks, calendar events, contacts, and recent-file history remain local. Uninstalling preserves user-created data.
+
+## Run from source
+
+```text
+RUN_LEANDESK_SUITE.bat
+```
+
+The app starts without optional Office-format libraries, but XLSX, PPTX, DOCX, and PDF features require the exact packages in `requirements.lock.txt`. Legacy and foreign-format conversion uses a separately installed trusted LibreOffice/`soffice` executable when required; LibreOffice is not bundled by this source package.
+
+## Build the complete Windows release
+
+```text
+BUILD_LEANDESK_SUITE.bat
+```
+
+The builder:
+
+- creates an isolated Python environment
+- installs the exact dependency lock
+- runs the canonical recursive compile/collection/test gate
+- regenerates the icon, README banner, and social preview
+- builds a one-file Windows preview EXE
+- creates or reuses the Dietrich AI Labs self-signing certificate
+- signs the application and installer when Windows SignTool is available
+- builds one current-user Inno Setup installer
+- registers supported formats under Windows **Open with** without stealing existing defaults
+- retains optional native LeanDesk default associations
+- produces portable, installer, and complete ZIP packages
+- writes SHA256 checksums and signature reports
+
 
 ## Updates and privacy
 
-The optional weekly update check reads public update metadata only from:
+LeanDesk can fetch public update metadata from exactly:
 
 ```text
 https://www.dietrichailabs.com/updates/leandesk.json
 ```
 
-It does not silently download or install software. It sends no document contents, file paths, user name, email address, hardware inventory, usage statistics, device ID, or persistent tracking identifier. The weekly check can be disabled in Settings.
+Automatic checks are enabled by default but occur only on normal startup and at most once every seven days. **Settings → Check for Updates Now** bypasses the timer, and the weekly preference can be disabled. The checker sends no user name, document information, paths, hardware inventory, email, usage statistics, device ID, or persistent tracking identifier. It never downloads or installs software, never runs as a service, and never blocks offline startup.
 
-## Signing and Windows warnings
+## Profile backup and restore
 
-The release binaries use a Dietrich AI Labs self-signed code-signing certificate, not a publicly trusted commercial certificate. Windows may still display **Unknown Publisher** or Microsoft Defender SmartScreen reputation warnings.
+The File and Settings menus expose verified local-profile backup and restore. A backup is built in a same-directory temporary file, flushed, structurally and semantically verified, identity/hash checked, and only then atomically replaces the selected destination; any pre-commit failure leaves an existing backup untouched. Restore rejects linked/reparse/mount-redirection roots, fully validates an isolated staging profile, and rechecks filesystem identities before rename boundaries. The successful staging-to-live directory rename is the restore commit point: failures before it reactivate or retain the previous profile, while cleanup or durability faults after it are reported as successful-restore warnings and never falsely claim that the old profile stayed live.
 
-The included public certificate and signature report support integrity verification, but they do not make the self-signed certificate publicly trusted. Always verify the published SHA-256.
+## Imported-document safety
 
-## Help and support
+Foreign and compatibility documents are opened without making the original a writable LeanDesk source. Ordinary **Save** offers to create a separate copy. **Save As** cannot target the original file or an alias to it and cannot write to import-only formats. This protects unsupported objects and formatting from silent destructive round trips.
 
-1. Confirm the ZIP was fully extracted and that you are using version 0.8.0.
-2. Review the documentation included in the package.
-3. Search [existing issues](https://github.com/dietrichailabs-oss/LeanDesk-Suite/issues).
-4. If needed, [open a new issue](https://github.com/dietrichailabs-oss/LeanDesk-Suite/issues/new) with the version, package type, Windows version, reproduction steps, and expected/actual behavior.
+## Compatibility boundaries
 
-Remove personal information, credentials, customer data, and confidential content from screenshots, logs, and sample files before posting publicly.
+This release is designed for practical testing and iteration. Direct DOCX, XLSX, and PPTX imports are validated from an immutable bounded in-memory package before third-party parsing, with parser-level DTD/entity prohibition and resource budgets. RTF import decodes stateful single- and multibyte ANSI code pages and export preserves plain Unicode text, but neither path claims full formatting round-trip fidelity.
 
-## Official links
+- Complex DOCX layouts, comments, tracked changes, macros, embedded objects, and exact pagination may not round-trip correctly.
+- Sheets supports a deliberately small safe formula language, not the complete Excel function catalog.
+- PPTX import/export focuses on plain slide text, images, notes, and simple layouts.
+- Draw is a lightweight diagram tool, not a full vector-graphics replacement.
+- Notes preview supports common lightweight Markdown patterns rather than every extension.
 
-- [LeanDesk product page](https://www.dietrichailabs.com/leandesk.html)
-- [Dietrich AI Labs download center](https://www.dietrichailabs.com/downloads.html)
-- [Dietrich AI Labs](https://www.dietrichailabs.com)
+Review exported files before relying on them for critical work.
 
 ## Publisher
 

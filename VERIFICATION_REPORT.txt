@@ -1,0 +1,41 @@
+LEANDESK SUITE 0.8.0 RECONSTRUCTED CORRECTION 5 — VERIFICATION REPORT
+
+SOURCE STATUS
+- New immutable source candidate; not byte-equivalent to the lost 0.7.0 source.
+- Source identity is generated deterministically in SOURCE_MANIFEST.json and SOURCE_TREE_ID.txt.
+- No application EXE or compiled installer is claimed by this report.
+
+LD-QA-C4-001 — PASS IN ENGINEERING
+- Restore opens the selected archive through a controlled regular-file identity and copies it into a private restore snapshot.
+- The same private bytes are verified, hashed, read for the manifest, extracted, and reported.
+- Valid-A-to-valid-B, valid-A-to-invalid, rename, symlink, truncation, and concurrent-change timing cases cannot switch restoration to another pathname occupant.
+
+LD-QA-C4-002 — PASS IN ENGINEERING
+- The verified candidate, previous destination rollback, and committed target are identity/hash bound across the final replace boundary.
+- A post-hash candidate swap, committed-target mutation, manifest verification failure, or replacement failure cannot produce false successful identity reporting.
+- Success returns the exact committed destination SHA-256; detected failure preserves or conservatively retains the exact previous destination/rollback.
+
+LD-QA-C4-003 — PASS IN ENGINEERING
+- [Content_Types].xml is parsed under protected XML controls before semantic member classification.
+- Every XML content type and relationship part receives bounded protected parsing regardless of .dat, extensionless, mixed-case, override, or default filename mapping.
+- Hostile DOCX, XLSX, and PPTX semantic-XML parts are rejected before python-docx, OpenPyXL, or python-pptx invocation.
+
+LD-QA-C4-004 — PASS IN ENGINEERING
+- Pending raw DBCS decoder state participates in lexical decisions for 0x5C, 0x7B, and 0x7D.
+- CP932 表, ―, ＋, and ± decode correctly while real RTF controls, groups, group-depth limits, malformed-tail rejection, and escape-origin boundaries remain intact.
+- Core Save/reopen, actual Writer GUI Save As/reopen, and LibreOffice readback pass.
+
+LD-QA-C4-005 — PASS IN ENGINEERING
+- Every existing raw parent component and the final backup source root are checked with lstat before resolution.
+- Symlink, simulated Windows reparse, mount-redirection, and changed parent/root identities are refused.
+- Parent/root identities are rechecked during manifest enumeration and member reads.
+- Native Windows junction/reparse/NTFS lifecycle testing remains required on the future packaged runtime.
+
+PRESERVED GATES
+- All prior Correction 1-4 regression suites remain required.
+- 347/347 canonical tests, 67/67 focused Correction 5 tests, and 35/35 legacy discovery tests pass.
+- Weekly/manual update checking remains offline-safe, telemetry-free, non-installing, fixed to the Dietrich AI Labs HTTPS manifest, and user-disableable.
+- Open With installer source remains non-hijacking; Windows lifecycle remains untested without immutable Windows artifacts.
+
+ROUTING
+Engineering -> Independent QA only. Sable and Iris are not reviewers, recipients, gates, or blockers in this cycle.

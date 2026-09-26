@@ -1,0 +1,31 @@
+LEANDESK SUITE 0.8.0 RECONSTRUCTED CORRECTION 5
+
+ENGINEERING SOURCE GATE: PASS
+INDEPENDENT QA: REQUIRED
+WINDOWS IMMUTABLE RUNTIME / INSTALLER LIFECYCLE: HOLD — NOT BUILT IN THIS LINUX ENVIRONMENT
+PUBLIC RELEASE: BLOCKED
+
+Verified in this source candidate:
+- full in-memory Python compilation without producing bytecode
+- one recursive authoritative gate explicitly requiring all seven test files
+- 347/347 Pytest tests passed, including 67 focused Correction 5 tests
+- 35/35 legacy unittest-discovery tests passed
+- source-stage cleanliness passed before and after testing
+- restore verifies and extracts one private immutable backup snapshot and reports the SHA-256 of the bytes actually restored
+- backup creation binds candidate, rollback, and committed-destination identities/hashes across the final commit boundary
+- semantic OOXML content types select protected XML parsing regardless of filename extension or case
+- raw CP932 trail bytes equal to RTF syntax decode correctly while real controls/groups and resource limits remain enforced
+- backup-source parent/root symlink, reparse, mount, and changed-identity boundaries are refused throughout enumeration and reads
+- the Windows builder creates its environment outside the source tree and requires the Correction 5 and cleanliness gates
+- all prior imported-document, recovery, formula, update-check, association-source, version-ordering, restore-transaction, duplicate-member, and Unicode/multibyte RTF regressions remain in the canonical suite
+
+Windows-only acceptance still required before release:
+- PyInstaller Windows EXE build and startup
+- Inno Setup installer compilation
+- clean install, repair/upgrade, reboot persistence, and uninstall
+- Open With visibility and double-click opening for registered extensions
+- preservation of existing Microsoft Office / LibreOffice defaults
+- coexistence, user-data preservation, printing, and Windows-path edge cases
+- native NTFS symlink, junction, mount-point, and reparse-point attacks
+
+Run BUILD_LEANDESK_SUITE.bat on a clean Windows build host only after this exact source candidate receives Independent QA source acceptance. Submit the resulting immutable application and installer artifacts with hashes to Independent QA.

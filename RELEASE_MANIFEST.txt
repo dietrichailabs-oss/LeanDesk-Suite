@@ -1,0 +1,82 @@
+LEANDESK SUITE 0.8.0 RECONSTRUCTED CORRECTION 5 SOURCE PROJECT
+
+Primary entry point
+- lean_desk_suite.py
+
+Application shell and modules
+- leandesk/app.py
+- leandesk/writer.py
+- leandesk/spellcheck.py
+- leandesk/sheets.py
+- leandesk/slides.py
+- leandesk/notes.py
+- leandesk/draw.py
+- leandesk/organizer.py
+- leandesk/ui.py
+
+Shared safety and compatibility boundaries
+- leandesk/save_policy.py
+- leandesk/import_safety.py
+- leandesk/data_boundary.py
+- leandesk/document_formats.py
+- leandesk/rtf_codec.py
+- leandesk/ooxml_preflight.py
+- leandesk/core.py
+- leandesk/compatibility.py
+- leandesk/backup_integrity.py
+- leandesk/backup_service.py
+
+Update subsystem
+- leandesk/updates/update_checker.py
+- leandesk/updates/update_manifest.py
+- leandesk/updates/version_compare.py
+- leandesk/update_checker.py (compatibility facade)
+- docs/update-manifest-example.json
+- docs/UPDATE_MANIFEST_DEPLOYMENT.md
+
+Tests and build gates
+- test_leandesk.py
+- test_compatibility.py
+- tests/test_correction_1_safety.py
+- tests/test_correction_2_qa.py
+- tests/test_correction_3_qa.py
+- tests/test_correction_4_qa.py
+- tests/test_correction_5_qa.py
+- tests/fixtures/correction_3/
+- tests/fixtures/correction_4/
+- tools/run_authoritative_tests.py
+- tools/package_cleanliness.py
+- tools/source_manifest.py
+- requirements.lock.txt
+- requirements.txt
+
+Windows build and installer source
+- BUILD_LEANDESK_SUITE.bat
+- BUILD_LEANDESK_SUITE.ps1
+- LeanDesk_Suite_Installer.iss
+- version_info.txt
+
+Documentation and legal
+- README.md
+- CHANGELOG.md
+- ROADMAP.md
+- START_HERE.txt
+- BUILD_READINESS.txt
+- ENGINEERING_TEST_LOG.txt
+- VERIFICATION_REPORT.txt
+- DEPENDENCY_LOCK_STATUS.json
+- EULA.txt
+- LICENSE.txt
+- THIRD_PARTY_NOTICES.txt
+- STANDARD_RELEASE_MODEL.md
+- UI_ACCEPTANCE_CHECKLIST.md
+- MODULE_ACCEPTANCE_ORDER.md
+
+Assets
+- lean_desk_suite.ico
+- assets/leandesk-suite-icon.png
+- assets/leandesk-suite-banner.png
+- assets/leandesk-suite-social-preview.png
+- assets/english_words.txt
+- docs/LeanDesk_Suite_0.3.0_UI_Overview.png
+- docs/writer-ribbon-approved-concept.png

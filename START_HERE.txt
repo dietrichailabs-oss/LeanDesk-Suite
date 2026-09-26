@@ -1,0 +1,34 @@
+LEANDESK SUITE 0.8.0 RECONSTRUCTED CORRECTION 5
+
+STATUS
+Engineering source gate passed. This is an Independent-QA candidate, not a public release. No Windows executable or compiled installer is included in the source tree.
+
+SOURCE PREVIEW
+1. Extract the project.
+2. Install the exact dependencies from requirements.lock.txt in an isolated environment.
+3. Run RUN_LEANDESK_SUITE.bat on Windows for a source preview.
+
+AUTHORITATIVE SOURCE TEST
+Run:
+  python tools\run_authoritative_tests.py --report AUTHORITATIVE_TEST_GATE.json
+
+The gate explicitly requires test_correction_5_qa.py, collects at least 347 tests, compiles in memory, disables Pytest cache generation, and verifies source cleanliness before and after all tests.
+
+WINDOWS BUILD
+Run BUILD_LEANDESK_SUITE.bat on a clean Windows build host only after Independent QA accepts this exact source identity. The builder creates its virtual environment outside the source tree, consumes requirements.lock.txt, runs source-cleanliness checks, and executes the same canonical test gate before packaging.
+
+QA ORDER
+1. Verify the completed handoff ZIP, source manifest, source-tree ID, and exact embedded Correction 4 QA FAIL identity.
+2. Run the complete 347-test canonical suite, the 67-test focused Correction 5 suite, and 35-test legacy discovery.
+3. Re-run all Correction 1-4 historical regression suites and the exact independent Correction 4 finding replay.
+4. Swap valid and invalid backup path occupants after verification, then vary rename, symlink, truncation, and concurrent-write timing. Confirm only the privately captured verified bytes can be restored and reported.
+5. Fault-inject the final backup-candidate hash/replace boundary, committed-target mutation, rollback mutation, verification failure, and replace failure. Confirm reported SHA-256 equals the committed bytes on success and the prior destination remains exact after failure.
+6. Exercise DOCX/XLSX/PPTX semantic XML and relationship parts under .dat, extensionless, mixed-case, override, and default content-type mappings. Confirm hostile XML is rejected before third-party parser invocation.
+7. Exercise raw CP932 表, ―, ＋, and ± byte pairs adjacent to real RTF controls/groups through core parsing, Writer GUI, Save As/reopen, and LibreOffice.
+8. Exercise linked backup-source parent/root, mount redirection, simulated Windows reparse boundaries, parent replacement, and root replacement during enumeration/read.
+9. Re-run all eight GUI modules and nine-format actual opening/source-preservation checks.
+10. Re-run weekly/manual update checks, version ordering, recovery, formula, grid, slide-asset, residue, and installer-source association gates.
+11. Test the exact Windows EXE/installer lifecycle only when immutable Windows artifacts built from an accepted source identity are supplied.
+
+Suggested module order:
+Writer -> Sheets -> Slides -> Notes -> Draw -> Tasks -> Calendar -> Contacts
