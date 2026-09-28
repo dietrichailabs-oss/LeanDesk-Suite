@@ -1,0 +1,45 @@
+name: Independent QA exact handoff transport
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/qa-handoff-artifact.yml
+
+permissions:
+  contents: read
+
+jobs:
+  mirror-exact-handoff:
+    if: github.event.pull_request.head.ref == 'codex/qa-artifact-transport-main-8821869'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download exact unpublished draft asset by immutable asset ID
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p qa-artifact
+          gh api \
+            --header 'Accept: application/octet-stream' \
+            /repos/dietrichailabs-oss/LeanDesk-Suite/releases/assets/538112832 \
+            > qa-artifact/LeanDesk_Suite_0.8.1_Final_Windows_Engineering_QA_Handoff.zip
+
+      - name: Verify exact handoff identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          file='qa-artifact/LeanDesk_Suite_0.8.1_Final_Windows_Engineering_QA_Handoff.zip'
+          test -f "$file"
+          test "$(stat -c '%s' "$file")" = '262904538'
+          printf '%s  %s\n' \
+            '223ebd5d2513d5624c59b2336c5dee6f2457cac568ce2b78d1f185767ca00889' \
+            "$file" | sha256sum --check --strict
+
+      - name: Upload exact handoff for Independent QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: LeanDesk-0.8.1-Final-QA-Handoff-223EBD5D
+          path: qa-artifact/LeanDesk_Suite_0.8.1_Final_Windows_Engineering_QA_Handoff.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
